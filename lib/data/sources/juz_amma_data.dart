@@ -54,7 +54,7 @@ class JuzAmmaData {
         surahNameArabic: surah.nameArabic,
         surahNameEnglish: surah.nameEnglish,
         reciterName: 'أحمد عمر الخامر',
-        assetPath: 'assets/audio/juz_amma/$paddedNumber.mp3',
+        assetPath: 'assets/audio/juz_amma/$paddedNumber-${surah.nameEnglish.toLowerCase()}.mp3',
         pageNumber: surah.pageStart,
       );
     }).toList();
