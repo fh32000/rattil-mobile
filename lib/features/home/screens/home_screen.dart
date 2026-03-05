@@ -16,6 +16,7 @@ class HomeScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
+      drawer: _buildDrawer(context),
       body: Stack(
         children: [
           CustomScrollView(
@@ -23,6 +24,12 @@ class HomeScreen extends ConsumerWidget {
               // App bar
               SliverAppBar(
                 expandedHeight: 180,
+                leading: Builder(
+                  builder: (context) => IconButton(
+                    icon: const Icon(Icons.menu, color: Colors.white),
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                  ),
+                ),
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
@@ -225,6 +232,129 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildDrawer(BuildContext context) {
+    return Drawer(
+      backgroundColor: AppColors.backgroundDark,
+      child: SafeArea(
+        child: Column(
+          children: [
+            // Drawer header
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(24),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [AppColors.primary, AppColors.primaryDark],
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'ورتِّله',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'تطبيق القرآن الكريم',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.7),
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            _buildDrawerItem(
+              context,
+              icon: Icons.home,
+              label: 'الرئيسية',
+              onTap: () => Navigator.pop(context),
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.favorite,
+              label: 'المفضلة',
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/favorites');
+              },
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.playlist_play,
+              label: 'قوائم التشغيل',
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/playlists');
+              },
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.person,
+              label: 'القارئ',
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/reciter');
+              },
+            ),
+
+            const Divider(color: AppColors.progressInactive),
+
+            _buildDrawerItem(
+              context,
+              icon: Icons.info_outline,
+              label: 'عن التطبيق',
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/about');
+              },
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.support_agent,
+              label: 'الدعم والتواصل',
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/support');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.accentLight, size: 22),
+      title: Text(
+        label,
+        style: const TextStyle(fontSize: 15),
+      ),
+      onTap: onTap,
+      dense: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20),
     );
   }
 }
