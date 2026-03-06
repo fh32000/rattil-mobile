@@ -120,6 +120,14 @@ class HomeScreen extends ConsumerWidget {
                         color: AppColors.primaryLight,
                         onTap: () => context.push('/reciter'),
                       ),
+                      const SizedBox(width: 12),
+                      _buildQuickAction(
+                        context,
+                        icon: Icons.abc,
+                        label: 'الحروف',
+                        color: const Color(0xFF6A1B9A),
+                        onTap: () => context.push('/arabic-alphabet'),
+                      ),
                     ],
                   ),
                 ),
@@ -308,6 +316,16 @@ class HomeScreen extends ConsumerWidget {
               onTap: () {
                 Navigator.pop(context);
                 context.push('/reciter');
+              },
+            ),
+
+            _buildDrawerItem(
+              context,
+              icon: Icons.abc,
+              label: 'مخارج الحروف',
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/arabic-alphabet');
               },
             ),
 

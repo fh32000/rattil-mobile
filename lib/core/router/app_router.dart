@@ -9,6 +9,8 @@ import '../../features/search/screens/search_screen.dart';
 import '../../features/reciter/screens/reciter_info_screen.dart';
 import '../../features/about/screens/about_screen.dart';
 import '../../features/support/screens/support_screen.dart';
+import '../../features/arabic_alphabet/screens/arabic_alphabet_screen.dart';
+import '../../features/arabic_alphabet/screens/letter_detail_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -66,6 +68,18 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/support',
       builder: (context, state) => const SupportScreen(),
+    ),
+    GoRoute(
+      path: '/arabic-alphabet',
+      builder: (context, state) => const ArabicAlphabetScreen(),
+    ),
+    GoRoute(
+      path: '/arabic-alphabet/:number',
+      builder: (context, state) {
+        final number =
+            int.tryParse(state.pathParameters['number'] ?? '1') ?? 1;
+        return LetterDetailScreen(letterNumber: number);
+      },
     ),
   ],
 );

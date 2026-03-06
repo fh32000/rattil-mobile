@@ -35,5 +35,6 @@ flutter:
 
   assets:
     - assets/audio/juz_amma/
+    - assets/audio/arabic_alphabet/
     - assets/images/
 
