@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/models/arabic_letter.dart';
 import '../../../data/sources/arabic_alphabet_data.dart';
+import '../../player/providers/audio_provider.dart';
 
-class LetterDetailScreen extends StatefulWidget {
+class LetterDetailScreen extends ConsumerStatefulWidget {
   final int letterNumber;
   const LetterDetailScreen({super.key, required this.letterNumber});
 
   @override
-  State<LetterDetailScreen> createState() => _LetterDetailScreenState();
+  ConsumerState<LetterDetailScreen> createState() => _LetterDetailScreenState();
 }
 
-class _LetterDetailScreenState extends State<LetterDetailScreen> {
+class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
   final AudioPlayer _player = AudioPlayer();
   late int _currentNumber;
   bool _isPlaying = false;
@@ -29,6 +31,14 @@ class _LetterDetailScreenState extends State<LetterDetailScreen> {
             _isPlaying = false;
           }
         });
+      }
+    });
+
+    // Listen to main Quran audio - stop letter audio if Quran starts playing
+    final handler = ref.read(audioHandlerProvider);
+    handler.playbackState.listen((state) {
+      if (state.playing && _player.playing) {
+        _player.stop();
       }
     });
   }
@@ -59,6 +69,13 @@ class _LetterDetailScreenState extends State<LetterDetailScreen> {
       await _player.pause();
     } else {
       try {
+        // Pause the main Quran audio if playing
+        final handler = ref.read(audioHandlerProvider);
+        final mainIsPlaying = ref.read(isPlayingProvider).valueOrNull ?? false;
+        if (mainIsPlaying) {
+          await handler.pause();
+        }
+
         await _player.setAsset(_letter!.assetPath);
         await _player.play();
       } catch (_) {}
@@ -142,7 +159,7 @@ class _LetterDetailScreenState extends State<LetterDetailScreen> {
                               Shadow(
                                 color: Colors.black.withValues(alpha: 0.3),
                                 blurRadius: 10,
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -174,7 +191,9 @@ class _LetterDetailScreenState extends State<LetterDetailScreen> {
                         // Group badge
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 4),
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: color.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(12),
@@ -202,16 +221,18 @@ class _LetterDetailScreenState extends State<LetterDetailScreen> {
                             const SizedBox(width: 8),
                             Text(
                               'مخرج الحرف',
-                              style: theme.textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 10),
                         Text(
                           letter.makhrajDetail,
-                          style: theme.textTheme.bodyLarge
-                              ?.copyWith(height: 1.6),
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            height: 1.6,
+                          ),
                         ),
                       ],
                     ),
@@ -253,8 +274,9 @@ class _LetterDetailScreenState extends State<LetterDetailScreen> {
                         Text(
                           'استمع لمخرج الحرف بحركاته المختلفة من القرآن الكريم',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.5),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -272,11 +294,12 @@ class _LetterDetailScreenState extends State<LetterDetailScreen> {
                               boxShadow: _isPlaying
                                   ? [
                                       BoxShadow(
-                                        color: AppColors.accent
-                                            .withValues(alpha: 0.4),
+                                        color: AppColors.accent.withValues(
+                                          alpha: 0.4,
+                                        ),
                                         blurRadius: 20,
                                         spreadRadius: 4,
-                                      )
+                                      ),
                                     ]
                                   : null,
                             ),
@@ -305,8 +328,9 @@ class _LetterDetailScreenState extends State<LetterDetailScreen> {
                           label: Text(
                             hasPrev
                                 ? ArabicAlphabetData.getByNumber(
-                                        _currentNumber - 1)
-                                    ?.name ?? ''
+                                        _currentNumber - 1,
+                                      )?.name ??
+                                      ''
                                 : '',
                           ),
                           style: OutlinedButton.styleFrom(
@@ -325,8 +349,9 @@ class _LetterDetailScreenState extends State<LetterDetailScreen> {
                           label: Text(
                             hasNext
                                 ? ArabicAlphabetData.getByNumber(
-                                        _currentNumber + 1)
-                                    ?.name ?? ''
+                                        _currentNumber + 1,
+                                      )?.name ??
+                                      ''
                                 : '',
                           ),
                           style: OutlinedButton.styleFrom(

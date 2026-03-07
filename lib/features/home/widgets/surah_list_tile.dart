@@ -6,12 +6,16 @@ class SurahListTile extends StatelessWidget {
   final Surah surah;
   final VoidCallback onTap;
   final VoidCallback onPlay;
+  final bool isCurrentTrack;
+  final bool isPlaying;
 
   const SurahListTile({
     super.key,
     required this.surah,
     required this.onTap,
     required this.onPlay,
+    this.isCurrentTrack = false,
+    this.isPlaying = false,
   });
 
   @override
@@ -29,6 +33,12 @@ class SurahListTile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
+              color: isCurrentTrack
+                  ? AppColors.accent.withValues(alpha: 0.08)
+                  : null,
+              border: isCurrentTrack
+                  ? Border.all(color: AppColors.accent.withValues(alpha: 0.2))
+                  : null,
             ),
             child: Row(
               children: [
@@ -38,13 +48,17 @@ class SurahListTile extends StatelessWidget {
                   height: 44,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: AppColors.primary.withValues(alpha: 0.15),
+                    color: isCurrentTrack
+                        ? AppColors.accent.withValues(alpha: 0.2)
+                        : AppColors.primary.withValues(alpha: 0.15),
                   ),
                   child: Center(
                     child: Text(
                       surah.number.toString(),
                       style: TextStyle(
-                        color: AppColors.primaryLight,
+                        color: isCurrentTrack
+                            ? AppColors.accent
+                            : AppColors.primaryLight,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -63,6 +77,7 @@ class SurahListTile extends StatelessWidget {
                         'سورة ${surah.nameArabic}',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
+                          color: isCurrentTrack ? AppColors.accent : null,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -73,16 +88,18 @@ class SurahListTile extends StatelessWidget {
                           Text(
                             '${surah.versesCount} آية',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.5),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 8),
                           Text(
                             'ص ${surah.pageStart}',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.5),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                           ),
                         ],
@@ -91,20 +108,26 @@ class SurahListTile extends StatelessWidget {
                   ),
                 ),
 
-                // Play button
+                // Play/Pause button
                 Container(
                   width: 38,
                   height: 38,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.accent.withValues(alpha: 0.15),
+                    color: isCurrentTrack && isPlaying
+                        ? AppColors.accent
+                        : AppColors.accent.withValues(alpha: 0.15),
                   ),
                   child: IconButton(
-                    icon: const Icon(
-                      Icons.play_arrow_rounded,
+                    icon: Icon(
+                      isCurrentTrack && isPlaying
+                          ? Icons.pause_rounded
+                          : Icons.play_arrow_rounded,
                       size: 22,
                     ),
-                    color: AppColors.accent,
+                    color: isCurrentTrack && isPlaying
+                        ? Colors.black
+                        : AppColors.accent,
                     padding: EdgeInsets.zero,
                     onPressed: onPlay,
                   ),

@@ -158,8 +158,9 @@ class HomeScreen extends ConsumerWidget {
                       Text(
                         '${surahs.length} سورة',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.5),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                       ),
                     ],
@@ -171,35 +172,47 @@ class HomeScreen extends ConsumerWidget {
               SliverPadding(
                 padding: const EdgeInsets.only(bottom: 100),
                 sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final surah = surahs[index];
-                      return SurahListTile(
-                        surah: surah,
-                        onTap: () => context.push('/surah/${surah.number}'),
-                        onPlay: () {
-                          final handler = ref.read(audioHandlerProvider);
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final surah = surahs[index];
+                    final currentTrack = ref
+                        .watch(currentTrackProvider)
+                        .valueOrNull;
+                    final isPlaying =
+                        ref.watch(isPlayingProvider).valueOrNull ?? false;
+                    final isCurrentTrack =
+                        currentTrack?.surahNumber == surah.number;
+
+                    return SurahListTile(
+                      surah: surah,
+                      isCurrentTrack: isCurrentTrack,
+                      isPlaying: isPlaying,
+                      onTap: () => context.push('/surah/${surah.number}'),
+                      onPlay: () {
+                        final handler = ref.read(audioHandlerProvider);
+                        if (isCurrentTrack) {
+                          // Toggle play/pause for current track
+                          if (isPlaying) {
+                            handler.pause();
+                          } else {
+                            handler.play();
+                          }
+                        } else {
+                          // Play new track
                           handler.loadTracks(
                             JuzAmmaData.tracks,
                             startIndex: index,
                           );
-                        },
-                      );
-                    },
-                    childCount: surahs.length,
-                  ),
+                        }
+                      },
+                    );
+                  }, childCount: surahs.length),
                 ),
               ),
             ],
           ),
 
           // Mini player
-          const Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: MiniPlayer(),
-          ),
+          const Positioned(left: 0, right: 0, bottom: 0, child: MiniPlayer()),
         ],
       ),
     );
@@ -220,9 +233,7 @@ class HomeScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: color.withValues(alpha: 0.2),
-            ),
+            border: Border.all(color: color.withValues(alpha: 0.2)),
           ),
           child: Column(
             children: [
@@ -363,15 +374,10 @@ class HomeScreen extends ConsumerWidget {
   }) {
     return ListTile(
       leading: Icon(icon, color: AppColors.accentLight, size: 22),
-      title: Text(
-        label,
-        style: const TextStyle(fontSize: 15),
-      ),
+      title: Text(label, style: const TextStyle(fontSize: 15)),
       onTap: onTap,
       dense: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
     );
   }
