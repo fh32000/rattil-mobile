@@ -33,17 +33,19 @@ workflows:
           echo "Updating version: $CURRENT_VERSION → $NEW_VERSION"
           sed -i '' "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
 
-          # --- Get current date in Arabic-friendly format ---
+          # --- Get current date ---
           RELEASE_DATE=$(date +"%d-%m-%Y %I:%M%p")
+          FILE_DATE=$(date +"%d-%m-%Y")
 
           # --- Update app_constants.dart ---
           CONSTANTS_FILE="lib/core/constants/app_constants.dart"
-
-          # Update appVersion
           sed -i '' "s/static const String appVersion = '.*'/static const String appVersion = '$VERSION_NAME'/" "$CONSTANTS_FILE"
-
-          # Update appReleaseDate
           sed -i '' "s/static const String appReleaseDate = '.*'/static const String appReleaseDate = '$RELEASE_DATE'/" "$CONSTANTS_FILE"
+
+          # --- Export for later steps ---
+          echo "CM_VERSION=$VERSION_NAME" >> $CM_ENV
+          echo "CM_BUILD=$NEW_BUILD_NUMBER" >> $CM_ENV
+          echo "CM_DATE=$FILE_DATE" >> $CM_ENV
 
           echo "✅ Version: $NEW_VERSION"
           echo "✅ Release date: $RELEASE_DATE"
@@ -60,8 +62,17 @@ workflows:
       - name: Build APK
         script: flutter build apk --release
 
+      # ──────────────────────────────────
+      # 4. Rename APK with version & date
+      # ──────────────────────────────────
+      - name: Rename APK
+        script: |
+          APK_DIR="build/app/outputs/flutter-apk"
+          mv "$APK_DIR/app-release.apk" "$APK_DIR/rattil-v${CM_VERSION}-build${CM_BUILD}-${CM_DATE}.apk"
+          echo "✅ APK: rattil-v${CM_VERSION}-build${CM_BUILD}-${CM_DATE}.apk"
+
     artifacts:
-      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/flutter-apk/rattil-*.apk
 
     publishing:
       email:
