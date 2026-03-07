@@ -206,7 +206,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   if (AppConstants.developerWhatsApp.isNotEmpty)
                     _buildContactTile(
                       icon: Icons.chat,
-                      title: 'واتساب',
+                      title: 'تواصل عبر الواتساب',
                       subtitle: AppConstants.developerPhone,
                       color: const Color(0xFF25D366),
                       onTap: () => _launchUrl(
@@ -217,7 +217,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   // Phone
                   _buildContactTile(
                     icon: Icons.phone,
-                    title: 'اتصال',
+                    title: 'تواصل عبر الاتصال',
                     subtitle: AppConstants.developerPhone,
                     color: AppColors.accent,
                     onTap: () => _launchUrl(

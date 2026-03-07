@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 
@@ -142,10 +143,37 @@ class AboutScreen extends StatelessWidget {
                   _buildInfoRow(Icons.school, 'التعليم', AppConstants.developerUniversity, theme),
                   const SizedBox(height: 8),
                   _buildInfoRow(Icons.business, 'الشركة', AppConstants.developerCompany, theme),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(Icons.email, 'البريد', AppConstants.developerEmail, theme),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(Icons.phone, 'التواصل', AppConstants.developerPhone, theme),
+
+                  const SizedBox(height: 16),
+
+                  // Contact tiles
+                  _buildContactTile(
+                    icon: Icons.email,
+                    title: 'البريد الإلكتروني',
+                    subtitle: AppConstants.developerEmail,
+                    color: AppColors.primaryLight,
+                    onTap: () => _launchUrl(
+                        'mailto:${AppConstants.developerEmail}?subject=ورتِّله - تواصل'),
+                    theme: theme,
+                  ),
+                  _buildContactTile(
+                    icon: Icons.chat,
+                    title: 'تواصل عبر الواتساب',
+                    subtitle: AppConstants.developerPhone,
+                    color: const Color(0xFF25D366),
+                    onTap: () => _launchUrl(
+                        'https://wa.me/${AppConstants.developerWhatsApp}'),
+                    theme: theme,
+                  ),
+                  _buildContactTile(
+                    icon: Icons.phone,
+                    title: 'تواصل عبر الاتصال',
+                    subtitle: AppConstants.developerPhone,
+                    color: AppColors.accent,
+                    onTap: () => _launchUrl(
+                        'tel:+${AppConstants.developerWhatsApp}'),
+                    theme: theme,
+                  ),
                 ],
               ),
             ),
@@ -239,5 +267,70 @@ class AboutScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _buildContactTile({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onTap,
+    required ThemeData theme,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: color.withValues(alpha: 0.1),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withValues(alpha: 0.15),
+                ),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const SizedBox(width: 14),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color:
+                          theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _launchUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 }

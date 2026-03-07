@@ -15,13 +15,13 @@ class AppConstants {
       'خريج جامعة الإيمان - قسم القرآن الكريم.';
 
   // Developer info
-  static const String developerName = 'محمد فراج بن محفوظ';
+  static const String developerName = 'محمد فرج بامحفوظ';
   static const String developerTitle = 'متخصص أنظمة برمجيات';
   static const String developerUniversity = 'خريج جامعة الملك عبدالعزيز';
   static const String developerCompany = 'شريك مؤسس ومدير تنفيذي في شركة بوتفاي';
   static const String developerEmail = 'fh32000@gmail.com';
   static const String developerWhatsApp = '967737060801';
-  static const String developerPhone = '737060801';
+  static const String developerPhone = '+967 737060801';
 
   // Hive Boxes
   static const String playbackBox = 'playback_positions';
