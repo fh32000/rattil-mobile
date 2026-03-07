@@ -9,9 +9,8 @@ class AppConstants {
 
   // Reciter info
   static const String reciterName = 'أحمد عمر الخامر';
-  static const String reciterNickname = 'الغمر';
   static const String reciterBio =
-      'أحمد عمر الخامر (الغمر)، 29 عامًا، من أبناء اليمن - حضرموت، '
+      'أحمد عمر الخامر، من أبناء اليمن - حضرموت، '
       'خريج جامعة الإيمان - قسم القرآن الكريم.';
 
   // Developer info
