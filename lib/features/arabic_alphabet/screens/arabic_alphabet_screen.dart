@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:just_audio/just_audio.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/models/arabic_letter.dart';
 import '../../../data/sources/arabic_alphabet_data.dart';
+import '../../player/providers/audio_provider.dart';
 import '../../player/widgets/mini_player.dart';
 import '../widgets/letter_card.dart';
 
@@ -17,58 +17,30 @@ class ArabicAlphabetScreen extends ConsumerStatefulWidget {
 }
 
 class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
-  final AudioPlayer _player = AudioPlayer();
   String _selectedGroup = 'الكل';
-  int? _playingNumber;
-  bool _isPlaying = false;
 
   List<ArabicLetter> get _filteredLetters =>
       ArabicAlphabetData.getByGroup(_selectedGroup);
 
-  @override
-  void initState() {
-    super.initState();
-    _player.playerStateStream.listen((state) {
-      if (mounted) {
-        setState(() {
-          _isPlaying = state.playing;
-          if (state.processingState == ProcessingState.completed) {
-            _playingNumber = null;
-            _isPlaying = false;
-          }
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _player.dispose();
-    super.dispose();
-  }
-
   Future<void> _playLetter(ArabicLetter letter) async {
-    if (_playingNumber == letter.number && _isPlaying) {
-      await _player.pause();
-      setState(() => _isPlaying = false);
-      return;
-    }
+    final handler = ref.read(audioHandlerProvider);
+    final currentTrack = ref.read(currentTrackProvider).valueOrNull;
+    final isPlaying = ref.read(isPlayingProvider).valueOrNull ?? false;
 
-    setState(() {
-      _playingNumber = letter.number;
-      _isPlaying = true;
-    });
-
-    try {
-      await _player.setAsset(letter.assetPath);
-      await _player.play();
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _playingNumber = null;
-          _isPlaying = false;
-        });
+    // If this letter is already loaded, toggle play/pause
+    if (currentTrack?.id == 'single_${letter.assetPath}') {
+      if (isPlaying) {
+        await handler.pause();
+      } else {
+        await handler.play();
       }
+    } else {
+      // Play through main audio handler (replaces Quran audio)
+      await handler.playSingleAsset(
+        assetPath: letter.assetPath,
+        title: 'حرف ${letter.name}',
+        artist: 'مخارج الحروف',
+      );
     }
   }
 
@@ -76,6 +48,10 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final letters = _filteredLetters;
+
+    // Watch audio state from main handler
+    final currentTrack = ref.watch(currentTrackProvider).valueOrNull;
+    final isPlaying = ref.watch(isPlayingProvider).valueOrNull ?? false;
 
     return Scaffold(
       body: Stack(
@@ -120,13 +96,16 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
                           children: [
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 4),
+                                horizontal: 14,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.accent.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color:
-                                      AppColors.accent.withValues(alpha: 0.3),
+                                  color: AppColors.accent.withValues(
+                                    alpha: 0.3,
+                                  ),
                                 ),
                               ),
                               child: Text(
@@ -148,16 +127,19 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
               // Group filter chips
               SliverToBoxAdapter(
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'تصفية حسب المخرج',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.5),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -166,12 +148,13 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
                         children: ArabicAlphabetData.groups.map((group) {
                           final isSelected = _selectedGroup == group;
                           return GestureDetector(
-                            onTap: () =>
-                                setState(() => _selectedGroup = group),
+                            onTap: () => setState(() => _selectedGroup = group),
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 7),
+                                horizontal: 16,
+                                vertical: 7,
+                              ),
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? AppColors.accent
@@ -180,8 +163,7 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
                                 border: Border.all(
                                   color: isSelected
                                       ? AppColors.accent
-                                      : AppColors.accent
-                                          .withValues(alpha: 0.2),
+                                      : AppColors.accent.withValues(alpha: 0.2),
                                 ),
                               ),
                               child: Text(
@@ -223,38 +205,32 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
                 sliver: SliverGrid(
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
                     childAspectRatio: 0.8,
                   ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final letter = letters[index];
-                      return LetterCard(
-                        letter: letter,
-                        isPlaying: _playingNumber == letter.number && _isPlaying,
-                        onTap: () =>
-                            context.push('/arabic-alphabet/${letter.number}'),
-                        onPlay: () => _playLetter(letter),
-                      );
-                    },
-                    childCount: letters.length,
-                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final letter = letters[index];
+                    final isLetterPlaying =
+                        currentTrack?.id == 'single_${letter.assetPath}' &&
+                        isPlaying;
+                    return LetterCard(
+                      letter: letter,
+                      isPlaying: isLetterPlaying,
+                      onTap: () =>
+                          context.push('/arabic-alphabet/${letter.number}'),
+                      onPlay: () => _playLetter(letter),
+                    );
+                  }, childCount: letters.length),
                 ),
               ),
             ],
           ),
 
           // Mini player
-          const Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: MiniPlayer(),
-          ),
+          const Positioned(left: 0, right: 0, bottom: 0, child: MiniPlayer()),
         ],
       ),
     );
@@ -277,10 +253,9 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
           label,
           style: TextStyle(
             fontSize: 12,
-            color: Theme.of(context)
-                .colorScheme
-                .onSurface
-                .withValues(alpha: 0.6),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
       ],
