@@ -57,6 +57,15 @@ class HomeScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const SizedBox(height: 8),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              'assets/images/app_icon.png',
+                              width: 60,
+                              height: 60,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
@@ -274,6 +283,15 @@ class HomeScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: Image.asset(
+                      'assets/images/app_icon.png',
+                      width: 56,
+                      height: 56,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   const Text(
                     'ورتِّله',
                     style: TextStyle(
