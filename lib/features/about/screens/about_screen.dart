@@ -64,7 +64,7 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 4),
 
             Text(
-              'الإصدار ${AppConstants.appVersion}',
+              'الإصدار ${AppConstants.appVersion} · ${AppConstants.appReleaseDate}',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
@@ -135,9 +135,17 @@ class AboutScreen extends StatelessWidget {
                 children: [
                   _buildSectionTitle('معلومات المطور', theme),
                   const SizedBox(height: 12),
-                  _buildInfoRow(Icons.code, 'التطوير', AppConstants.developerName, theme),
+                  _buildInfoRow(Icons.person, 'المطور', AppConstants.developerName, theme),
+                  const SizedBox(height: 8),
+                  _buildInfoRow(Icons.work, 'التخصص', AppConstants.developerTitle, theme),
+                  const SizedBox(height: 8),
+                  _buildInfoRow(Icons.school, 'التعليم', AppConstants.developerUniversity, theme),
+                  const SizedBox(height: 8),
+                  _buildInfoRow(Icons.business, 'الشركة', AppConstants.developerCompany, theme),
                   const SizedBox(height: 8),
                   _buildInfoRow(Icons.email, 'البريد', AppConstants.developerEmail, theme),
+                  const SizedBox(height: 8),
+                  _buildInfoRow(Icons.phone, 'التواصل', AppConstants.developerPhone, theme),
                 ],
               ),
             ),

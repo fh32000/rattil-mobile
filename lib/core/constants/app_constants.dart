@@ -4,6 +4,7 @@ class AppConstants {
   static const String appName = 'ورتِّله';
   static const String appNameEn = 'Warattilhu';
   static const String appVersion = '1.0.0';
+  static const String appReleaseDate = '07-03-2026 7:30AM';
   static const String appDescription =
       'تطبيق ورتِّله للاستماع إلى تلاوات القرآن الكريم';
 
@@ -14,9 +15,13 @@ class AppConstants {
       'خريج جامعة الإيمان - قسم القرآن الكريم.';
 
   // Developer info
-  static const String developerName = 'Rattil';
-  static const String developerEmail = 'contact@rattil.com';
-  static const String developerWhatsApp = '';
+  static const String developerName = 'محمد فراج بن محفوظ';
+  static const String developerTitle = 'متخصص أنظمة برمجيات';
+  static const String developerUniversity = 'خريج جامعة الملك عبدالعزيز';
+  static const String developerCompany = 'شريك مؤسس ومدير تنفيذي في شركة بوتفاي';
+  static const String developerEmail = 'fh32000@gmail.com';
+  static const String developerWhatsApp = '967737060801';
+  static const String developerPhone = '737060801';
 
   // Hive Boxes
   static const String playbackBox = 'playback_positions';

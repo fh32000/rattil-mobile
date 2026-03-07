@@ -207,12 +207,23 @@ class _SupportScreenState extends State<SupportScreen> {
                     _buildContactTile(
                       icon: Icons.chat,
                       title: 'واتساب',
-                      subtitle: AppConstants.developerWhatsApp,
+                      subtitle: AppConstants.developerPhone,
                       color: const Color(0xFF25D366),
                       onTap: () => _launchUrl(
                           'https://wa.me/${AppConstants.developerWhatsApp}'),
                       theme: theme,
                     ),
+
+                  // Phone
+                  _buildContactTile(
+                    icon: Icons.phone,
+                    title: 'اتصال',
+                    subtitle: AppConstants.developerPhone,
+                    color: AppColors.accent,
+                    onTap: () => _launchUrl(
+                        'tel:+${AppConstants.developerWhatsApp}'),
+                    theme: theme,
+                  ),
 
                   // Email
                   _buildContactTile(
@@ -293,16 +304,18 @@ class _SupportScreenState extends State<SupportScreen> {
 
   void _submitReport() {
     if (_formKey.currentState?.validate() ?? false) {
-      // Send via email
-      final subject =
-          Uri.encodeComponent('ورتِّله - بلاغ: $_issueType');
-      final body = Uri.encodeComponent(_descriptionController.text);
+      // Send via WhatsApp
+      final message = Uri.encodeComponent(
+        '📱 *بلاغ من تطبيق ورتِّله*\n\n'
+        '📋 *نوع المشكلة:* $_issueType\n\n'
+        '📝 *الوصف:*\n${_descriptionController.text}',
+      );
       _launchUrl(
-          'mailto:${AppConstants.developerEmail}?subject=$subject&body=$body');
+          'https://wa.me/${AppConstants.developerWhatsApp}?text=$message');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('شكراً لك! سيتم فتح تطبيق البريد لإرسال البلاغ'),
+          content: const Text('شكراً لك! سيتم فتح الواتساب لإرسال البلاغ'),
           backgroundColor: AppColors.primary,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
