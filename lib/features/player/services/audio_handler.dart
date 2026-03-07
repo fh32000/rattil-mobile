@@ -5,15 +5,18 @@ import '../../../data/models/audio_track.dart';
 import '../../../data/repositories/playback_repository.dart';
 
 /// Audio handler for background playback and media controls
-class QuranAudioHandler extends BaseAudioHandler with SeekHandler, QueueHandler {
+class QuranAudioHandler extends BaseAudioHandler
+    with SeekHandler, QueueHandler {
   final AudioPlayer _player = AudioPlayer();
   final PlaybackRepository _playbackRepo = PlaybackRepository();
 
-  final BehaviorSubject<List<AudioTrack>> _trackList =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<AudioTrack>> _trackList = BehaviorSubject.seeded(
+    [],
+  );
   final BehaviorSubject<int> _currentIndex = BehaviorSubject.seeded(0);
-  final BehaviorSubject<LoopMode> _loopMode =
-      BehaviorSubject.seeded(LoopMode.off);
+  final BehaviorSubject<LoopMode> _loopMode = BehaviorSubject.seeded(
+    LoopMode.off,
+  );
 
   AudioPlayer get player => _player;
   Stream<List<AudioTrack>> get trackListStream => _trackList.stream;
@@ -43,9 +46,9 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler, QueueHandler 
     });
 
     // Save position periodically
-    _player.positionStream
-        .throttleTime(const Duration(seconds: 3))
-        .listen((position) {
+    _player.positionStream.throttleTime(const Duration(seconds: 3)).listen((
+      position,
+    ) {
       _saveCurrentPosition();
     });
   }
@@ -61,6 +64,37 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler, QueueHandler 
     queue.add(tracks.map(_trackToMediaItem).toList());
 
     await _loadCurrentTrack();
+  }
+
+  /// Play a single audio asset (e.g. letter pronunciation) through the main player
+  Future<void> playSingleAsset({
+    required String assetPath,
+    required String title,
+    String artist = '',
+  }) async {
+    final track = AudioTrack(
+      id: 'single_$assetPath',
+      surahNumber: 0,
+      surahNameArabic: title,
+      surahNameEnglish: '',
+      reciterName: artist,
+      assetPath: assetPath,
+      pageNumber: 0,
+    );
+
+    _trackList.add([track]);
+    _currentIndex.add(0);
+
+    // Update media item for notification
+    mediaItem.add(MediaItem(id: track.id, title: title, artist: artist));
+    queue.add([mediaItem.value!]);
+
+    try {
+      await _player.setAsset(assetPath);
+      await _player.play();
+    } catch (e) {
+      print('Error playing single asset: $assetPath - $e');
+    }
   }
 
   /// Load and play the current track
@@ -114,10 +148,7 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler, QueueHandler 
     if (completed) {
       _playbackRepo.savePosition(track.id, 0);
     } else {
-      _playbackRepo.savePosition(
-        track.id,
-        _player.position.inMilliseconds,
-      );
+      _playbackRepo.savePosition(track.id, _player.position.inMilliseconds);
     }
   }
 
@@ -204,9 +235,7 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler, QueueHandler 
   Future<void> fastForward10() async {
     final newPosition = _player.position + const Duration(seconds: 10);
     final duration = _player.duration ?? Duration.zero;
-    await _player.seek(
-      newPosition > duration ? duration : newPosition,
-    );
+    await _player.seek(newPosition > duration ? duration : newPosition);
   }
 
   /// Rewind 10 seconds

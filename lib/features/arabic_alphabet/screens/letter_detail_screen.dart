@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:just_audio/just_audio.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/models/arabic_letter.dart';
 import '../../../data/sources/arabic_alphabet_data.dart';
@@ -15,41 +14,22 @@ class LetterDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
-  final AudioPlayer _player = AudioPlayer();
   late int _currentNumber;
-  bool _isPlaying = false;
 
   @override
   void initState() {
     super.initState();
     _currentNumber = widget.letterNumber;
-    _player.playerStateStream.listen((state) {
-      if (mounted) {
-        setState(() {
-          _isPlaying = state.playing;
-          if (state.processingState == ProcessingState.completed) {
-            _isPlaying = false;
-          }
-        });
-      }
-    });
-
-    // Listen to main Quran audio - stop letter audio if Quran starts playing
-    final handler = ref.read(audioHandlerProvider);
-    handler.playbackState.listen((state) {
-      if (state.playing && _player.playing) {
-        _player.stop();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _player.dispose();
-    super.dispose();
   }
 
   ArabicLetter? get _letter => ArabicAlphabetData.getByNumber(_currentNumber);
+
+  /// Check if this letter's audio is what's currently loaded in the main player
+  bool _isCurrentLetterPlaying(AsyncValue<dynamic> currentTrackAsync) {
+    final track = currentTrackAsync.valueOrNull;
+    if (track == null) return false;
+    return track.id == 'single_${_letter?.assetPath}';
+  }
 
   Color get _groupColor {
     switch (_letter?.makhrajGroup) {
@@ -65,30 +45,35 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
   }
 
   Future<void> _togglePlay() async {
-    if (_player.playing) {
-      await _player.pause();
-    } else {
-      try {
-        // Pause the main Quran audio if playing
-        final handler = ref.read(audioHandlerProvider);
-        final mainIsPlaying = ref.read(isPlayingProvider).valueOrNull ?? false;
-        if (mainIsPlaying) {
-          await handler.pause();
-        }
+    final handler = ref.read(audioHandlerProvider);
+    final currentTrack = ref.read(currentTrackProvider).valueOrNull;
+    final isPlaying = ref.read(isPlayingProvider).valueOrNull ?? false;
 
-        await _player.setAsset(_letter!.assetPath);
-        await _player.play();
-      } catch (_) {}
+    // If this letter is already loaded, just toggle play/pause
+    if (currentTrack?.id == 'single_${_letter?.assetPath}') {
+      if (isPlaying) {
+        await handler.pause();
+      } else {
+        await handler.play();
+      }
+    } else {
+      // Play this letter through the main audio handler
+      await handler.playSingleAsset(
+        assetPath: _letter!.assetPath,
+        title: 'حرف ${_letter!.name}',
+        artist: 'مخارج الحروف',
+      );
     }
   }
 
   void _navigate(int delta) {
     final newNum = _currentNumber + delta;
     if (newNum >= 1 && newNum <= 28) {
-      _player.stop();
+      // Stop current playback when navigating
+      final handler = ref.read(audioHandlerProvider);
+      handler.stop();
       setState(() {
         _currentNumber = newNum;
-        _isPlaying = false;
       });
     }
   }
@@ -107,6 +92,12 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
     final color = _groupColor;
     final hasPrev = _currentNumber > 1;
     final hasNext = _currentNumber < 28;
+
+    // Watch audio state for this letter
+    final currentTrackAsync = ref.watch(currentTrackProvider);
+    final isLetterPlaying = _isCurrentLetterPlaying(currentTrackAsync);
+    final isPlaying =
+        isLetterPlaying && (ref.watch(isPlayingProvider).valueOrNull ?? false);
 
     return Scaffold(
       body: CustomScrollView(
@@ -288,10 +279,10 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
                             height: 70,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: _isPlaying
+                              color: isPlaying
                                   ? AppColors.accent
                                   : color.withValues(alpha: 0.2),
-                              boxShadow: _isPlaying
+                              boxShadow: isPlaying
                                   ? [
                                       BoxShadow(
                                         color: AppColors.accent.withValues(
@@ -304,10 +295,10 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
                                   : null,
                             ),
                             child: Icon(
-                              _isPlaying
+                              isPlaying
                                   ? Icons.pause_rounded
                                   : Icons.play_arrow_rounded,
-                              color: _isPlaying ? Colors.black : Colors.white,
+                              color: isPlaying ? Colors.black : Colors.white,
                               size: 38,
                             ),
                           ),
