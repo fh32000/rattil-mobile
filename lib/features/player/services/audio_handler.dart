@@ -17,6 +17,7 @@ class QuranAudioHandler extends BaseAudioHandler
   final BehaviorSubject<LoopMode> _loopMode = BehaviorSubject.seeded(
     LoopMode.off,
   );
+  DateTime _lastSkipTime = DateTime(2000); // Debounce for rapid skip presses
 
   AudioPlayer get player => _player;
   Stream<List<AudioTrack>> get trackListStream => _trackList.stream;
@@ -94,6 +95,30 @@ class QuranAudioHandler extends BaseAudioHandler
       await _player.play();
     } catch (e) {
       print('Error playing single asset: $assetPath - $e');
+    }
+  }
+
+  /// Load all letter tracks as a playlist and start from the given index
+  Future<void> loadLetterTracks({
+    required List<AudioTrack> letterTracks,
+    required int startIndex,
+  }) async {
+    if (letterTracks.isEmpty) return;
+
+    _trackList.add(letterTracks);
+    _currentIndex.add(startIndex);
+
+    // Build queue for media notification
+    queue.add(letterTracks.map(_trackToMediaItem).toList());
+
+    final track = letterTracks[startIndex];
+    mediaItem.add(_trackToMediaItem(track));
+
+    try {
+      await _player.setAsset(track.assetPath);
+      await _player.play();
+    } catch (e) {
+      print('Error loading letter track: ${track.assetPath} - $e');
     }
   }
 
@@ -189,6 +214,11 @@ class QuranAudioHandler extends BaseAudioHandler
 
   @override
   Future<void> skipToNext() async {
+    // Debounce: ignore rapid presses within 500ms
+    final now = DateTime.now();
+    if (now.difference(_lastSkipTime).inMilliseconds < 500) return;
+    _lastSkipTime = now;
+
     _saveCurrentPosition();
     final tracks = _trackList.value;
     final nextIndex = _currentIndex.value + 1;
@@ -204,6 +234,11 @@ class QuranAudioHandler extends BaseAudioHandler
 
   @override
   Future<void> skipToPrevious() async {
+    // Debounce: ignore rapid presses within 500ms
+    final now = DateTime.now();
+    if (now.difference(_lastSkipTime).inMilliseconds < 500) return;
+    _lastSkipTime = now;
+
     // If more than 3 seconds in, restart current track
     if (_player.position.inSeconds > 3) {
       await _player.seek(Duration.zero);

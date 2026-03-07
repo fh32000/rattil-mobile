@@ -28,7 +28,7 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
   bool _isCurrentLetterPlaying(AsyncValue<dynamic> currentTrackAsync) {
     final track = currentTrackAsync.valueOrNull;
     if (track == null) return false;
-    return track.id == 'single_${_letter?.assetPath}';
+    return track.id == 'letter_${_currentNumber}';
   }
 
   Color get _groupColor {
@@ -50,18 +50,19 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
     final isPlaying = ref.read(isPlayingProvider).valueOrNull ?? false;
 
     // If this letter is already loaded, just toggle play/pause
-    if (currentTrack?.id == 'single_${_letter?.assetPath}') {
+    if (currentTrack?.id == 'letter_${_currentNumber}') {
       if (isPlaying) {
         await handler.pause();
       } else {
         await handler.play();
       }
     } else {
-      // Play this letter through the main audio handler
-      await handler.playSingleAsset(
-        assetPath: _letter!.assetPath,
-        title: 'حرف ${_letter!.name}',
-        artist: 'مخارج الحروف',
+      // Load all letters as a playlist, starting from this one
+      final letterTracks = ArabicAlphabetData.toAudioTracks();
+      final startIndex = _currentNumber - 1;
+      await handler.loadLetterTracks(
+        letterTracks: letterTracks,
+        startIndex: startIndex,
       );
     }
   }

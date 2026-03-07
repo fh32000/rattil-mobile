@@ -42,10 +42,7 @@ class PlayerScreen extends ConsumerWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  AppColors.primaryDark,
-                  AppColors.backgroundDark,
-                ],
+                colors: [AppColors.primaryDark, AppColors.backgroundDark],
               ),
             ),
             child: SafeArea(
@@ -67,12 +64,7 @@ class PlayerScreen extends ConsumerWidget {
                   const SizedBox(height: 32),
 
                   // Progress bar
-                  _buildProgressBar(
-                    context,
-                    handler,
-                    position,
-                    duration,
-                  ),
+                  _buildProgressBar(context, handler, position, duration),
 
                   const SizedBox(height: 24),
 
@@ -111,9 +103,9 @@ class PlayerScreen extends ConsumerWidget {
           ),
           Text(
             'جزء عمّ',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white70,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(color: Colors.white70),
           ),
           const SizedBox(width: 48), // Balance
         ],
@@ -130,10 +122,7 @@ class PlayerScreen extends ConsumerWidget {
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [
-            AppColors.primary,
-            AppColors.primaryDark,
-          ],
+          colors: [AppColors.primary, AppColors.primaryDark],
         ),
         boxShadow: [
           BoxShadow(
@@ -173,10 +162,7 @@ class PlayerScreen extends ConsumerWidget {
             ),
             child: Text(
               'صفحة ${track.pageNumber}',
-              style: TextStyle(
-                color: AppColors.accentLight,
-                fontSize: 13,
-              ),
+              style: TextStyle(color: AppColors.accentLight, fontSize: 13),
             ),
           ),
         ],
@@ -201,10 +187,7 @@ class PlayerScreen extends ConsumerWidget {
           const SizedBox(height: 6),
           Text(
             track.reciterName,
-            style: TextStyle(
-              color: AppColors.accentLight,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: AppColors.accentLight, fontSize: 16),
             textAlign: TextAlign.center,
           ),
         ],
@@ -281,9 +264,7 @@ class PlayerScreen extends ConsumerWidget {
           // Loop
           IconButton(
             icon: Icon(
-              loopMode == LoopMode.one
-                  ? Icons.repeat_one
-                  : Icons.repeat,
+              loopMode == LoopMode.one ? Icons.repeat_one : Icons.repeat,
               color: loopMode == LoopMode.off
                   ? Colors.white60
                   : AppColors.accent,
@@ -294,7 +275,7 @@ class PlayerScreen extends ConsumerWidget {
 
           // Previous
           IconButton(
-            icon: const Icon(Icons.skip_previous_rounded),
+            icon: const Icon(Icons.skip_next_rounded),
             color: Colors.white,
             iconSize: 40,
             onPressed: () => handler.skipToPrevious(),
@@ -325,9 +306,7 @@ class PlayerScreen extends ConsumerWidget {
             ),
             child: IconButton(
               icon: Icon(
-                isPlaying
-                    ? Icons.pause_rounded
-                    : Icons.play_arrow_rounded,
+                isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
               ),
               color: Colors.black,
               iconSize: 44,
@@ -351,7 +330,7 @@ class PlayerScreen extends ConsumerWidget {
 
           // Next
           IconButton(
-            icon: const Icon(Icons.skip_next_rounded),
+            icon: const Icon(Icons.skip_previous_rounded),
             color: Colors.white,
             iconSize: 40,
             onPressed: () => handler.skipToNext(),

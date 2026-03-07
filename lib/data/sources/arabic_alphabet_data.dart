@@ -1,7 +1,25 @@
 import '../models/arabic_letter.dart';
+import '../models/audio_track.dart';
 
 class ArabicAlphabetData {
   ArabicAlphabetData._();
+
+  /// Convert all letters to AudioTrack list for playlist playback
+  static List<AudioTrack> toAudioTracks() {
+    return letters
+        .map(
+          (l) => AudioTrack(
+            id: 'letter_${l.number}',
+            surahNumber: 0,
+            surahNameArabic: 'حرف ${l.name}',
+            surahNameEnglish: l.nameEnglish,
+            reciterName: 'مخارج الحروف',
+            assetPath: l.assetPath,
+            pageNumber: 0,
+          ),
+        )
+        .toList();
+  }
 
   static const List<ArabicLetter> letters = [
     ArabicLetter(

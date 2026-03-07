@@ -126,10 +126,7 @@ class MiniPlayer extends ConsumerWidget {
 
                         // Skip previous
                         IconButton(
-                          icon: const Icon(
-                            Icons.skip_previous_rounded,
-                            size: 26,
-                          ),
+                          icon: const Icon(Icons.skip_next_rounded, size: 26),
                           color: Colors.white70,
                           onPressed: () => handler.skipToPrevious(),
                           padding: EdgeInsets.zero,
@@ -168,7 +165,10 @@ class MiniPlayer extends ConsumerWidget {
 
                         // Skip next
                         IconButton(
-                          icon: const Icon(Icons.skip_next_rounded, size: 26),
+                          icon: const Icon(
+                            Icons.skip_previous_rounded,
+                            size: 26,
+                          ),
                           color: Colors.white70,
                           onPressed: () => handler.skipToNext(),
                           padding: EdgeInsets.zero,

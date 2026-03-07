@@ -28,18 +28,19 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
     final isPlaying = ref.read(isPlayingProvider).valueOrNull ?? false;
 
     // If this letter is already loaded, toggle play/pause
-    if (currentTrack?.id == 'single_${letter.assetPath}') {
+    if (currentTrack?.id == 'letter_${letter.number}') {
       if (isPlaying) {
         await handler.pause();
       } else {
         await handler.play();
       }
     } else {
-      // Play through main audio handler (replaces Quran audio)
-      await handler.playSingleAsset(
-        assetPath: letter.assetPath,
-        title: 'حرف ${letter.name}',
-        artist: 'مخارج الحروف',
+      // Load all letters as a playlist, starting from this letter
+      final letterTracks = ArabicAlphabetData.toAudioTracks();
+      final startIndex = letter.number - 1; // 1-based number → 0-based index
+      await handler.loadLetterTracks(
+        letterTracks: letterTracks,
+        startIndex: startIndex,
       );
     }
   }
@@ -214,7 +215,7 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final letter = letters[index];
                     final isLetterPlaying =
-                        currentTrack?.id == 'single_${letter.assetPath}' &&
+                        currentTrack?.id == 'letter_${letter.number}' &&
                         isPlaying;
                     return LetterCard(
                       letter: letter,
