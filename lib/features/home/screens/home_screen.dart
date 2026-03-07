@@ -23,7 +23,7 @@ class HomeScreen extends ConsumerWidget {
             slivers: [
               // App bar
               SliverAppBar(
-                expandedHeight: 180,
+                expandedHeight: 240,
                 leading: Builder(
                   builder: (context) => IconButton(
                     icon: const Icon(Icons.menu, color: Colors.white),
@@ -65,7 +65,7 @@ class HomeScreen extends ConsumerWidget {
                               height: 60,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
@@ -87,6 +87,7 @@ class HomeScreen extends ConsumerWidget {
                               ),
                             ),
                           ),
+                          const SizedBox(height: 40),
                         ],
                       ),
                     ),
