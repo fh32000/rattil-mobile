@@ -111,10 +111,14 @@ class AboutScreen extends StatelessWidget {
                   _buildSectionTitle('الهدف من التطبيق', theme),
                   const SizedBox(height: 12),
                   _buildBullet(
-                      'توفير تجربة استماع سهلة ومريحة للقرآن الكريم', theme),
+                    'توفير تجربة استماع سهلة ومريحة للقرآن الكريم',
+                    theme,
+                  ),
+                  _buildBullet('مشغل صوتي متكامل يشبه تطبيقات الموسيقى', theme),
                   _buildBullet(
-                      'مشغل صوتي متكامل يشبه تطبيقات الموسيقى', theme),
-                  _buildBullet('تمكين المستخدم من متابعة التلاوة بسهولة', theme),
+                    'تمكين المستخدم من متابعة التلاوة بسهولة',
+                    theme,
+                  ),
                   _buildBullet('حفظ آخر موضع توقف لكل مقطع', theme),
                   _buildBullet('تنظيم المقاطع للتصفح والبحث', theme),
                 ],
@@ -136,13 +140,33 @@ class AboutScreen extends StatelessWidget {
                 children: [
                   _buildSectionTitle('معلومات المطور', theme),
                   const SizedBox(height: 12),
-                  _buildInfoRow(Icons.person, 'المطور', AppConstants.developerName, theme),
+                  _buildInfoRow(
+                    Icons.person,
+                    'المطور',
+                    AppConstants.developerName,
+                    theme,
+                  ),
                   const SizedBox(height: 8),
-                  _buildInfoRow(Icons.work, 'التخصص', AppConstants.developerTitle, theme),
+                  _buildInfoRow(
+                    Icons.work,
+                    'التخصص',
+                    AppConstants.developerTitle,
+                    theme,
+                  ),
                   const SizedBox(height: 8),
-                  _buildInfoRow(Icons.school, 'التعليم', AppConstants.developerUniversity, theme),
+                  _buildInfoRow(
+                    Icons.school,
+                    'التعليم',
+                    AppConstants.developerUniversity,
+                    theme,
+                  ),
                   const SizedBox(height: 8),
-                  _buildInfoRow(Icons.business, 'الشركة', AppConstants.developerCompany, theme),
+                  _buildInfoRow(
+                    Icons.business,
+                    'الشركة',
+                    AppConstants.developerCompany,
+                    theme,
+                  ),
 
                   const SizedBox(height: 16),
 
@@ -153,7 +177,8 @@ class AboutScreen extends StatelessWidget {
                     subtitle: AppConstants.developerEmail,
                     color: AppColors.primaryLight,
                     onTap: () => _launchUrl(
-                        'mailto:${AppConstants.developerEmail}?subject=ورتِّله - تواصل'),
+                      'mailto:${AppConstants.developerEmail}?subject=ورتِّله - تواصل',
+                    ),
                     theme: theme,
                   ),
                   _buildContactTile(
@@ -162,7 +187,8 @@ class AboutScreen extends StatelessWidget {
                     subtitle: AppConstants.developerPhone,
                     color: const Color(0xFF25D366),
                     onTap: () => _launchUrl(
-                        'https://wa.me/${AppConstants.developerWhatsApp}'),
+                      'https://wa.me/${AppConstants.developerWhatsApp}',
+                    ),
                     theme: theme,
                   ),
                   _buildContactTile(
@@ -170,8 +196,8 @@ class AboutScreen extends StatelessWidget {
                     title: 'تواصل عبر الاتصال',
                     subtitle: AppConstants.developerPhone,
                     color: AppColors.accent,
-                    onTap: () => _launchUrl(
-                        'tel:+${AppConstants.developerWhatsApp}'),
+                    onTap: () =>
+                        _launchUrl('tel:+${AppConstants.developerWhatsApp}'),
                     theme: theme,
                   ),
                 ],
@@ -248,7 +274,11 @@ class AboutScreen extends StatelessWidget {
   }
 
   Widget _buildInfoRow(
-      IconData icon, String label, String value, ThemeData theme) {
+    IconData icon,
+    String label,
+    String value,
+    ThemeData theme,
+  ) {
     return Row(
       children: [
         Icon(icon, size: 18, color: AppColors.primaryLight),
@@ -259,12 +289,7 @@ class AboutScreen extends StatelessWidget {
             color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
           ),
         ),
-        Expanded(
-          child: Text(
-            value,
-            style: theme.textTheme.bodyMedium,
-          ),
-        ),
+        Expanded(child: Text(value, style: theme.textTheme.bodyMedium)),
       ],
     );
   }
@@ -312,8 +337,7 @@ class AboutScreen extends StatelessWidget {
                   Text(
                     subtitle,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color:
-                          theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
@@ -329,8 +353,8 @@ class AboutScreen extends StatelessWidget {
 
   Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
+    try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
+    } catch (_) {}
   }
 }

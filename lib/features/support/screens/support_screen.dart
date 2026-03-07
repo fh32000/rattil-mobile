@@ -100,10 +100,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         ),
                       ),
                       items: _issueTypes.map((type) {
-                        return DropdownMenuItem(
-                          value: type,
-                          child: Text(type),
-                        );
+                        return DropdownMenuItem(value: type, child: Text(type));
                       }).toList(),
                       onChanged: (value) {
                         setState(() {
@@ -210,7 +207,8 @@ class _SupportScreenState extends State<SupportScreen> {
                       subtitle: AppConstants.developerPhone,
                       color: const Color(0xFF25D366),
                       onTap: () => _launchUrl(
-                          'https://wa.me/${AppConstants.developerWhatsApp}'),
+                        'https://wa.me/${AppConstants.developerWhatsApp}',
+                      ),
                       theme: theme,
                     ),
 
@@ -220,8 +218,8 @@ class _SupportScreenState extends State<SupportScreen> {
                     title: 'تواصل عبر الاتصال',
                     subtitle: AppConstants.developerPhone,
                     color: AppColors.accent,
-                    onTap: () => _launchUrl(
-                        'tel:+${AppConstants.developerWhatsApp}'),
+                    onTap: () =>
+                        _launchUrl('tel:+${AppConstants.developerWhatsApp}'),
                     theme: theme,
                   ),
 
@@ -232,7 +230,8 @@ class _SupportScreenState extends State<SupportScreen> {
                     subtitle: AppConstants.developerEmail,
                     color: AppColors.primaryLight,
                     onTap: () => _launchUrl(
-                        'mailto:${AppConstants.developerEmail}?subject=ورتِّله - دعم'),
+                      'mailto:${AppConstants.developerEmail}?subject=ورتِّله - دعم',
+                    ),
                     theme: theme,
                   ),
                 ],
@@ -287,8 +286,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   Text(
                     subtitle,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color:
-                          theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
@@ -304,14 +302,19 @@ class _SupportScreenState extends State<SupportScreen> {
 
   void _submitReport() {
     if (_formKey.currentState?.validate() ?? false) {
-      // Send via WhatsApp
-      final message = Uri.encodeComponent(
-        '📱 *بلاغ من تطبيق ورتِّله*\n\n'
-        '📋 *نوع المشكلة:* $_issueType\n\n'
-        '📝 *الوصف:*\n${_descriptionController.text}',
-      );
-      _launchUrl(
-          'https://wa.me/${AppConstants.developerWhatsApp}?text=$message');
+      // Build WhatsApp message with proper newlines
+      final description = _descriptionController.text;
+      final message =
+          'أهلاً بكم مطوري تطبيق ورتِّله 📱\n\n'
+          'لدي مشكلة أود الإبلاغ عنها:\n\n'
+          '📋 نوع المشكلة: $_issueType\n\n'
+          '📝 وصف المشكلة:\n$description';
+
+      final encoded = Uri.encodeComponent(message);
+      final url =
+          'https://wa.me/${AppConstants.developerWhatsApp}?text=$encoded';
+
+      _launchUrl(url);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -328,8 +331,21 @@ class _SupportScreenState extends State<SupportScreen> {
 
   Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('لم يتم العثور على التطبيق المطلوب: $e'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      }
     }
   }
 }
