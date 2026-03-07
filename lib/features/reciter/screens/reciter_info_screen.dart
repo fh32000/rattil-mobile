@@ -145,7 +145,7 @@ class ReciterInfoScreen extends StatelessWidget {
                       _buildInfoCard(
                         icon: Icons.school,
                         label: 'التعليم',
-                        value: 'جامعة الإيمان',
+                        value: 'جامعة القرآن',
                         theme: theme,
                       ),
                     ],
