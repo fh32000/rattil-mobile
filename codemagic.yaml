@@ -31,7 +31,7 @@ workflows:
           NEW_VERSION="${VERSION_NAME}+${NEW_BUILD_NUMBER}"
 
           echo "Updating version: $CURRENT_VERSION → $NEW_VERSION"
-          sed -i "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
+          sed -i '' "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
 
           # --- Get current date in Arabic-friendly format ---
           RELEASE_DATE=$(date +"%d-%m-%Y %I:%M%p")
@@ -40,10 +40,10 @@ workflows:
           CONSTANTS_FILE="lib/core/constants/app_constants.dart"
 
           # Update appVersion
-          sed -i "s/static const String appVersion = '.*'/static const String appVersion = '$VERSION_NAME'/" "$CONSTANTS_FILE"
+          sed -i '' "s/static const String appVersion = '.*'/static const String appVersion = '$VERSION_NAME'/" "$CONSTANTS_FILE"
 
           # Update appReleaseDate
-          sed -i "s/static const String appReleaseDate = '.*'/static const String appReleaseDate = '$RELEASE_DATE'/" "$CONSTANTS_FILE"
+          sed -i '' "s/static const String appReleaseDate = '.*'/static const String appReleaseDate = '$RELEASE_DATE'/" "$CONSTANTS_FILE"
 
           echo "✅ Version: $NEW_VERSION"
           echo "✅ Release date: $RELEASE_DATE"
