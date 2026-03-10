@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "1. ADB: Enable TCP/IP (Connect via USB first)",
+            "type": "shell",
+            "command": "adb tcpip 5555",
+            "problemMatcher": [],
+            "detail": "يُفعّل وضع الشبكة في الهاتف (يجب توصيل الكابل أولاً)"
+        },
+        {
+            "label": "2. ADB: Connect via Wi-Fi",
+            "type": "shell",
+            "command": "adb connect ${input:deviceIP}",
+            "problemMatcher": [],
+            "detail": "يتصل بالهاتف عبر شبكة Wi-Fi (ادخل عنوان IP الخاص بالهاتف)"
+        },
+        {
+            "label": "3. ADB: Disconnect All",
+            "type": "shell",
+            "command": "adb disconnect",
+            "problemMatcher": [],
+            "detail": "يفصل جميع الأجهزة المتصلة عبر Wi-Fi"
+        },
+        {
+            "label": "4. Flutter: Clean & Get Packages",
+            "type": "shell",
+            "command": "flutter clean && flutter pub get",
+            "problemMatcher": [],
+            "detail": "ينظف المشروع ويُحمل الحزم من جديد"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "deviceIP",
+            "type": "promptString",
+            "description": "أدخل عنوان IP الخاص بالهاتف (مثال: 192.168.1.15)",
+            "default": "192.168.1."
+        }
+    ]
+}
