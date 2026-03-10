@@ -9,10 +9,11 @@ class AppConstants {
       'تطبيق ورتِّله للاستماع إلى تلاوات القرآن الكريم';
 
   // Reciter info
-  static const String reciterName = 'عمر أحمد الخامر';
+  static const String reciterName = 'عمر أحمد عمر الخامر';
   static const String reciterBio =
-      'عمر أحمد الخامر، من أبناء اليمن - حضرموت، '
-      'خريج جامعة القرآن - قسم القرآن الكريم.';
+      'عمر أحمد عمر الخامر، من أبناء اليمن - حضرموت / المكلا / روكب، '
+      'خريج جامعة القرآن الكريم والعلوم الإسلامية بالمكلا '
+      '- قسم التجويد التطبيقي للقرآن.';
 
   // Developer info
   static const String developerName = 'محمد فرج بامحفوظ';

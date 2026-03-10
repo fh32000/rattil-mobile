@@ -138,14 +138,14 @@ class ReciterInfoScreen extends StatelessWidget {
                       _buildInfoCard(
                         icon: Icons.location_on,
                         label: 'المنطقة',
-                        value: 'حضرموت - اليمن',
+                        value: 'حضرموت / المكلا / روكب',
                         theme: theme,
                       ),
                       const SizedBox(width: 12),
                       _buildInfoCard(
                         icon: Icons.school,
-                        label: 'التعليم',
-                        value: 'جامعة القرآن',
+                        label: 'الجامعة',
+                        value: 'جامعة القرآن الكريم والعلوم الإسلامية بالمكلا',
                         theme: theme,
                       ),
                     ],
@@ -158,7 +158,7 @@ class ReciterInfoScreen extends StatelessWidget {
                       _buildInfoCard(
                         icon: Icons.menu_book,
                         label: 'التخصص',
-                        value: 'قسم القرآن',
+                        value: 'التجويد التطبيقي للقرآن',
                         theme: theme,
                       ),
                       const SizedBox(width: 12),
