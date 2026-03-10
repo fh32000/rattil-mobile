@@ -2,18 +2,18 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "1. ADB: Enable TCP/IP (Connect via USB first)",
+            "label": "1. ADB: Pair (First Time)",
             "type": "shell",
-            "command": "adb tcpip 5555",
+            "command": "adb pair ${input:pairIPPort} ${input:pairCode}",
             "problemMatcher": [],
-            "detail": "يُفعّل وضع الشبكة في الهاتف (يجب توصيل الكابل أولاً)"
+            "detail": "للربط أول مرة — ادخل IP:PORT وكود الربط من Wireless Debugging > Pair"
         },
         {
             "label": "2. ADB: Connect via Wi-Fi",
             "type": "shell",
-            "command": "adb connect ${input:deviceIP}",
+            "command": "adb connect ${input:deviceIPPort}",
             "problemMatcher": [],
-            "detail": "يتصل بالهاتف عبر شبكة Wi-Fi (ادخل عنوان IP الخاص بالهاتف)"
+            "detail": "يتصل بالهاتف عبر Wi-Fi — ادخل IP:PORT من إعدادات Wireless Debugging"
         },
         {
             "label": "3. ADB: Disconnect All",
@@ -23,19 +23,38 @@
             "detail": "يفصل جميع الأجهزة المتصلة عبر Wi-Fi"
         },
         {
-            "label": "4. Flutter: Clean & Get Packages",
+            "label": "4. ADB: Show Connected Devices",
+            "type": "shell",
+            "command": "adb devices",
+            "problemMatcher": [],
+            "detail": "يعرض قائمة الأجهزة المتصلة"
+        },
+        {
+            "label": "5. Flutter: Clean & Get Packages",
             "type": "shell",
             "command": "flutter clean && flutter pub get",
             "problemMatcher": [],
-            "detail": "ينظف المشروع ويُحمل الحزم من جديد"
+            "detail": "ينظف المشروع ويحمل الحزم من جديد"
         }
     ],
     "inputs": [
         {
-            "id": "deviceIP",
+            "id": "pairIPPort",
             "type": "promptString",
-            "description": "أدخل عنوان IP الخاص بالهاتف (مثال: 192.168.1.15)",
-            "default": "192.168.1."
+            "description": "أدخل IP:PORT من شاشة Pair device في الهاتف",
+            "default": "192.168.35.55:"
+        },
+        {
+            "id": "pairCode",
+            "type": "promptString",
+            "description": "أدخل كود الربط (6 أرقام) من شاشة Pair device",
+            "default": ""
+        },
+        {
+            "id": "deviceIPPort",
+            "type": "promptString",
+            "description": "أدخل IP:PORT من إعدادات Wireless Debugging في الهاتف",
+            "default": "192.168.35.55:33631"
         }
     ]
 }
