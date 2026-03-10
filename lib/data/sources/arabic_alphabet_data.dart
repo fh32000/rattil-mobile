@@ -11,11 +11,12 @@ class ArabicAlphabetData {
           (l) => AudioTrack(
             id: 'letter_${l.number}',
             surahNumber: 0,
-            surahNameArabic: 'حرف ${l.name}',
+            surahNameArabic: l.name,
             surahNameEnglish: l.nameEnglish,
             reciterName: 'مخارج الحروف',
             assetPath: l.assetPath,
             pageNumber: 0,
+            trackType: 'alphabet',
           ),
         )
         .toList();
