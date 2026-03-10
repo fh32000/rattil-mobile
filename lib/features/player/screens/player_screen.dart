@@ -135,14 +135,24 @@ class PlayerScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            'سورة',
-            style: TextStyle(
-              color: AppColors.accentLight,
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
+          if (track.isSurah)
+            Text(
+              'سورة',
+              style: TextStyle(
+                color: AppColors.accentLight,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
             ),
-          ),
+          if (!track.isSurah)
+            Text(
+              'حرف',
+              style: TextStyle(
+                color: AppColors.accentLight,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
           const SizedBox(height: 8),
           Text(
             track.surahNameArabic,
@@ -153,18 +163,20 @@ class PlayerScreen extends ConsumerWidget {
               fontFamily: 'Amiri',
             ),
           ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColors.accent.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
+          if (track.isSurah) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.accent.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                'صفحة ${track.pageNumber}',
+                style: TextStyle(color: AppColors.accentLight, fontSize: 13),
+              ),
             ),
-            child: Text(
-              'صفحة ${track.pageNumber}',
-              style: TextStyle(color: AppColors.accentLight, fontSize: 13),
-            ),
-          ),
+          ],
         ],
       ),
     );
@@ -176,7 +188,7 @@ class PlayerScreen extends ConsumerWidget {
       child: Column(
         children: [
           Text(
-            'سورة ${track.surahNameArabic}',
+            track.displayName,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 24,

@@ -284,7 +284,7 @@ class QuranAudioHandler extends BaseAudioHandler
   MediaItem _trackToMediaItem(AudioTrack track) {
     return MediaItem(
       id: track.id,
-      title: 'سورة ${track.surahNameArabic}',
+      title: track.displayName,
       artist: track.reciterName,
       album: 'جزء عمّ',
       extras: {
