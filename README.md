@@ -61,10 +61,19 @@
 - **الهوية البصرية:** توفير أيقونة إسلامية جديدة واحترافية (App Icon).
 - **دعم الويب:** إضافة إعدادات التشغيل للويب (Chrome) وإصلاح مشاكل التوطين (Localization) على المتصفح.
 
-## 📸 نظرة على التطبيق (Screenshots & Demo)
+## 📸 صور من داخل التطبيق (Screenshots)
+
+<div align="center">
+  <img src="assets/screenshots/1_home.png" width="30%" alt="Home Screen">
+  <img src="assets/screenshots/4_alphabet.png" width="30%" alt="Alphabet Screen">
+  <img src="assets/screenshots/3_player.png" width="30%" alt="Full Player">
+</div>
+<br>
+<div align="center">
+  <img src="assets/screenshots/5_mini_player.png" width="30%" alt="Mini Player">
+  <img src="assets/screenshots/2_drawer.png" width="30%" alt="Drawer Menu">
+</div>
+
+### 🎥 فيديو تجريبي (App Demo)
 
 ![عرض تطبيقي للميزات](assets/app_demo.webp)
-
-- شاشة رئيسية جذابة بتدرجات ألوان هادئة.
-- مشغل صوتي متكامل يوفر معلومات السورة/الحرف، وعداد التقدم.
-- شبكة عرض تفصيلية لمخارج الحروف مع ترميز لوني لكل مخرج (الحلق، اللسان، الشفتان).
