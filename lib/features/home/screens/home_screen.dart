@@ -6,12 +6,43 @@ import '../../../data/sources/juz_amma_data.dart';
 import '../../player/providers/audio_provider.dart';
 import '../../player/widgets/mini_player.dart';
 import '../widgets/surah_list_tile.dart';
+import '../../updates/providers/update_provider.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(updateProvider.notifier).checkForUpdates(isSilent: true);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen(updateProvider, (previous, next) {
+      if (next.status == UpdateStatus.updateAvailable) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('تحديث جديد متاح!'),
+            action: SnackBarAction(
+              label: 'التحديثات',
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                context.push('/updates');
+              },
+            ),
+          ),
+        );
+      }
+    });
+
     final surahs = JuzAmmaData.surahs;
     final theme = Theme.of(context);
 
@@ -356,6 +387,15 @@ class HomeScreen extends ConsumerWidget {
               onTap: () {
                 Navigator.pop(context);
                 context.push('/arabic-alphabet');
+              },
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.system_update,
+              label: 'التحديثات',
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/updates');
               },
             ),
 

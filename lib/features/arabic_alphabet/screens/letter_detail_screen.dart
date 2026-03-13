@@ -100,6 +100,8 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
     final isPlaying =
         isLetterPlaying && (ref.watch(isPlayingProvider).valueOrNull ?? false);
 
+    final arabicLetter = letter.arabicLetter;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -141,7 +143,7 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
                       children: [
                         // Giant letter
                         Text(
-                          letter.arabicLetter,
+                          arabicLetter,
                           style: TextStyle(
                             fontSize: 100,
                             color: Colors.white,

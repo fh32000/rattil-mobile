@@ -23,6 +23,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  http: ^1.6.0
+  package_info_plus: ^9.0.0
 
 dev_dependencies:
   flutter_test:

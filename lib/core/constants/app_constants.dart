@@ -8,6 +8,10 @@ class AppConstants {
   static const String appDescription =
       'تطبيق ورتِّله للاستماع إلى تلاوات القرآن الكريم';
 
+  // Remote URLs
+  static const String versionCheckUrl =
+      'https://woostore.dev/apps/rattil/version.json';
+
   // Reciter info
   static const String reciterName = 'عمر أحمد عمر الخامر';
   static const String reciterBio =
