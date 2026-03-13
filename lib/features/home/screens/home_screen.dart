@@ -30,14 +30,47 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       if (next.status == UpdateStatus.updateAvailable) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('تحديث جديد متاح!'),
+            content: Row(
+              children: [
+                const Icon(Icons.new_releases, color: Colors.white),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Text(
+                    'تحديث جديد متاح!',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white70,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+              ],
+            ),
+            backgroundColor: AppColors.primary,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             action: SnackBarAction(
               label: 'التحديثات',
+              textColor: AppColors.accent,
               onPressed: () {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 context.push('/updates');
               },
             ),
+            duration: const Duration(seconds: 10),
           ),
         );
       }
