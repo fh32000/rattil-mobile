@@ -1,11 +1,20 @@
 import '../models/surah.dart';
 import '../models/audio_track.dart';
+import '../../core/constants/app_constants.dart';
 
 /// بيانات جزء عمّ - سور 78 إلى 114
 class JuzAmmaData {
   JuzAmmaData._();
 
   static const List<Surah> surahs = [
+    Surah(
+      number: 1,
+      nameArabic: 'الفاتحة',
+      nameEnglish: 'Al-Fatihah',
+      versesCount: 7,
+      pageStart: 1,
+      revelationType: 'مكية',
+    ),
     Surah(
       number: 78,
       nameArabic: 'النبأ',
@@ -312,7 +321,7 @@ class JuzAmmaData {
         surahNumber: surah.number,
         surahNameArabic: surah.nameArabic,
         surahNameEnglish: surah.nameEnglish,
-        reciterName: 'عمر أحمد الخامر',
+        reciterName: AppConstants.reciterName,
         assetPath:
             'assets/audio/juz_amma/$paddedNumber-${surah.nameEnglish.toLowerCase()}.mp3',
         pageNumber: surah.pageStart,
