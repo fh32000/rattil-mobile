@@ -1,4 +1,4 @@
-package com.rattil.rattil
+package woostore.dev.rattil
 
 import com.ryanheise.audioservice.AudioServiceFragmentActivity
 
