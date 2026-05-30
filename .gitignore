@@ -34,6 +34,8 @@ pubspec.lock
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/android/app/key.properties
+**/android/keystore/*.jks
 
 # iOS
 **/ios/**/*.mode1v3
