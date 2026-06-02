@@ -30,6 +30,7 @@ class QuranAudioHandler extends BaseAudioHandler
   MemorizationPlaybackState _memState = const MemorizationPlaybackState();
   List<AudioTrack> _ayahTracks = [];
   Timer? _pauseTimer;
+  Timer? _pauseCountdownTimer;
 
   // Saved legacy state for restoring when Hifz mode is disabled
   List<AudioTrack>? _savedTrackList;
@@ -220,6 +221,7 @@ class QuranAudioHandler extends BaseAudioHandler
 
     _pauseTimer?.cancel();
     _pauseTimer = null;
+    _stopPauseCountdown();
     _hifzMode = false;
     _ayahTracks = [];
     _memState = const MemorizationPlaybackState();
@@ -238,6 +240,7 @@ class QuranAudioHandler extends BaseAudioHandler
   void _disableHifzMode() {
     _pauseTimer?.cancel();
     _pauseTimer = null;
+    _stopPauseCountdown();
     _hifzMode = false;
     _ayahTracks = [];
     _memState = const MemorizationPlaybackState();
@@ -267,13 +270,31 @@ class QuranAudioHandler extends BaseAudioHandler
   }
 
   void updateMemorizationSettings(MemorizationSettings settings) {
+    final speedChanged = settings.playbackSpeed != _memSettings.playbackSpeed;
+    final volumeChanged = settings.volume != _memSettings.volume;
+
     _memSettings = settings;
     _memSettingsSubject.add(settings);
+
+    if (speedChanged) {
+      _player.setSpeed(settings.playbackSpeed);
+    }
+    if (volumeChanged) {
+      _player.setVolume(settings.volume);
+    }
 
     _memState = _memState.copyWith(
       isPauseModeActive: settings.pauseForRecitation,
     );
     _memStateSubject.add(_memState);
+  }
+
+  void setVolume(double volume) {
+    updateMemorizationSettings(_memSettings.copyWith(volume: volume));
+  }
+
+  void setPlaybackSpeed(double speed) {
+    updateMemorizationSettings(_memSettings.copyWith(playbackSpeed: speed));
   }
 
   // ─── Ayah Playback ───
@@ -292,6 +313,7 @@ class QuranAudioHandler extends BaseAudioHandler
     _memState = _memState.copyWith(
       currentAyah: ayahNumber,
       totalAyahs: _ayahTracks.length,
+      phase: HifzPhase.listening,
     );
     _memStateSubject.add(_memState);
 
@@ -301,6 +323,8 @@ class QuranAudioHandler extends BaseAudioHandler
     try {
       await _player.stop();
       await _player.setAudioSource(AudioLoader.createSource(track.assetPath));
+      await _player.setSpeed(_memSettings.playbackSpeed);
+      await _player.setVolume(_memSettings.volume);
       await _player.play();
     } catch (e) {
       // ignore: avoid_print
@@ -373,18 +397,48 @@ class QuranAudioHandler extends BaseAudioHandler
   void _scheduleNextPlayback(void Function() playAction) {
     if (_memSettings.pauseForRecitation) {
       _pauseTimer?.cancel();
-      final pauseDuration = _memState.currentAyahDuration;
+      _stopPauseCountdown();
+
+      final raw = _memState.currentAyahDuration;
+      final scaled = raw > Duration.zero
+          ? Duration(milliseconds: (raw.inMilliseconds / _memSettings.playbackSpeed).round())
+          : const Duration(seconds: 1);
+
       _player.pause();
-      _pauseTimer = Timer(
-        pauseDuration > Duration.zero ? pauseDuration : const Duration(seconds: 1),
-        () {
-          _pauseTimer = null;
-          playAction();
-        },
+
+      _memState = _memState.copyWith(
+        phase: HifzPhase.reciting,
+        pauseRemaining: scaled,
+        pauseTotalDuration: scaled,
       );
+      _memStateSubject.add(_memState);
+
+      _pauseCountdownTimer = Timer.periodic(const Duration(milliseconds: 200), (_) {
+        final remaining = _memState.pauseRemaining! - const Duration(milliseconds: 200);
+        _memState = _memState.copyWith(
+          pauseRemaining: remaining > Duration.zero ? remaining : Duration.zero,
+        );
+        _memStateSubject.add(_memState);
+      });
+
+      _pauseTimer = Timer(scaled, () {
+        _stopPauseCountdown();
+        _pauseTimer = null;
+        _memState = _memState.copyWith(
+          phase: HifzPhase.listening,
+          pauseRemaining: Duration.zero,
+        );
+        _memStateSubject.add(_memState);
+        playAction();
+      });
     } else {
       playAction();
     }
+  }
+
+  void _stopPauseCountdown() {
+    _pauseCountdownTimer?.cancel();
+    _pauseCountdownTimer = null;
   }
 
   // ─── Track Completion ───
@@ -470,6 +524,13 @@ class QuranAudioHandler extends BaseAudioHandler
   Future<void> skipToNext() async {
     if (_hifzMode) {
       _pauseTimer?.cancel();
+      _stopPauseCountdown();
+      _memState = _memState.copyWith(
+        phase: HifzPhase.listening,
+        pauseRemaining: null,
+        pauseTotalDuration: null,
+      );
+      _memStateSubject.add(_memState);
       final nextAyah = _memState.currentAyah + 1;
       if (nextAyah <= _ayahTracks.length) {
         _memState = _memState.copyWith(
@@ -506,6 +567,13 @@ class QuranAudioHandler extends BaseAudioHandler
   Future<void> skipToPrevious() async {
     if (_hifzMode) {
       _pauseTimer?.cancel();
+      _stopPauseCountdown();
+      _memState = _memState.copyWith(
+        phase: HifzPhase.listening,
+        pauseRemaining: null,
+        pauseTotalDuration: null,
+      );
+      _memStateSubject.add(_memState);
       final prevAyah = _memState.currentAyah - 1;
       if (prevAyah >= 1) {
         _memState = _memState.copyWith(
@@ -609,6 +677,7 @@ class QuranAudioHandler extends BaseAudioHandler
 
   Future<void> dispose() async {
     _pauseTimer?.cancel();
+    _stopPauseCountdown();
     _saveCurrentPosition();
     await _player.dispose();
     await _trackList.close();
