@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
+import '../../../core/services/analytics_service.dart';
 import '../../../data/models/audio_track.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../../../data/repositories/favorites_repository.dart';
@@ -140,8 +141,23 @@ class FavoritesNotifier extends StateNotifier<Set<String>> {
   bool isFavorite(String trackId) => state.contains(trackId);
 
   void toggle(String trackId) {
+    final wasFavorite = state.contains(trackId);
     _repo.toggleFavorite(trackId);
     state = _repo.getAllFavorites().toSet();
+
+    // Extract surah ID from track ID (format: "juz_amma_078" or "078_ayah_001")
+    final parts = trackId.split('_');
+    final surahId = int.tryParse(parts.lastWhere(
+      (p) => int.tryParse(p) != null,
+      orElse: () => '0',
+    )) ?? 0;
+
+    final analytics = AnalyticsService.instance;
+    if (wasFavorite) {
+      analytics.trackFavoriteRemoved(surahId);
+    } else {
+      analytics.trackFavoriteAdded(surahId);
+    }
   }
 }
 

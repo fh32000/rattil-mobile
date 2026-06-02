@@ -1,4 +1,5 @@
 import 'package:quran/quran.dart' as quran;
+import '../../../core/services/analytics_service.dart';
 import '../../../data/sources/ayah_file_to_verse.dart';
 
 /// Lightweight service that wraps the `quran` package with caching.
@@ -22,10 +23,24 @@ class VerseService {
     if (verseNumber < 1) return quran.basmala;
 
     final key = _key(surahNumber, verseNumber);
-    return _cache.putIfAbsent(
-      key,
-      () => quran.getVerse(surahNumber, verseNumber, verseEndSymbol: true),
-    );
+    if (_cache.containsKey(key)) return _cache[key]!;
+
+    try {
+      final text = quran.getVerse(
+        surahNumber,
+        verseNumber,
+        verseEndSymbol: true,
+      );
+      _cache[key] = text;
+      return text;
+    } catch (e) {
+      AnalyticsService.instance.recordError(
+        e,
+        StackTrace.current,
+        reason: 'verse_fetch_failed',
+      );
+      rethrow;
+    }
   }
 
   /// Convenience: resolve audio file index → verse text in one call.

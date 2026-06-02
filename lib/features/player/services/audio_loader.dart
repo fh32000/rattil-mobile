@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../../core/services/analytics_service.dart';
 
 abstract class AudioLoader {
   AudioLoader._();
@@ -14,9 +15,20 @@ abstract class AudioLoader {
   ///
   /// No other part of the codebase needs platform checks for audio loading.
   static AudioSource createSource(String assetPath) {
-    if (kIsWeb) {
-      return AudioSource.asset(assetPath.startsWith('assets/') ? assetPath.substring(7) : assetPath);
+    try {
+      if (kIsWeb) {
+        return AudioSource.asset(
+          assetPath.startsWith('assets/') ? assetPath.substring(7) : assetPath,
+        );
+      }
+      return AudioSource.asset(assetPath);
+    } catch (e) {
+      AnalyticsService.instance.recordError(
+        e,
+        StackTrace.current,
+        reason: 'audio_source_creation_failed',
+      );
+      rethrow;
     }
-    return AudioSource.asset(assetPath);
   }
 }
