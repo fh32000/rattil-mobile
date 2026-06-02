@@ -1,6 +1,7 @@
 import '../models/surah.dart';
 import '../models/audio_track.dart';
 import '../sources/juz_amma_data.dart';
+import '../sources/ayah_track_source.dart';
 
 /// Repository providing access to Quran data
 class QuranRepository {
@@ -47,4 +48,16 @@ class QuranRepository {
         .cast<AudioTrack>()
         .toList();
   }
+
+  /// Check if a surah has ayah-level audio available
+  bool hasAyahAudio(int surahNumber) =>
+      AyahTrackSource.hasAyahAudio(surahNumber);
+
+  /// Get ayah-level tracks for a surah
+  List<AudioTrack> getAyahTracks(int surahNumber) =>
+      AyahTrackSource.getAyahTracks(surahNumber);
+
+  /// Get ayah count for a surah
+  int getAyahCount(int surahNumber) =>
+      AyahTrackSource.getAyahCount(surahNumber);
 }
