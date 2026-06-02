@@ -19,8 +19,20 @@ Future<void> main() async {
     ]);
   }
 
-  // Initialize Firebase
-  await Firebase.initializeApp();
+  // Initialize Firebase (web requires explicit options)
+  await Firebase.initializeApp(
+    options: kIsWeb
+        ? const FirebaseOptions(
+            apiKey: 'AIzaSyA7Wi0tvZN5Emi1xzAJs0qr590GDM33BAo',
+            authDomain: 'rattil-99355.firebaseapp.com',
+            projectId: 'rattil-99355',
+            storageBucket: 'rattil-99355.firebasestorage.app',
+            messagingSenderId: '80692180579',
+            appId: '1:80692180579:web:36d3602b5132a6376bea56',
+            measurementId: 'G-8JPHJCN7EM',
+          )
+        : null,
+  );
 
   // Initialize Analytics & Crashlytics
   final analytics = AnalyticsService.instance;
