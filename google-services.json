@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "80692180579",
+    "project_id": "rattil-99355",
+    "storage_bucket": "rattil-99355.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:80692180579:android:4108dcb2d2d6eb6f6bea56",
+        "android_client_info": {
+          "package_name": "woostore.dev.rattil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCTv7fGkhtagUx6vkAor1UJ7jHwsFgkFs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
