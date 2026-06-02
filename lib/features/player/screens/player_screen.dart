@@ -6,6 +6,12 @@ import '../../../data/models/audio_track.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../providers/audio_provider.dart';
 import '../services/audio_handler.dart';
+import '../widgets/hifz_mode_indicator.dart';
+import '../widgets/hifz_progress_bar.dart';
+import '../widgets/pause_countdown_bar.dart';
+import '../widgets/volume_control.dart';
+import '../widgets/playback_speed_control.dart';
+import '../widgets/hifz_dashboard.dart';
 
 class PlayerScreen extends ConsumerStatefulWidget {
   const PlayerScreen({super.key});
@@ -62,47 +68,108 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
               ),
             ),
             child: SafeArea(
-              child: Column(
-                children: [
-                  // Top bar
-                  _buildTopBar(context),
-
-                  const Spacer(flex: 1),
-
-                  // Surah artwork/decoration
-                  _buildSurahArt(track, isHifz, memState),
-
-                  const Spacer(flex: 1),
-
-                  // Track info
-                  _buildTrackInfo(context, track, isHifz, memState),
-
-                  const SizedBox(height: 32),
-
-                  // Progress bar
-                  _buildProgressBar(context, handler, position, duration),
-
-                  const SizedBox(height: 16),
-
-                  // Memorization controls (collapsible)
-                  if (canHifz) _buildMemorizationToggle(handler, isHifz),
-                  if (isHifz) _buildMemorizationControls(handler, memSettings),
-
-                  const SizedBox(height: 16),
-
-                  // Controls
-                  _buildControls(
-                    handler,
-                    isPlaying,
-                    loopMode,
-                    isFav,
-                    track,
-                    ref,
-                    isHifz,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).padding.bottom + 16,
                   ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Top bar
+                      _buildTopBar(context),
 
-                  const Spacer(flex: 2),
-                ],
+                      if (isHifz) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                          child: HifzDashboard(
+                            track: track,
+                            state: memState,
+                            settings: memSettings,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+
+                      // Surah artwork/decoration
+                      _buildSurahArt(track, isHifz, memState),
+
+                      const SizedBox(height: 24),
+
+                      // Track info
+                      _buildTrackInfo(context, track, isHifz, memState),
+
+                      const SizedBox(height: 16),
+
+                      // Hifz mode indicator (only in Hifz mode)
+                      if (isHifz) ...[
+                        HifzModeIndicator(state: memState),
+                        const SizedBox(height: 12),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32),
+                          child: memState.phase == HifzPhase.reciting
+                              ? PauseCountdownBar(state: memState)
+                              : HifzProgressBar(state: memState),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+
+                      // Progress bar
+                      _buildProgressBar(context, handler, position, duration),
+
+                      // Memorization controls
+                      if (canHifz && !isHifz) ...[
+                        const SizedBox(height: 8),
+                        _buildMemorizationToggle(handler, isHifz),
+                      ],
+                      if (isHifz) ...[
+                        const SizedBox(height: 6),
+                        _buildMemorizationToggle(handler, isHifz),
+                        const SizedBox(height: 6),
+                        _buildMemorizationControls(handler, memSettings),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.04),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              children: [
+                                VolumeControl(
+                                  handler: handler,
+                                  currentVolume: memSettings.volume,
+                                ),
+                                const Divider(height: 4, color: Colors.white10),
+                                PlaybackSpeedControl(
+                                  handler: handler,
+                                  currentSpeed: memSettings.playbackSpeed,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+
+                      const SizedBox(height: 12),
+
+                      // Controls
+                      _buildControls(
+                        handler,
+                        isPlaying,
+                        loopMode,
+                        isFav,
+                        track,
+                        ref,
+                        isHifz,
+                      ),
+
+                      const SizedBox(height: 32),
+                    ],
+                  ),
+                ),
               ),
             ),
           );
