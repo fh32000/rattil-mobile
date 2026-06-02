@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/services/analytics_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/duration_helpers.dart';
 import '../../../data/models/audio_track.dart';
@@ -559,6 +560,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     handler.updateMemorizationSettings(
                       memSettings.copyWith(pauseForRecitation: value),
                     );
+                    AnalyticsService.instance.trackHifzPauseMode(value);
                   },
                   activeColor: AppColors.accent,
                 ),
@@ -580,6 +582,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     handler.updateMemorizationSettings(
                       memSettings.copyWith(repeatSurah: value),
                     );
+                    AnalyticsService.instance.trackHifzSurahRepeat(value);
                   },
                   activeColor: AppColors.accent,
                 ),
@@ -615,6 +618,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     handler.updateMemorizationSettings(
                       memSettings.copyWith(hideVerses: value),
                     );
+                    AnalyticsService.instance.trackHifzHideVerses(value);
                   },
                   activeColor: AppColors.accent,
                 ),
@@ -665,6 +669,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                 handler.updateMemorizationSettings(
                   memSettings.copyWith(recitationMultiplier: m),
                 );
+                AnalyticsService.instance.trackHifzRecitationMultiplierChanged(m);
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(
@@ -735,8 +740,13 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: GestureDetector(
                       onTap: () {
+                        final oldValue = currentSettings.ayahRepeatCount;
                         handler.updateMemorizationSettings(
                           currentSettings.copyWith(ayahRepeatCount: count),
+                        );
+                        AnalyticsService.instance.trackHifzRepeatChanged(
+                          oldValue,
+                          count,
                         );
                         Navigator.pop(sheetContext);
                       },

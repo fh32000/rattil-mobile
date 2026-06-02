@@ -89,6 +89,9 @@
 | Package | Purpose |
 | :--- | :--- |
 | `quran` | Quran verse text retrieval and verse count lookups for Hifz mode |
+| `firebase_core` | Firebase initialization and core services |
+| `firebase_analytics` | User behaviour analytics, feature usage tracking, screen views |
+| `firebase_crashlytics` | Crash reporting, non-fatal error monitoring, custom keys |
 | `rxdart` | CombineLatest for joining track list + index streams |
 | `url_launcher` | Open WhatsApp, email, phone from About/Support screens |
 | `google_fonts` | Amiri (Arabic display) + Cairo (UI text) fonts |

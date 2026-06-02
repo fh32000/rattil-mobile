@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
+import '../../../core/services/analytics_service.dart';
 import '../../../data/models/audio_track.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../../../data/repositories/memorization_settings_repository.dart';
@@ -219,6 +220,17 @@ class QuranAudioHandler extends BaseAudioHandler
     );
     _memStateSubject.add(_memState);
 
+    final analytics = AnalyticsService.instance;
+    analytics.trackHifzStarted(
+      track.surahNumber,
+      _memSettings.ayahRepeatCount,
+      _memSettings.pauseForRecitation,
+    );
+    analytics.setHifzEnabled(true);
+    analytics.setCurrentSurah(track.surahNumber);
+    analytics.setRepeatCount(_memSettings.ayahRepeatCount);
+    analytics.setPauseMode(_memSettings.pauseForRecitation);
+
     await _playAyah(1);
   }
 
@@ -268,9 +280,13 @@ class QuranAudioHandler extends BaseAudioHandler
         await _player.seek(Duration(milliseconds: savedPosition));
       }
       await _player.play();
+      AnalyticsService.instance.trackPlaybackStarted(track.surahNumber, 0);
     } catch (e) {
-      // Log error but don't crash – asset might be missing
-      // ignore: avoid_print
+      AnalyticsService.instance.recordError(
+        e,
+        StackTrace.current,
+        reason: 'track_playback_failed',
+      );
       print('Error loading track: ${track.assetPath} - $e');
     }
   }
@@ -327,14 +343,22 @@ class QuranAudioHandler extends BaseAudioHandler
     _currentIndex.add(ayahIndex);
     mediaItem.add(_trackToMediaItem(track));
 
+    final analytics = AnalyticsService.instance;
+    analytics.setCurrentAyah(ayahNumber);
+
     try {
       await _player.stop();
       await _player.setAudioSource(AudioLoader.createSource(track.assetPath));
       await _player.setSpeed(_memSettings.playbackSpeed);
       await _player.setVolume(_memSettings.volume);
       await _player.play();
+      analytics.trackPlaybackStarted(track.surahNumber, ayahNumber);
     } catch (e) {
-      // ignore: avoid_print
+      analytics.recordError(
+        e,
+        StackTrace.current,
+        reason: 'ayah_playback_failed',
+      );
       print('Error playing ayah: ${track.assetPath} - $e');
     }
   }
@@ -362,6 +386,14 @@ class QuranAudioHandler extends BaseAudioHandler
     final isBasmala = surahNumber != 1 && _memState.currentAyah == 1;
     final repCount = isBasmala ? 1 : _memSettings.ayahRepeatCount;
 
+    // Track ayah repetition
+    final analytics = AnalyticsService.instance;
+    analytics.trackAyahRepeated(
+      surahNumber,
+      _memState.currentAyah,
+      nextRep,
+    );
+
     if (nextRep < repCount) {
       _memState = _memState.copyWith(currentRepetition: nextRep);
       _memStateSubject.add(_memState);
@@ -387,6 +419,12 @@ class QuranAudioHandler extends BaseAudioHandler
   }
 
   void _handleSurahComplete() {
+    final surahNumber = _ayahTracks.isNotEmpty
+        ? _ayahTracks.first.surahNumber
+        : 0;
+    final analytics = AnalyticsService.instance;
+    analytics.trackHifzCompleted(surahNumber);
+
     if (_memSettings.repeatSurah) {
       _memState = _memState.copyWith(currentAyah: 1, currentRepetition: 0);
       _memStateSubject.add(_memState);
@@ -470,6 +508,12 @@ class QuranAudioHandler extends BaseAudioHandler
       return;
     }
 
+    // Track playback completion for non-Hifz mode
+    final track = currentTrack;
+    if (track != null) {
+      AnalyticsService.instance.trackPlaybackCompleted(track.surahNumber);
+    }
+
     switch (_loopMode.value) {
       case LoopMode.one:
         _player.seek(Duration.zero);
@@ -517,7 +561,10 @@ class QuranAudioHandler extends BaseAudioHandler
   // ─── BaseAudioHandler overrides ───
 
   @override
-  Future<void> play() => _player.play();
+  Future<void> play() async {
+    AnalyticsService.instance.trackPlaybackResumed();
+    await _player.play();
+  }
 
   @override
   Future<void> pause() async {
@@ -526,6 +573,7 @@ class QuranAudioHandler extends BaseAudioHandler
     }
     _saveCurrentPosition();
     await _player.pause();
+    AnalyticsService.instance.trackPlaybackPaused();
   }
 
   @override

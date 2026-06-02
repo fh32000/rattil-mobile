@@ -41,6 +41,22 @@
     For more details:
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
+  <!-- Firebase JS SDK for web analytics -->
+  <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics-compat.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyA7Wi0tvZN5Emi1xzAJs0qr590GDM33BAo",
+      authDomain: "rattil-99355.firebaseapp.com",
+      projectId: "rattil-99355",
+      storageBucket: "rattil-99355.firebasestorage.app",
+      messagingSenderId: "80692180579",
+      appId: "1:80692180579:web:36d3602b5132a6376bea56",
+      measurementId: "G-8JPHJCN7EM"
+    });
+    firebase.analytics();
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

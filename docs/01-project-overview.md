@@ -6,7 +6,7 @@ Warattilhu (ورتِّله) is a premium Quran recitation Flutter application. I
 
 **Package name:** `rattil`  
 **Version:** `1.0.13+1`  
-**Tech:** Flutter 3.8+, Dart 3.8+
+**Tech:** Flutter 3.8+, Dart 3.8+, Firebase Analytics + Crashlytics
 
 ## Goal
 
