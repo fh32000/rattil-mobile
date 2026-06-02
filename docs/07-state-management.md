@@ -1,6 +1,6 @@
 # 07 State Management
 
-Warattilhu uses **Riverpod** (`flutter_riverpod`) exclusively for state management. There are 11 providers total, defined across 2 files.
+Warattilhu uses **Riverpod** (`flutter_riverpod`) exclusively for state management. There are 15 providers total, defined across 3 files.
 
 ## Provider Types Used
 
@@ -108,6 +108,52 @@ final favoritesProvider =
 final favoritesRepositoryProvider = Provider((ref) => FavoritesRepository());
 ```
 
+### 12. `canEnableHifzModeProvider` (Provider)
+
+```dart
+final canEnableHifzModeProvider = Provider<bool>((ref) {
+  final track = ref.watch(currentTrackProvider).valueOrNull;
+  return track != null && AyahTrackSource.hasAyahAudio(track.surahNumber);
+});
+```
+
+**Purpose:** Whether the current track's surah has ayah-level audio available. Controls visibility of the Hifz toggle button.
+
+### 13. `isHifzModeActiveProvider` (Provider)
+
+```dart
+final isHifzModeActiveProvider = Provider<bool>((ref) {
+  final state = ref.watch(memorizationPlaybackStateProvider).valueOrNull;
+  return state?.isHifzActive ?? false;
+});
+```
+
+**Purpose:** Whether Hifz mode is currently active.
+
+### 14. `memorizationSettingsProvider` (StreamProvider)
+
+```dart
+final memorizationSettingsProvider =
+    StreamProvider<MemorizationSettings>((ref) {
+  final handler = ref.watch(audioHandlerProvider);
+  return handler.memSettingsStream;
+});
+```
+
+**Purpose:** Reactive settings stream — emits whenever settings change (repeat count, speed, volume, multipliers, toggles).
+
+### 15. `memorizationPlaybackStateProvider` (StreamProvider)
+
+```dart
+final memorizationPlaybackStateProvider =
+    StreamProvider<MemorizationPlaybackState>((ref) {
+  final handler = ref.watch(audioHandlerProvider);
+  return handler.memStateStream;
+});
+```
+
+**Purpose:** Reactive playback state stream — emits on every ayah change, repetition, phase transition, and pause update.
+
 ## Provider File: `lib/features/updates/providers/update_provider.dart`
 
 ### Update Provider
@@ -161,6 +207,8 @@ Widget rebuilds
 ## Key Pattern: Stream-Based Audio State
 
 Audio providers are `StreamProvider` because `Just Audio` exposes continuous streams (position, playing state, duration). This is a natural fit — the UI reacts to audio changes without polling.
+
+The Hifz providers follow the same pattern — `memorizationSettingsProvider` wraps a `BehaviorSubject<MemorizationSettings>` exposed by the audio handler, and `memorizationPlaybackStateProvider` wraps a `BehaviorSubject<MemorizationPlaybackState>`. This ensures all Hifz UI (verse display, progress bars, countdown timer, settings panel) reacts instantly to engine state changes.
 
 ## Key Pattern: StateNotifier for Mutable Data
 

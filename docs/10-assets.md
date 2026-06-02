@@ -12,6 +12,12 @@ assets/
 │   │   ├── ...                  # Surahs 80-113
 │   │   └── 114-an-nas.mp3       # Surah An-Nas (Surah 114)
 │   │
+│   ├── juz_amma_ayahs/        # 585 ayah-level MP3 files (~170 MB) for Hifz mode
+│   │   ├── surah_078/           # 44 files (001.mp3 = basmala, 002-044 = ayat)
+│   │   ├── surah_079/           # 46 files
+│   │   ├── ...                  # Surahs 080-113 (each with basmala + ayat)
+│   │   └── surah_114/           # 7 files
+│   │
 │   └── arabic_alphabet/       # 28 MP3 files
 │       ├── 001-alif.mp3         # Letter Alif
 │       ├── 002-baa.mp3          # Letter Baa
@@ -55,13 +61,27 @@ assets/
 
 ### Audio Technical Specs
 
-| Property | Value |
-| :--- | :--- |
-| Format | MP3 |
-| Bitrate | ~64 kbps |
-| Channels | Mono |
-| Total tracks | 66 (38 surahs + 28 letters) |
-| Total size | ~49 MB |
+| Property | Surah Tracks | Ayah Tracks | Alphabet Tracks |
+| :--- | :--- | :--- | :--- |
+| Format | MP3 | MP3 | MP3 |
+| Bitrate | ~64 kbps | ~64 kbps | ~64 kbps |
+| Channels | Mono | Mono | Mono |
+| Total tracks | 38 | 585 (33 surahs) | 28 |
+| Total size | ~49 MB | ~170 MB | ~3 MB |
+
+### Ayah Tracks (Hifz Mode)
+
+- **Path pattern:** `assets/audio/juz_amma_ayahs/surah_{NNN}/{NNN}.mp3`
+- **Surah numbers:** 078–114 (Juz Amma, 33 surahs; Al-Fatihah not available at ayah level)
+- **Index convention:** audio[1] = basmala, audio[2] = verse 1, ... audio[N] = verse N-1
+- **Code reference:** `AyahTrackSource.getAyahTracks(surahNumber)` generates all `AudioTrack` objects
+- **Mapping:** `ayahFileToVerseNumber()` converts audio index to canonical verse number
+- **Registration in pubspec.yaml:**
+  ```yaml
+  flutter:
+    assets:
+      - assets/audio/juz_amma_ayahs/
+  ```
 
 ## Image Assets
 
@@ -88,6 +108,7 @@ Assets are declared in `pubspec.yaml`:
 flutter:
   assets:
     - assets/audio/juz_amma/
+    - assets/audio/juz_amma_ayahs/
     - assets/audio/arabic_alphabet/
     - assets/images/
 ```

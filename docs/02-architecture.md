@@ -59,7 +59,8 @@ Warattilhu uses a **Feature-First Architecture** — each feature is a self-cont
 
 | Decision | Rationale |
 | :--- | :--- |
-| Single `QuranAudioHandler` | Global singleton initialized in `main()`; shared across all screens via Provider |
+| Single `QuranAudioHandler` | Global singleton initialized in `main()`; shared across all screens via Provider. Also manages Hifz memorization mode with ayah-level playback, repetition, and pause timing |
+| Hifz as a mode, not a screen | Turns player into ayah-level memorization tool; saves/restores track list on toggle |
 | Hive for storage | Fast local NoSQL without SQLite overhead; no need for complex queries |
 | Static data sources | Juz Amma and alphabet data are compile-time constants; no API needed |
 | StreamProviders for audio | Audio player emits continuous position/state streams; natural fit |

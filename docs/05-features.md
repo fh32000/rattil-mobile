@@ -216,3 +216,124 @@ This document details every feature in the app, its files, state management, rou
 
 **States:** initial → checking → (updateAvailable | upToDate | error).  
 **Silent check:** On HomeScreen init, checks once per day (tracked in Hive `settings` box).
+
+---
+
+## 13. Hifz Memorization Mode
+
+| | |
+| :--- | :--- |
+| **Goal** | Ayah-by-ayah memorization tool with configurable repetition, recitation pause, verse display, and persistent settings |
+| **Files** | `audio_handler.dart` (engine), `memorization_settings.dart` (model), `memorization_settings_repository.dart` (persistence), `ayah_track_source.dart` (data source), `ayah_file_to_verse.dart` (mapping), `verse_service.dart` (verse text), `audio_loader.dart` (web audio), `verse_display_widget.dart`, `hifz_mode_indicator.dart`, `hifz_progress_bar.dart`, `pause_countdown_bar.dart`, `volume_control.dart`, `playback_speed_control.dart`, `hifz_dashboard.dart`, `mini_player.dart` |
+| **State** | `memorizationSettingsProvider`, `memorizationPlaybackStateProvider`, `canEnableHifzModeProvider`, `isHifzModeActiveProvider` (all StreamProvider) |
+| **Routing** | No dedicated route — toggled within PlayerScreen |
+| **Entry** | Hifz toggle button in PlayerScreen (visible when current surah has ayah audio) |
+
+### How It Works
+
+```
+Normal surah playback
+        │
+        ▼  User toggles "وضع الحفظ"
+        │
+        ▼
+enableHifzMode()
+  ├── Save current playlist/index → _savedTrackList, _savedTrackIndex
+  ├── Load ayah tracks for this surah → _ayahTracks
+  ├── Replace track list with ayah tracks
+  └── Start playback from ayah 1
+        │
+        ▼
+  ┌──────────────────────────────────┐
+  │     Hifz Playback Loop           │
+  │                                  │
+  │  _playAyah(ayahNumber)           │
+  │    → setAudioSource(ayah MP3)    │
+  │    → apply speed & volume        │
+  │    → play                        │
+  │         │                        │
+  │         ▼                        │
+  │  _handleAyahCompleted()          │
+  │    ├── Basmala check: if surah≠1 │
+  │    │   and ayah==1 → repCount=1  │
+  │    ├── More repetitions? →       │
+  │    │   _scheduleNextPlayback()   │
+  │    ├── Last repetition? →        │
+  │    │   advance to next ayah      │
+  │    │   (with pause if enabled)   │
+  │    └── Last ayah? →              │
+  │        _handleSurahComplete()    │
+  │            ├── repeatSurah? →    │
+  │            │   restart from ayah1│
+  │            └── restore playlist  │
+  │                → next surah      │
+  └──────────────────────────────────┘
+```
+
+### State Machine
+
+```
+HifzPhase.listening ── ayah ends ──► HifzPhase.reciting
+      ▲                                    │
+      │                                    │ pause timer ends
+      │                                    │
+      └────────────── play() ◄─────────────┘
+```
+
+- **Listening:** Audio plays, user listens.
+- **Reciting:** Audio paused for `(ayahDuration / playbackSpeed × recitationMultiplier)` duration; user recites aloud.
+
+### Memorization Settings (Persisted)
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `ayahRepeatCount` | `int` | 3 | Number of times each ayah repeats |
+| `pauseForRecitation` | `bool` | true | Pause between replays for user to recite |
+| `repeatSurah` | `bool` | false | Loop entire surah when all ayat done |
+| `volume` | `double` | 1.0 | Playback volume (0.0-1.0) |
+| `playbackSpeed` | `double` | 1.0 | Speed multiplier (0.75x-2.0x) |
+| `recitationMultiplier` | `double` | 1.0 | Scale pause duration (0.25x-1.0x) |
+| `hideVerses` | `bool` | false | Hide verse text for memorization testing |
+
+Settings are loaded from Hive on app start and saved immediately on every change.
+
+### Basmala Special Handling
+
+- **Non-Fatihah surahs:** Basmala (ayah 1) plays only once, regardless of `ayahRepeatCount`. Recitation pause still applies.
+- **Al-Fatihah:** Basmala follows normal repetition rules (treated as an actual verse).
+
+Detection logic uses surah number + ayah index — no text matching.
+
+### Verse Display
+
+In Hifz mode, the surah artwork area is replaced by `VerseDisplayWidget` showing:
+- **Previous ayah** (dimmed, 55% opacity, 20px)
+- **Current ayah** (gold, bold, 28px) — highlighted with `AnimatedSwitcher` (400ms transition)
+- **Next ayah** (dimmed, 55% opacity, 20px)
+- **Hidden mode:** When `hideVerses=true`, shows placeholder text:
+  - 👂 استمع للآية (listening phase)
+  - 👄 ردد الآية الآن (reciting phase)
+
+Verse text is fetched via `VerseService` (singleton wrapping the `quran` package with LRU cache).
+
+### Audio Data Source
+
+Ayah-level MP3 files are stored in `assets/audio/juz_amma_ayahs/surah_{NNN}/{NNN}.mp3`. The `AyahTrackSource` class maps each surah to its actual file count (e.g., surah 78 → 44 files). Each surah has one extra file (file index 1) for the basmala.
+
+### Skip Behavior
+
+- **Skip Next:** Cancels any active pause, advances to next ayah, resets repetition counter.
+- **Skip Previous:** Cancels pause, goes to previous ayah, resets repetition.
+- **Position persistence is disabled** in Hifz mode (saving positions for individual ayah files is meaningless given the repetition structure).
+
+### Exiting Hifz Mode
+
+On `disableHifzMode()`:
+1. Pause timers are cancelled
+2. Ayah tracks cleared
+3. Legacy track list and index restored
+4. Normal surah playback resumes
+
+### Web Support
+
+`AudioLoader.createSource()` strips the `assets/` prefix on web to avoid double-path issues, using `AudioSource.asset` which internally converts to a base64 data URL.

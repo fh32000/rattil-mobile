@@ -33,11 +33,26 @@ This guide is optimized for AI agents. It maps tasks to specific file locations 
 | Typography | `lib/core/theme/app_typography.dart` |
 | App constants | `lib/core/constants/app_constants.dart` |
 | Duration helpers | `lib/core/utils/duration_helpers.dart` |
+| Hifz mode engine | `lib/features/player/services/audio_handler.dart` (Hifz methods: `enableHifzMode`, `_playAyah`, `_handleAyahCompleted`, `_scheduleNextPlayback`, `updateMemorizationSettings`) |
+| Hifz settings model | `lib/data/models/memorization_settings.dart` |
+| Hifz settings persistence | `lib/data/repositories/memorization_settings_repository.dart` |
+| Hifz providers | `lib/features/player/providers/audio_provider.dart` (`memorizationSettingsProvider`, `memorizationPlaybackStateProvider`, `canEnableHifzModeProvider`, `isHifzModeActiveProvider`) |
+| Verse display UI | `lib/features/player/widgets/verse_display_widget.dart` |
+| Hifz mode indicator | `lib/features/player/widgets/hifz_mode_indicator.dart` |
+| Hifz progress bar | `lib/features/player/widgets/hifz_progress_bar.dart` |
+| Pause countdown bar | `lib/features/player/widgets/pause_countdown_bar.dart` |
+| Volume control | `lib/features/player/widgets/volume_control.dart` |
+| Playback speed control | `lib/features/player/widgets/playback_speed_control.dart` |
+| Hifz dashboard | `lib/features/player/widgets/hifz_dashboard.dart` |
+| Ayah audio data source | `lib/data/sources/ayah_track_source.dart` |
+| Ayah-to-verse mapping | `lib/data/sources/ayah_file_to_verse.dart` |
+| Verse text service | `lib/features/player/services/verse_service.dart` |
+| Web audio loader | `lib/features/player/services/audio_loader.dart` |
 | Hive init | `lib/data/hive/hive_service.dart` |
 | Juz Amma data | `lib/data/sources/juz_amma_data.dart` |
 | Alphabet data | `lib/data/sources/arabic_alphabet_data.dart` |
-| Models | `lib/data/models/audio_track.dart`, `surah.dart`, `arabic_letter.dart`, `playlist.dart`, `app_version.dart` |
-| Repositories | `lib/data/repositories/quran_repository.dart`, `favorites_repository.dart`, `playlist_repository.dart`, `playback_repository.dart` |
+| Models | `lib/data/models/audio_track.dart`, `surah.dart`, `arabic_letter.dart`, `playlist.dart`, `memorization_settings.dart`, `app_version.dart` |
+| Repositories | `lib/data/repositories/quran_repository.dart`, `favorites_repository.dart`, `playlist_repository.dart`, `playback_repository.dart`, `memorization_settings_repository.dart` |
 | App entry point | `lib/main.dart` |
 | App widget | `lib/app.dart` |
 
@@ -54,6 +69,45 @@ This guide is optimized for AI agents. It maps tasks to specific file locations 
 - Change debounce timing → modify `_lastSkipTime` delta (line ~218, ~237)
 - Change position save interval → modify `throttleTime` in constructor (line ~50)
 - Add new audio features → extend `BaseAudioHandler` or add methods
+
+### Modifying Hifz Memorization Mode
+
+**File:** `lib/features/player/services/audio_handler.dart` (Hifz section)
+
+- **Change ayah repetition logic** → modify `_handleAyahCompleted()` (line ~351)
+- **Change pause timing formula** → modify `_scheduleNextPlayback()` (line ~407), adjust the `scaled` Duration calculation
+- **Change basmala detection rule** → modify the `isBasmala` check in `_handleAyahCompleted()` (line ~362)
+- **Change surah completion behavior** → modify `_handleSurahComplete()` (line ~389)
+- **Add new memorization setting** → add field in `MemorizationSettings` (see below), add to `toMap()`/`fromMap()`, apply in `updateMemorizationSettings()`
+- **Change persistence format** → modify `MemorizationSettingsRepository` methods
+
+**Model:** `lib/data/models/memorization_settings.dart`
+- `MemorizationSettings`: settings with `copyWith`, `toMap`, `fromMap`
+- `MemorizationPlaybackState`: live state streamed to UI, computed getters (`pauseProgress`, `ayahProgress`)
+- `HifzPhase` enum: `listening`, `reciting`
+
+**Repository:** `lib/data/repositories/memorization_settings_repository.dart`
+- Loads/saves settings as JSON in Hive `settings` box under key `hifz_settings`
+
+### Modifying Verse Display
+
+**File:** `lib/features/player/widgets/verse_display_widget.dart`
+
+- Change layout → modify `build()` method (green gradient card)
+- Change verse styling → adjust `TextStyle` for current/prev/next ayah
+- Add new hidden-mode placeholder → modify the `hideVerses` branch
+- Change transition animation → modify `AnimatedSwitcher` duration
+
+### Modifying Hifz UI Widgets
+
+| Widget | File | Notes |
+|--------|------|-------|
+| Hifz toggle + settings panel | `lib/features/player/screens/player_screen.dart` | Search for `_buildMemorizationControls()` |
+| Hifz progress bar | `lib/features/player/widgets/hifz_progress_bar.dart` | Uses `ayahProgress` from `MemorizationPlaybackState` |
+| Pause countdown | `lib/features/player/widgets/pause_countdown_bar.dart` | Only visible during `reciting` phase |
+| Speed selector | `lib/features/player/widgets/playback_speed_control.dart` | Chip list: 0.75x-2.0x |
+| Volume slider | `lib/features/player/widgets/volume_control.dart` | Slider 0.0-1.0 with dynamic icon |
+| Phase indicator | `lib/features/player/widgets/hifz_mode_indicator.dart` | Pulsing animated badge |
 
 ### Modifying Audio State/Providers
 
@@ -183,6 +237,25 @@ final isPlaying = ref.watch(isPlayingProvider).valueOrNull ?? false;
 final handler = ref.watch(audioHandlerProvider);
 ```
 
+### Watching Hifz State
+
+```dart
+// Hifz settings (reactive):
+final memSettings = ref.watch(memorizationSettingsProvider).valueOrNull;
+final memState    = ref.watch(memorizationPlaybackStateProvider).valueOrNull;
+final canHifz     = ref.watch(canEnableHifzModeProvider);
+final isHifzActive = ref.watch(isHifzModeActiveProvider);
+
+// Update settings:
+handler.updateMemorizationSettings(
+  memSettings.copyWith(ayahRepeatCount: 5)
+);
+
+// Toggle Hifz mode:
+await handler.enableHifzMode();
+handler.disableHifzMode();
+```
+
 ### Playing a Track
 
 ```dart
@@ -223,10 +296,12 @@ Navigator.pop(context);
 
 ```
 AudioTrack
-  ├── id: String          "juz_amma_078" | "letter_005"
+  ├── id: String          "juz_amma_078" | "letter_005" | "078_ayah_001"
   ├── surahNumber: int    78 | 0 (for alphabet)
   ├── assetPath: String   "assets/audio/juz_amma/078-an-naba.mp3"
-  ├── trackType: String   "surah" | "alphabet"
+  ├── trackType: String   "surah" | "alphabet" | "ayah"
+  ├── ayahNumber: int?    null | 1-44 (for ayah tracks)
+  ├── isAyah: bool        trackType == 'ayah'
   └── displayName: String "سورة النبأ" | "حرف الخاء"
 
 Surah
@@ -244,6 +319,26 @@ Playlist
   ├── id: String          timestamp-based
   ├── name: String        user-defined
   └── trackIds: List<String>  references AudioTrack.id
+
+MemorizationSettings
+  ├── ayahRepeatCount: int           3
+  ├── pauseForRecitation: bool       true
+  ├── repeatSurah: bool              false
+  ├── volume: double                 1.0
+  ├── playbackSpeed: double          1.0
+  ├── recitationMultiplier: double   1.0
+  └── hideVerses: bool               false
+
+MemorizationPlaybackState
+  ├── currentAyah: int               1
+  ├── currentRepetition: int         0
+  ├── currentAyahDuration: Duration  (computed from audio)
+  ├── totalAyahs: int                44
+  ├── isHifzActive: bool             true
+  ├── isPauseModeActive: bool        true
+  ├── phase: HifzPhase               listening | reciting
+  ├── pauseRemaining: Duration?      (during reciting phase)
+  └── pauseTotalDuration: Duration?  (total pause duration)
 ```
 
 ## Hive Boxes Reference
@@ -253,20 +348,22 @@ Playlist
 | `playback_positions` | `String` (trackId) | `int` (ms) | Track position persistence |
 | `favorites` | `String` ("favorite_tracks") | `List<String>` | Favorite track IDs |
 | `playlists` | `String` (playlistId) | `String` (JSON) | Playlist serialization |
-| `settings` | `String` (key) | `dynamic` | Misc settings (update check date) |
+| `settings` | `String` (key) | `dynamic` | Misc settings (update check date) + `hifz_settings` (JSON) |
 
 ## File Dependency Graph
 
 ```
 main.dart
-  ├── app.dart
-  │     └── app_router.dart (imports all screens)
+  ├── app.dart → app_router.dart (imports all screens)
   ├── hive_service.dart
   └── audio_provider.dart
         └── audio_handler.dart
               ├── audio_track.dart
-              └── playback_repository.dart
-                    └── hive_service.dart
+              ├── playback_repository.dart → hive_service.dart
+              ├── memorization_settings.dart
+              ├── memorization_settings_repository.dart → hive_service.dart
+              ├── ayah_track_source.dart → ayah_file_to_verse.dart, audio_track.dart
+              └── audio_loader.dart
 
 home_screen.dart
   ├── juz_amma_data.dart → surah.dart, audio_track.dart
@@ -277,7 +374,9 @@ home_screen.dart
 player_screen.dart
   ├── audio_provider.dart
   ├── audio_handler.dart
-  └── duration_helpers.dart
+  ├── verse_service.dart
+  ├── duration_helpers.dart
+  └── (Hifz widgets: verse_display_widget, hifz_*, volume_control, playback_speed_control)
 
 (Every screen that shows audio state imports audio_provider.dart)
 ```

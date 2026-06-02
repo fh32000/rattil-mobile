@@ -164,9 +164,170 @@ Lock screen → OS MediaSession displays:
 App reopened → MiniPlayer shows current state
 ```
 
+## Hifz Memorization Engine
+
+The `QuranAudioHandler` also serves as the Hifz memorization engine — a state machine that manages ayah-by-ayah playback with configurable repetition and recitation pauses.
+
+### Architecture
+
+```
+QuranAudioHandler
+├── Legacy Fields (surah/alphabet playback)
+│   ├── _trackList (BehaviorSubject<List<AudioTrack>>)
+│   ├── _currentIndex (BehaviorSubject<int>)
+│   └── _loopMode (BehaviorSubject<LoopMode>)
+│
+├── Hifz Fields
+│   ├── _hifzMode (bool)
+│   ├── _ayahTracks (List<AudioTrack>) — ayah-level tracks for current surah
+│   ├── _memSettings (MemorizationSettings) — current settings
+│   ├── _memSettingsRepo (MemorizationSettingsRepository) — Hive persistence
+│   ├── _memSettingsSubject (BehaviorSubject<MemorizationSettings>)
+│   ├── _memState (MemorizationPlaybackState) — current playback state
+│   ├── _memStateSubject (BehaviorSubject<MemorizationPlaybackState>)
+│   ├── _pauseTimer (Timer?) — pause countdown
+│   ├── _pauseCountdownTimer (Timer?) — 200ms UI tick
+│   └── _savedTrackList / _savedTrackIndex — restore point for exiting Hifz
+│
+└── Shared
+    └── _player (AudioPlayer) — same instance used for both modes
+```
+
+### Hifz State Machine
+
+```
+                        enableHifzMode()
+                              │
+                              ▼
+                    ┌──────────────────┐
+                    │  Hifz Active     │
+                    │  currentAyah=1   │
+                    │  phase=listening │
+                    └────────┬─────────┘
+                             │
+                  ┌──────────┴──────────┐
+                  ▼                     ▼
+         ┌────────────────┐   ┌────────────────┐
+         │ Listening      │   │ Reciting       │
+         │ (audio plays)  │   │ (pause timer)  │
+         │ phase=listening│   │ phase=reciting │
+         └───────┬────────┘   └────────┬───────┘
+                 │                     │
+         ayah completes         pause timer ends
+                 │                     │
+                 └──────┬──────────────┘
+                        ▼
+              _handleAyahCompleted()
+                        │
+                ┌───────┴───────┐
+                │               │
+          more reps?       last rep?
+                │               │
+           replay ayah    next ayah?
+                │               │
+                │          ┌────┴────┐
+                │          │         │
+                │      has more  surah done
+                │          │         │
+                │      pause +    _handle
+                │      advance   SurahComplete
+                │          │         │
+                │          │    ┌────┴────┐
+                │          │    │         │
+                │          │  repeat?  restore +
+                │          │    │      next surah
+                │          │  restart
+                │          │  ayah 1
+                ▼          ▼
+           _scheduleNextPlayback()
+                │
+          ┌─────┴─────┐
+          │           │
+    pause=ON     pause=OFF
+          │           │
+    ┌─────┴──┐    playAction()
+    │ pause  │    immediately
+    │ player │
+    │ start  │
+    │ timer  │
+    └─────┬──┘
+          │
+    timer ends
+          │
+    playAction()
+```
+
+### Key Hifz Methods
+
+| Method | Description |
+| :--- | :--- |
+| `enableHifzMode()` | Save legacy state, load ayah tracks, start from ayah 1 |
+| `disableHifzMode()` | Cancel timers, restore legacy playlist |
+| `_playAyah(ayahNumber)` | Load + play individual ayah MP3 with speed/volume |
+| `_handleAyahCompleted()` | Check repetitions → more? replay / last? advance / done? surah complete |
+| `_handleSurahComplete()` | Repeat surah or restore track list and advance |
+| `_scheduleNextPlayback(action)` | Pause for recitation (if enabled) then execute action |
+| `updateMemorizationSettings(s)` | Apply new settings, persist to Hive |
+| `setVolume(v)` / `setPlaybackSpeed(s)` | Convenience wrappers |
+
+### Repetition Logic
+
+```
+_handleAyahCompleted()
+  │
+  ├── Determine effective rep count:
+  │     isBasmala = (surahNumber != 1 && currentAyah == 1)
+  │     repCount = isBasmala ? 1 : userSetting
+  │
+  ├── nextRep = currentRepetition + 1
+  │
+  ├── if (nextRep < repCount):
+  │     → replay same ayah (increment repetition counter)
+  │
+  ├── else:
+  │     → advance to next ayah
+  │       (currentAyah update happens AFTER pause, not before)
+  │
+  └── On last ayah:
+        → _handleSurahComplete()
+```
+
+### Pause Timing Formula
+
+```
+pauseDuration = (ayahAudioDuration / playbackSpeed) × recitationMultiplier
+
+Example:
+  Ayah duration  = 5 seconds
+  Speed         = 2x
+  Multiplier    = 0.5
+  Result        = (5 / 2) × 0.5 = 1.25 seconds
+```
+
+The pause is implemented via a `Timer(scaled, ...)`. A secondary `Timer.periodic(200ms)` drives a smooth UI countdown.
+
+### Basmala Exception
+
+For all surahs **except Al-Fatihah**, audio file index 1 (the Basmala) is forced to a repetition count of 1, regardless of the user's `ayahRepeatCount` setting. The recitation pause still applies after it. Detection uses surah number + ayah index metadata.
+
+### Persistence
+
+Settings are loaded from Hive on `QuranAudioHandler` construction and saved on every `updateMemorizationSettings()` call:
+- **Box:** `settings` (existing box, key `hifz_settings`)
+- **Format:** JSON string via `MemorizationSettings.toMap()` / `fromMap()`
+- **No custom Hive adapter** needed — uses existing `Box<dynamic>`
+
+### Important Interactions
+
+- **`skipToNext()` / `skipToPrevious()`** — cancel any active pause, reset phase to `listening`, navigate between ayat
+- **`pause()`** — keeps Hifz timers alive (only pauses audio)
+- **`stop()`** — disables Hifz mode
+- **`_onTrackCompleted()`** — delegates to `_handleAyahCompleted()` when in Hifz mode
+- **Position saving** — disabled in Hifz mode (`if (_hifzMode) return;` in `_saveCurrentPosition()`)
+
 ## Key Observations
 
-- **Single player instance** — only one `AudioPlayer` for both surahs and letters
+- **Single player instance** — only one `AudioPlayer` for both surahs, letters, and Hifz mode
 - **Alphabet tracks** are loaded as a playlist (letter 1-28) using `loadLetterTracks`
 - **No remote audio** — all files are bundled assets
 - **No audio caching** needed since files are local

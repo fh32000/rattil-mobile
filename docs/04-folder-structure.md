@@ -10,6 +10,11 @@ rattil-mobile/
 ├── assets/
 │   ├── audio/
 │   │   ├── juz_amma/                 # 38 MP3 files (Al-Fatihah + Surahs 78-114)
+│   │   ├── juz_amma_ayahs/           # 585 ayah-level MP3 files across 33 surahs (78-114)
+│   │   │   ├── surah_078/            # 44 ayah files (001.mp3 - 044.mp3)
+│   │   │   ├── surah_079/            # 46 ayah files
+│   │   │   ├── ...                   # Surahs 080-114
+│   │   │   └── surah_114/            # 7 ayah files
 │   │   └── arabic_alphabet/          # 28 MP3 files (letters أ to ي)
 │   ├── images/
 │   │   └── app_icon.png              # App icon (used in About, Home, Drawer)
@@ -39,19 +44,23 @@ rattil-mobile/
 │   │   ├── hive/
 │   │   │   └── hive_service.dart     # Hive initialization, 4 box getters
 │   │   ├── models/
-│   │   │   ├── audio_track.dart      # AudioTrack: id, surahNumber, assetPath, trackType
+│   │   │   ├── audio_track.dart      # AudioTrack: id, surahNumber, assetPath, trackType (includes 'ayah'), ayahNumber
 │   │   │   ├── surah.dart            # Surah: number, nameArabic/English, versesCount, pageStart
 │   │   │   ├── arabic_letter.dart    # ArabicLetter: number, letter, makhrajGroup/Detail
 │   │   │   ├── playlist.dart         # Playlist: id, name, trackIds, createdAt
+│   │   │   ├── memorization_settings.dart  # MemorizationSettings, MemorizationPlaybackState, HifzPhase enum
 │   │   │   └── app_version.dart      # AppVersion: parsed from remote JSON
 │   │   ├── repositories/
-│   │   │   ├── quran_repository.dart # Wraps JuzAmmaData static access + search
+│   │   │   ├── quran_repository.dart # Wraps JuzAmmaData static access + search, ayah audio helpers
 │   │   │   ├── favorites_repository.dart  # Hive-backed CRUD for favorites
 │   │   │   ├── playlist_repository.dart   # Hive-backed CRUD for playlists
-│   │   │   └── playback_repository.dart   # Hive-backed position save/restore
+│   │   │   ├── playback_repository.dart   # Hive-backed position save/restore
+│   │   │   └── memorization_settings_repository.dart  # Hive-backed JSON persistence
 │   │   └── sources/
 │   │       ├── juz_amma_data.dart    # Static list of 38 surahs + tracks getter
-│   │       └── arabic_alphabet_data.dart  # Static list of 28 letters + group filter
+│   │       ├── arabic_alphabet_data.dart  # Static list of 28 letters + group filter
+│   │       ├── ayah_track_source.dart     # Surah→ayah file count map, ayah AudioTrack generation
+│   │       └── ayah_file_to_verse.dart    # Audio index → canonical verse number mapping (with basmala offset)
 │   │
 │   └── features/                     # Feature modules (11 total)
 │       ├── home/                     # Main dashboard
@@ -62,13 +71,22 @@ rattil-mobile/
 │       │
 │       ├── player/                   # Audio player (core feature)
 │       │   ├── services/
-│       │   │   └── audio_handler.dart    # QuranAudioHandler: playback, queue, loop, seek
+│       │   │   ├── audio_handler.dart    # QuranAudioHandler: playback, queue, loop, seek + Hifz engine (ayah repetition, pause countdown, basmala handling)
+│       │   │   ├── audio_loader.dart     # Platform-aware AudioSource factory (handles web asset path)
+│       │   │   └── verse_service.dart    # Singleton: Quran verse text fetching with LRU cache
 │       │   ├── providers/
-│       │   │   └── audio_provider.dart   # 8 StreamProviders + FavoritesNotifier + initAudioService()
+│       │   │   └── audio_provider.dart   # 12 providers (8 legacy + 4 Hifz) + FavoritesNotifier + initAudioService()
 │       │   ├── screens/
-│       │   │   └── player_screen.dart    # Full-screen player with artwork, progress, controls
+│       │   │   └── player_screen.dart    # Full-screen player: artwork/progress/controls + Hifz toggle, VerseDisplayWidget, memorization settings panel
 │       │   └── widgets/
-│       │       └── mini_player.dart      # Persistent bottom bar with progress + controls
+│       │       ├── mini_player.dart      # Persistent bottom bar + Hifz-aware ayah progress
+│       │       ├── verse_display_widget.dart  # Green gradient card: prev/current/next ayah with hide-verses placeholder
+│       │       ├── hifz_mode_indicator.dart   # Animated pulsing badge: Listening/Reciting phase
+│       │       ├── hifz_progress_bar.dart     # Ayah-level progress bar through surah
+│       │       ├── pause_countdown_bar.dart   # Orange countdown bar during recitation pause
+│       │       ├── volume_control.dart        # Volume slider for Hifz mode
+│       │       ├── playback_speed_control.dart # Speed chip selector (0.75x-2.0x)
+│       │       └── hifz_dashboard.dart        # Info card: surah, ayah, repetition, speed, phase
 │       │
 │       ├── surah/                    # Surah detail page
 │       │   └── screens/
@@ -148,6 +166,6 @@ rattil-mobile/
 | Directory | Files |
 | :--- | :--- |
 | `lib/core/` | 7 |
-| `lib/data/` | 12 |
-| `lib/features/` | 20 |
-| **Total `lib/`** | **39 Dart files** |
+| `lib/data/` | 16 |
+| `lib/features/` | 26 |
+| **Total `lib/`** | **49 Dart files** |
