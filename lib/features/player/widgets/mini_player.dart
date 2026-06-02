@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/duration_helpers.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../providers/audio_provider.dart';
+import 'hifz_progress_bar.dart';
 
 class MiniPlayer extends ConsumerWidget {
   const MiniPlayer({super.key});
@@ -54,7 +55,7 @@ class MiniPlayer extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Progress indicator
+                  // Playback progress
                   ClipRRect(
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(16),
@@ -68,6 +69,16 @@ class MiniPlayer extends ConsumerWidget {
                       minHeight: 3,
                     ),
                   ),
+
+                  // Hifz ayah progress
+                  if (isHifz && memState.totalAyahs > 0)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      child: HifzProgressBar(state: memState),
+                    ),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -123,7 +134,7 @@ class MiniPlayer extends ConsumerWidget {
                               ),
                               Text(
                                 isHifz && memState.totalAyahs > 0
-                                    ? 'آية ${memState.currentAyah} من ${memState.totalAyahs}  ·  ${formatDuration(position)}'
+                                    ? 'آية ${memState.currentAyah} من ${memState.totalAyahs}  ·  ${formatDuration(position)}  ${memState.phase == HifzPhase.reciting ? '🔊' : '👂'}'
                                     : '${track.reciterName}  ·  ${formatDuration(position)}',
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.6),
