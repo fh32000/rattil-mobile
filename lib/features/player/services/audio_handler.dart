@@ -6,6 +6,7 @@ import '../../../data/models/audio_track.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../../../data/repositories/playback_repository.dart';
 import '../../../data/sources/ayah_track_source.dart';
+import 'audio_loader.dart';
 
 /// Audio handler for background playback and media controls
 /// Supports both legacy track-level and Hifz (ayah-level memorization) modes
@@ -82,12 +83,22 @@ class QuranAudioHandler extends BaseAudioHandler
       if (state == ProcessingState.completed) {
         _onTrackCompleted();
       }
+    }).onError((e) {
+      // ignore: avoid_print
+      print('processingStateStream error: $e');
     });
 
     _player.positionStream.throttleTime(const Duration(seconds: 3)).listen((
       position,
     ) {
       _saveCurrentPosition();
+    });
+
+    _player.durationStream.listen((duration) {
+      if (duration != null && duration > Duration.zero) {
+        // ignore: avoid_print
+        print('Audio duration resolved: ${duration.inSeconds}s');
+      }
     });
   }
 
@@ -129,7 +140,7 @@ class QuranAudioHandler extends BaseAudioHandler
     queue.add([mediaItem.value!]);
 
     try {
-      await _player.setAsset(assetPath);
+      await _player.setAudioSource(AudioLoader.createSource(assetPath));
       await _player.play();
     } catch (e) {
       // ignore: avoid_print
@@ -153,7 +164,7 @@ class QuranAudioHandler extends BaseAudioHandler
     mediaItem.add(_trackToMediaItem(track));
 
     try {
-      await _player.setAsset(track.assetPath);
+      await _player.setAudioSource(AudioLoader.createSource(track.assetPath));
       await _player.play();
     } catch (e) {
       // ignore: avoid_print
@@ -242,7 +253,7 @@ class QuranAudioHandler extends BaseAudioHandler
     mediaItem.add(_trackToMediaItem(track));
 
     try {
-      await _player.setAsset(track.assetPath);
+      await _player.setAudioSource(AudioLoader.createSource(track.assetPath));
       final savedPosition = _playbackRepo.getPosition(track.id);
       if (savedPosition != null && savedPosition > 0) {
         await _player.seek(Duration(milliseconds: savedPosition));
@@ -280,19 +291,16 @@ class QuranAudioHandler extends BaseAudioHandler
 
     _memState = _memState.copyWith(
       currentAyah: ayahNumber,
-      currentRepetition: 0,
       totalAyahs: _ayahTracks.length,
     );
     _memStateSubject.add(_memState);
 
     _currentIndex.add(ayahIndex);
-
-    // Update media notification
     mediaItem.add(_trackToMediaItem(track));
 
     try {
       await _player.stop();
-      await _player.setAsset(track.assetPath);
+      await _player.setAudioSource(AudioLoader.createSource(track.assetPath));
       await _player.play();
     } catch (e) {
       // ignore: avoid_print
@@ -300,79 +308,92 @@ class QuranAudioHandler extends BaseAudioHandler
     }
   }
 
-  void _handleAyahCompleted() {
+  Future<Duration> _resolveDuration() async {
+    final d = _player.duration;
+    if (d != null && d > Duration.zero) return d;
+    final resolved = await _player.durationStream.firstWhere(
+      (d) => d != null && d > Duration.zero,
+    );
+    return resolved ?? Duration.zero;
+  }
+
+  Future<void> _handleAyahCompleted() async {
     if (!_hifzMode) return;
 
-    final ayahDuration = _player.duration ?? Duration.zero;
+    final ayahDuration = await _resolveDuration();
     _memState = _memState.copyWith(currentAyahDuration: ayahDuration);
     _memStateSubject.add(_memState);
 
     final nextRep = _memState.currentRepetition + 1;
+    final repCount = _memSettings.ayahRepeatCount;
 
-    if (nextRep < _memSettings.ayahRepeatCount) {
-      // More repetitions of current ayah
+    if (nextRep < repCount) {
       _memState = _memState.copyWith(currentRepetition: nextRep);
       _memStateSubject.add(_memState);
-
-      if (_memSettings.pauseForRecitation) {
-        _startPauseTimer(() => _playAyah(_memState.currentAyah));
-      } else {
-        _playAyah(_memState.currentAyah);
-      }
-    } else {
-      // Done with this ayah
-      if (_memSettings.pauseForRecitation) {
-        _startPauseTimer(() => _advanceToNextAyah());
-      } else {
-        _advanceToNextAyah();
-      }
+      _scheduleNextPlayback(() => _playAyah(_memState.currentAyah));
+      return;
     }
-  }
 
-  void _advanceToNextAyah() {
     final nextAyah = _memState.currentAyah + 1;
     if (nextAyah <= _ayahTracks.length) {
-      _playAyah(nextAyah);
-    } else {
-      _handleSurahComplete();
+      _memState = _memState.copyWith(
+        currentAyah: nextAyah,
+        currentRepetition: 0,
+      );
+      _memStateSubject.add(_memState);
+      _scheduleNextPlayback(() => _playAyah(nextAyah));
+      return;
     }
+
+    _handleSurahComplete();
   }
 
   void _handleSurahComplete() {
     if (_memSettings.repeatSurah) {
+      _memState = _memState.copyWith(currentAyah: 1, currentRepetition: 0);
+      _memStateSubject.add(_memState);
       _playAyah(1);
-    } else {
-      _disableHifzMode();
-      _player.stop();
+      return;
+    }
 
-      // Restore legacy state
-      final saved = _savedTrackList;
-      if (saved != null) {
+    final saved = _savedTrackList;
+    final savedIndex = _savedTrackIndex;
+    _disableHifzMode();
+    _player.stop();
+
+    if (saved != null) {
+      final nextIndex = savedIndex + 1;
+      if (nextIndex < saved.length) {
         _trackList.add(saved);
-        _currentIndex.add(_savedTrackIndex);
-        _savedTrackList = null;
+        _currentIndex.add(nextIndex);
       }
     }
   }
 
-  void _startPauseTimer(void Function() onComplete) {
-    _pauseTimer?.cancel();
-    final pauseDuration = _memState.currentAyahDuration;
-    _player.pause();
-
-    _pauseTimer = Timer(pauseDuration, () {
-      _pauseTimer = null;
-      onComplete();
-    });
+  void _scheduleNextPlayback(void Function() playAction) {
+    if (_memSettings.pauseForRecitation) {
+      _pauseTimer?.cancel();
+      final pauseDuration = _memState.currentAyahDuration;
+      _player.pause();
+      _pauseTimer = Timer(
+        pauseDuration > Duration.zero ? pauseDuration : const Duration(seconds: 1),
+        () {
+          _pauseTimer = null;
+          playAction();
+        },
+      );
+    } else {
+      playAction();
+    }
   }
 
   // ─── Track Completion ───
 
-  void _onTrackCompleted() {
+  Future<void> _onTrackCompleted() async {
     _saveCurrentPosition(completed: true);
 
     if (_hifzMode) {
-      _handleAyahCompleted();
+      await _handleAyahCompleted();
       return;
     }
 
@@ -427,7 +448,9 @@ class QuranAudioHandler extends BaseAudioHandler
 
   @override
   Future<void> pause() async {
-    _pauseTimer?.cancel();
+    if (!_hifzMode) {
+      _pauseTimer?.cancel();
+    }
     _saveCurrentPosition();
     await _player.pause();
   }
@@ -447,7 +470,17 @@ class QuranAudioHandler extends BaseAudioHandler
   Future<void> skipToNext() async {
     if (_hifzMode) {
       _pauseTimer?.cancel();
-      _advanceToNextAyah();
+      final nextAyah = _memState.currentAyah + 1;
+      if (nextAyah <= _ayahTracks.length) {
+        _memState = _memState.copyWith(
+          currentAyah: nextAyah,
+          currentRepetition: 0,
+        );
+        _memStateSubject.add(_memState);
+        await _playAyah(nextAyah);
+      } else {
+        _handleSurahComplete();
+      }
       return;
     }
 
@@ -475,6 +508,11 @@ class QuranAudioHandler extends BaseAudioHandler
       _pauseTimer?.cancel();
       final prevAyah = _memState.currentAyah - 1;
       if (prevAyah >= 1) {
+        _memState = _memState.copyWith(
+          currentAyah: prevAyah,
+          currentRepetition: 0,
+        );
+        _memStateSubject.add(_memState);
         await _playAyah(prevAyah);
       }
       return;
