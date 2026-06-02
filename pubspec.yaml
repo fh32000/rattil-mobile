@@ -25,6 +25,7 @@ dependencies:
   intl: any
   http: ^1.6.0
   package_info_plus: ^9.0.0
+  quran: ^1.3.3
 
 dev_dependencies:
   flutter_test:

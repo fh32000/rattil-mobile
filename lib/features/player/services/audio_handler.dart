@@ -4,6 +4,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../../data/models/audio_track.dart';
 import '../../../data/models/memorization_settings.dart';
+import '../../../data/repositories/memorization_settings_repository.dart';
 import '../../../data/repositories/playback_repository.dart';
 import '../../../data/sources/ayah_track_source.dart';
 import 'audio_loader.dart';
@@ -14,6 +15,8 @@ class QuranAudioHandler extends BaseAudioHandler
     with SeekHandler, QueueHandler {
   final AudioPlayer _player = AudioPlayer();
   final PlaybackRepository _playbackRepo = PlaybackRepository();
+  final MemorizationSettingsRepository _memSettingsRepo =
+      MemorizationSettingsRepository();
 
   final BehaviorSubject<List<AudioTrack>> _trackList = BehaviorSubject.seeded(
     [],
@@ -78,6 +81,9 @@ class QuranAudioHandler extends BaseAudioHandler
   LoopMode get currentLoopMode => _loopMode.value;
 
   QuranAudioHandler() {
+    _memSettings = _memSettingsRepo.load();
+    _memSettingsSubject.add(_memSettings);
+
     _player.playbackEventStream.map(_transformEvent).pipe(playbackState);
 
     _player.processingStateStream.listen((state) {
@@ -275,6 +281,7 @@ class QuranAudioHandler extends BaseAudioHandler
 
     _memSettings = settings;
     _memSettingsSubject.add(settings);
+    _memSettingsRepo.save(settings);
 
     if (speedChanged) {
       _player.setSpeed(settings.playbackSpeed);
@@ -349,7 +356,11 @@ class QuranAudioHandler extends BaseAudioHandler
     _memStateSubject.add(_memState);
 
     final nextRep = _memState.currentRepetition + 1;
-    final repCount = _memSettings.ayahRepeatCount;
+
+    // Basmala (currentAyah == 1) repeats only once for all surahs except Al-Fatihah
+    final surahNumber = _ayahTracks.first.surahNumber;
+    final isBasmala = surahNumber != 1 && _memState.currentAyah == 1;
+    final repCount = isBasmala ? 1 : _memSettings.ayahRepeatCount;
 
     if (nextRep < repCount) {
       _memState = _memState.copyWith(currentRepetition: nextRep);
@@ -360,12 +371,15 @@ class QuranAudioHandler extends BaseAudioHandler
 
     final nextAyah = _memState.currentAyah + 1;
     if (nextAyah <= _ayahTracks.length) {
-      _memState = _memState.copyWith(
-        currentAyah: nextAyah,
-        currentRepetition: 0,
-      );
-      _memStateSubject.add(_memState);
-      _scheduleNextPlayback(() => _playAyah(nextAyah));
+      // Don't advance currentAyah yet — wait until pause finishes
+      _scheduleNextPlayback(() async {
+        _memState = _memState.copyWith(
+          currentAyah: nextAyah,
+          currentRepetition: 0,
+        );
+        _memStateSubject.add(_memState);
+        await _playAyah(nextAyah);
+      });
       return;
     }
 
@@ -401,7 +415,12 @@ class QuranAudioHandler extends BaseAudioHandler
 
       final raw = _memState.currentAyahDuration;
       final scaled = raw > Duration.zero
-          ? Duration(milliseconds: (raw.inMilliseconds / _memSettings.playbackSpeed).round())
+          ? Duration(
+              milliseconds: (raw.inMilliseconds /
+                      _memSettings.playbackSpeed *
+                      _memSettings.recitationMultiplier)
+                  .round(),
+            )
           : const Duration(seconds: 1);
 
       _player.pause();

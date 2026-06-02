@@ -6,12 +6,11 @@ import '../../../data/models/audio_track.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../providers/audio_provider.dart';
 import '../services/audio_handler.dart';
-import '../widgets/hifz_mode_indicator.dart';
 import '../widgets/hifz_progress_bar.dart';
 import '../widgets/pause_countdown_bar.dart';
 import '../widgets/volume_control.dart';
 import '../widgets/playback_speed_control.dart';
-import '../widgets/hifz_dashboard.dart';
+import '../widgets/verse_display_widget.dart';
 
 class PlayerScreen extends ConsumerStatefulWidget {
   const PlayerScreen({super.key});
@@ -81,18 +80,19 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
 
                       if (isHifz) ...[
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                          child: HifzDashboard(
-                            track: track,
-                            state: memState,
-                            settings: memSettings,
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                          child: VerseDisplayWidget(
+                            surahNumber: track.surahNumber,
+                            currentAudioIndex: memState.currentAyah,
+                            totalAudioFiles: memState.totalAyahs,
+                            phase: memState.phase,
+                            hideVerses: memSettings.hideVerses,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                      ] else ...[
+                        // Surah artwork/decoration (non-Hifz only)
+                        _buildSurahArt(track, isHifz, memState),
                       ],
-
-                      // Surah artwork/decoration
-                      _buildSurahArt(track, isHifz, memState),
 
                       const SizedBox(height: 24),
 
@@ -101,10 +101,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
 
                       const SizedBox(height: 16),
 
-                      // Hifz mode indicator (only in Hifz mode)
                       if (isHifz) ...[
-                        HifzModeIndicator(state: memState),
-                        const SizedBox(height: 12),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 32),
                           child: memState.phase == HifzPhase.reciting
@@ -530,6 +527,10 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             ),
             const SizedBox(height: 12),
 
+            // Recitation Duration Multiplier
+            _buildMultiplierControl(handler, memSettings),
+            const SizedBox(height: 12),
+
             // Pause For Recitation
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -584,9 +585,119 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 4),
+
+            // Hide Verses
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'إخفاء الآيات أثناء الحفظ',
+                        style: TextStyle(color: Colors.white70, fontSize: 14),
+                      ),
+                      Text(
+                        'للحفظ غيباً واختبار النفس',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.4),
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Switch(
+                  value: memSettings.hideVerses,
+                  onChanged: (value) {
+                    handler.updateMemorizationSettings(
+                      memSettings.copyWith(hideVerses: value),
+                    );
+                  },
+                  activeColor: AppColors.accent,
+                ),
+              ],
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildMultiplierControl(
+    QuranAudioHandler handler,
+    MemorizationSettings memSettings,
+  ) {
+    const options = [0.25, 0.5, 0.75, 1.0];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.timer_outlined, color: Colors.white60, size: 18),
+            const SizedBox(width: 8),
+            Text(
+              'مدة الترديد',
+              style: TextStyle(color: Colors.white70, fontSize: 13),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              '${memSettings.recitationMultiplier}x',
+              style: TextStyle(
+                color: const Color(0xFF4CAF50),
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        Wrap(
+          spacing: 6,
+          runSpacing: 4,
+          children: options.map((m) {
+            final isSelected = m == memSettings.recitationMultiplier;
+            return GestureDetector(
+              onTap: () {
+                handler.updateMemorizationSettings(
+                  memSettings.copyWith(recitationMultiplier: m),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? const Color(0xFF4CAF50).withValues(alpha: 0.25)
+                      : Colors.white.withValues(alpha: 0.06),
+                  borderRadius: BorderRadius.circular(12),
+                  border: isSelected
+                      ? Border.all(
+                          color:
+                              const Color(0xFF4CAF50).withValues(alpha: 0.5),
+                        )
+                      : null,
+                ),
+                child: Text(
+                  '${m}x',
+                  style: TextStyle(
+                    color:
+                        isSelected ? const Color(0xFF4CAF50) : Colors.white70,
+                    fontSize: 12,
+                    fontWeight:
+                        isSelected ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 
