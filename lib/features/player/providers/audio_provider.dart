@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../../data/models/audio_track.dart';
+import '../../../data/models/memorization_settings.dart';
 import '../../../data/repositories/favorites_repository.dart';
+import '../../../data/sources/ayah_track_source.dart';
 import '../services/audio_handler.dart';
 
 // ─── Global audio handler initialization ───
@@ -10,6 +13,16 @@ import '../services/audio_handler.dart';
 late QuranAudioHandler _audioHandler;
 
 Future<void> initAudioService() async {
+  if (kIsWeb) {
+    try {
+      _audioHandler = QuranAudioHandler();
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error creating audio handler on web: $e');
+      rethrow;
+    }
+    return;
+  }
   _audioHandler = await AudioService.init(
     builder: () => QuranAudioHandler(),
     config: const AudioServiceConfig(
@@ -21,7 +34,7 @@ Future<void> initAudioService() async {
   );
 }
 
-// ─── Providers ───
+// ─── Core Audio Providers ───
 
 /// Provides the audio handler instance
 final audioHandlerProvider = Provider<QuranAudioHandler>((ref) {
@@ -81,6 +94,37 @@ final trackListProvider = StreamProvider<List<AudioTrack>>((ref) {
 final currentIndexProvider = StreamProvider<int>((ref) {
   final handler = ref.watch(audioHandlerProvider);
   return handler.currentIndexStream;
+});
+
+// ─── Hifz / Memorization Providers ───
+
+/// Whether hifz mode is available for the current track
+final canEnableHifzModeProvider = Provider<bool>((ref) {
+  final handler = ref.watch(audioHandlerProvider);
+  final track = ref.watch(currentTrackProvider).valueOrNull;
+  if (track == null) return false;
+  return AyahTrackSource.hasAyahAudio(track.surahNumber);
+});
+
+/// Whether hifz mode is currently active
+final isHifzModeActiveProvider = Provider<bool>((ref) {
+  final memState = ref.watch(memorizationPlaybackStateProvider).valueOrNull;
+  return memState?.isHifzActive ?? false;
+});
+
+/// Memorization settings
+final memorizationSettingsProvider = StreamProvider<MemorizationSettings>((
+  ref,
+) {
+  final handler = ref.watch(audioHandlerProvider);
+  return handler.memSettingsStream;
+});
+
+/// Memorization playback state
+final memorizationPlaybackStateProvider =
+    StreamProvider<MemorizationPlaybackState>((ref) {
+  final handler = ref.watch(audioHandlerProvider);
+  return handler.memStateStream;
 });
 
 // ─── Favorites ───
