@@ -83,6 +83,37 @@ final currentIndexProvider = StreamProvider<int>((ref) {
   return handler.currentIndexStream;
 });
 
+// ─── Hifz / Memorization Providers ───
+
+/// Whether hifz mode is available for the current track
+final canEnableHifzModeProvider = Provider<bool>((ref) {
+  final handler = ref.watch(audioHandlerProvider);
+  final track = ref.watch(currentTrackProvider).valueOrNull;
+  if (track == null) return false;
+  return AyahTrackSource.hasAyahAudio(track.surahNumber);
+});
+
+/// Whether hifz mode is currently active
+final isHifzModeActiveProvider = Provider<bool>((ref) {
+  final memState = ref.watch(memorizationPlaybackStateProvider).valueOrNull;
+  return memState?.isHifzActive ?? false;
+});
+
+/// Memorization settings
+final memorizationSettingsProvider = StreamProvider<MemorizationSettings>((
+  ref,
+) {
+  final handler = ref.watch(audioHandlerProvider);
+  return handler.memSettingsStream;
+});
+
+/// Memorization playback state
+final memorizationPlaybackStateProvider =
+    StreamProvider<MemorizationPlaybackState>((ref) {
+  final handler = ref.watch(audioHandlerProvider);
+  return handler.memStateStream;
+});
+
 // ─── Favorites ───
 
 final favoritesRepositoryProvider = Provider((ref) => FavoritesRepository());
