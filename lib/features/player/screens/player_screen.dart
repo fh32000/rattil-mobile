@@ -6,12 +6,11 @@ import '../../../data/models/audio_track.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../providers/audio_provider.dart';
 import '../services/audio_handler.dart';
-import '../widgets/hifz_mode_indicator.dart';
 import '../widgets/hifz_progress_bar.dart';
 import '../widgets/pause_countdown_bar.dart';
 import '../widgets/volume_control.dart';
 import '../widgets/playback_speed_control.dart';
-import '../widgets/hifz_dashboard.dart';
+import '../widgets/verse_display_widget.dart';
 
 class PlayerScreen extends ConsumerStatefulWidget {
   const PlayerScreen({super.key});
@@ -81,18 +80,18 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
 
                       if (isHifz) ...[
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                          child: HifzDashboard(
-                            track: track,
-                            state: memState,
-                            settings: memSettings,
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                          child: VerseDisplayWidget(
+                            surahNumber: track.surahNumber,
+                            currentAudioIndex: memState.currentAyah,
+                            totalAudioFiles: memState.totalAyahs,
+                            phase: memState.phase,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                      ] else ...[
+                        // Surah artwork/decoration (non-Hifz only)
+                        _buildSurahArt(track, isHifz, memState),
                       ],
-
-                      // Surah artwork/decoration
-                      _buildSurahArt(track, isHifz, memState),
 
                       const SizedBox(height: 24),
 
@@ -101,10 +100,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
 
                       const SizedBox(height: 16),
 
-                      // Hifz mode indicator (only in Hifz mode)
                       if (isHifz) ...[
-                        HifzModeIndicator(state: memState),
-                        const SizedBox(height: 12),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 32),
                           child: memState.phase == HifzPhase.reciting
