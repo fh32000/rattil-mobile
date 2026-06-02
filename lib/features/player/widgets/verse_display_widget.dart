@@ -8,11 +8,15 @@ import '../services/verse_service.dart';
 ///
 /// Designed for the Hifz memorization view. The current ayah is shown large and
 /// highlighted (gold), while the surrounding ayat are smaller and dimmed.
+///
+/// When [hideVerses] is true, the verse text is replaced by a placeholder
+/// icon + message for distraction‑free memorisation.
 class VerseDisplayWidget extends StatelessWidget {
   final int surahNumber;
   final int currentAudioIndex; // 1‑based audio file index
   final int totalAudioFiles;
   final HifzPhase phase;
+  final bool hideVerses;
 
   const VerseDisplayWidget({
     super.key,
@@ -20,28 +24,12 @@ class VerseDisplayWidget extends StatelessWidget {
     required this.currentAudioIndex,
     required this.totalAudioFiles,
     required this.phase,
+    this.hideVerses = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final service = VerseService();
-
-    final prevAudioIndex = currentAudioIndex > 1 ? currentAudioIndex - 1 : null;
-    final nextAudioIndex = currentAudioIndex < totalAudioFiles
-        ? currentAudioIndex + 1
-        : null;
-
-    final prevText = prevAudioIndex != null
-        ? service.getTextForAudioIndex(surahNumber, prevAudioIndex)
-        : null;
-    final currentText = service.getTextForAudioIndex(
-      surahNumber,
-      currentAudioIndex,
-    );
-    final nextText = nextAudioIndex != null
-        ? service.getTextForAudioIndex(surahNumber, nextAudioIndex)
-        : null;
-
     final isReciting = phase == HifzPhase.reciting;
 
     return Directionality(
@@ -72,36 +60,78 @@ class VerseDisplayWidget extends StatelessWidget {
           children: [
             _buildModeHeader(isReciting),
             const SizedBox(height: 16),
-            _buildVerseSlot(
-              text: prevText,
-              isCurrent: false,
-              isPrev: true,
-            ),
-            if (prevText != null) ...[
-              const SizedBox(height: 8),
-              _buildDivider(),
-              const SizedBox(height: 8),
+            if (hideVerses) ...[
+              _buildHiddenPlaceholder(isReciting),
+            ] else ...[
+              _buildVerseContent(service),
             ],
-            _buildVerseSlot(
-              text: currentText,
-              isCurrent: true,
-              isPrev: false,
-            ),
-            if (nextText != null) ...[
-              const SizedBox(height: 8),
-              _buildDivider(),
-              const SizedBox(height: 8),
-            ],
-            _buildVerseSlot(
-              text: nextText,
-              isCurrent: false,
-              isPrev: false,
-            ),
             const SizedBox(height: 12),
             _buildFooter(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildVerseContent(VerseService service) {
+    final prevAudioIndex =
+        currentAudioIndex > 1 ? currentAudioIndex - 1 : null;
+    final nextAudioIndex =
+        currentAudioIndex < totalAudioFiles ? currentAudioIndex + 1 : null;
+
+    final prevText = prevAudioIndex != null
+        ? service.getTextForAudioIndex(surahNumber, prevAudioIndex)
+        : null;
+    final currentText = service.getTextForAudioIndex(
+      surahNumber,
+      currentAudioIndex,
+    );
+    final nextText = nextAudioIndex != null
+        ? service.getTextForAudioIndex(surahNumber, nextAudioIndex)
+        : null;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildVerseSlot(text: prevText, isCurrent: false, isPrev: true),
+        if (prevText != null) ...[
+          const SizedBox(height: 8),
+          _buildDivider(),
+          const SizedBox(height: 8),
+        ],
+        _buildVerseSlot(text: currentText, isCurrent: true, isPrev: false),
+        if (nextText != null) ...[
+          const SizedBox(height: 8),
+          _buildDivider(),
+          const SizedBox(height: 8),
+        ],
+        _buildVerseSlot(text: nextText, isCurrent: false, isPrev: false),
+      ],
+    );
+  }
+
+  Widget _buildHiddenPlaceholder(bool isReciting) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          isReciting ? Icons.record_voice_over : Icons.hearing,
+          size: 48,
+          color: (isReciting ? Colors.orange : const Color(0xFF81C784))
+              .withValues(alpha: 0.6),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          isReciting ? '👄 ردد الآية الآن' : '👂 استمع للآية',
+          style: GoogleFonts.amiri(
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
+            color: (isReciting ? Colors.orange : const Color(0xFF81C784))
+                .withValues(alpha: 0.8),
+            height: 1.6,
+          ),
+        ),
+      ],
     );
   }
 
