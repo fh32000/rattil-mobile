@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/duration_helpers.dart';
+import '../../../data/models/memorization_settings.dart';
 import '../providers/audio_provider.dart';
+import 'hifz_progress_bar.dart';
 
 class MiniPlayer extends ConsumerWidget {
   const MiniPlayer({super.key});
@@ -15,6 +17,8 @@ class MiniPlayer extends ConsumerWidget {
     final positionAsync = ref.watch(positionProvider);
     final durationAsync = ref.watch(durationProvider);
     final handler = ref.watch(audioHandlerProvider);
+    final isHifz = ref.watch(isHifzModeActiveProvider);
+    final memStateAsync = ref.watch(memorizationPlaybackStateProvider);
 
     return trackAsync.when(
       data: (track) {
@@ -26,6 +30,8 @@ class MiniPlayer extends ConsumerWidget {
         final totalMs = duration.inMilliseconds.toDouble();
         final posMs = position.inMilliseconds.toDouble();
         final progress = totalMs > 0 ? posMs / totalMs : 0.0;
+        final memState = memStateAsync.valueOrNull ??
+            const MemorizationPlaybackState();
 
         return GestureDetector(
           onTap: () => context.push('/player'),
@@ -49,7 +55,7 @@ class MiniPlayer extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Progress indicator
+                  // Playback progress
                   ClipRRect(
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(16),
@@ -57,10 +63,22 @@ class MiniPlayer extends ConsumerWidget {
                     child: LinearProgressIndicator(
                       value: progress.clamp(0.0, 1.0),
                       backgroundColor: Colors.transparent,
-                      valueColor: AlwaysStoppedAnimation(AppColors.accent),
+                      valueColor: AlwaysStoppedAnimation(
+                        isHifz ? const Color(0xFF4CAF50) : AppColors.accent,
+                      ),
                       minHeight: 3,
                     ),
                   ),
+
+                  // Hifz ayah progress
+                  if (isHifz && memState.totalAyahs > 0)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      child: HifzProgressBar(state: memState),
+                    ),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -103,7 +121,9 @@ class MiniPlayer extends ConsumerWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                track.displayName,
+                                track.isAyah
+                                    ? 'سورة ${track.surahNameArabic}'
+                                    : track.displayName,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -113,7 +133,9 @@ class MiniPlayer extends ConsumerWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
-                                '${track.reciterName}  ·  ${formatDuration(position)}',
+                                isHifz && memState.totalAyahs > 0
+                                    ? 'آية ${memState.currentAyah} من ${memState.totalAyahs}  ·  ${formatDuration(position)}  ${memState.phase == HifzPhase.reciting ? '🔊' : '👂'}'
+                                    : '${track.reciterName}  ·  ${formatDuration(position)}',
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.6),
                                   fontSize: 12,
@@ -140,9 +162,11 @@ class MiniPlayer extends ConsumerWidget {
                         Container(
                           width: 40,
                           height: 40,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.accent,
+                            color: isHifz
+                                ? const Color(0xFF4CAF50)
+                                : AppColors.accent,
                           ),
                           child: IconButton(
                             icon: Icon(

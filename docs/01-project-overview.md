@@ -48,6 +48,7 @@ Muslims worldwide — Arabic speakers and learners — who want:
 | Search | Search by surah name (Arabic/English), number, or page |
 | Reciter Bio | Biography of Shaykh Omar Ahmed Omar Al-Khamer |
 | Update Checker | Remote version check from woostore.dev |
+| Hifz Memorization | Ayah-by-ayah repetition engine with configurable repeat count, recitation pause, verse display, speed/volume controls, and persistent settings |
 | Dark Mode | Always-on dark theme with teal/gold palette |
 | RTL | Full Arabic right-to-left layout |
 

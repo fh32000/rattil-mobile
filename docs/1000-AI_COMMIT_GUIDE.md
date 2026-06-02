@@ -62,6 +62,7 @@ This project follows the **GitFlow** branching model. **NEVER commit directly to
 | `main` | Production-ready code | — | — |
 | `develop` | Integration branch for features | `main` | `main` (via release) |
 | `feature/*` | New features & improvements | `develop` | `develop` |
+| `docs/*` | Documentation updates | `develop` | `develop` |
 | `hotfix/*` | Urgent production fixes | `main` | `main` & `develop` |
 | `release/*` | Release preparation & final fixes | `develop` | `main` & `develop` |
 
@@ -69,6 +70,7 @@ This project follows the **GitFlow** branching model. **NEVER commit directly to
 
 ```text
 feature/<developer-name>/<short-description>
+docs/<developer-name>/<short-description>
 hotfix/<short-description>
 release/<version>
 ```
@@ -80,6 +82,8 @@ release/<version>
 *Examples:*
 - `feature/fh32000/improve-engines`
 - `feature/fh32000/add-webhook-logging`
+- `docs/fh32000/update-commit-guide`
+- `feature/fh32000/save-memorization`
 - `hotfix/fix-payment-gateway`
 - `release/2.1.0`
 
