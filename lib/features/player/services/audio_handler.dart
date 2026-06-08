@@ -645,7 +645,6 @@ class QuranAudioHandler extends BaseAudioHandler
     _trackList.add([]);
     _currentIndex.add(0);
     await _player.stop();
-    await _player.seek(Duration.zero);
     mediaItem.add(null);
     queue.add([]);
     _AudioLog.track('stop() complete — player stopped, media cleared');
@@ -787,7 +786,11 @@ class QuranAudioHandler extends BaseAudioHandler
         MediaControl.skipToPrevious,
         if (_player.playing) MediaControl.pause else MediaControl.play,
         MediaControl.skipToNext,
-        MediaControl.stop,
+        const MediaControl(
+          androidIcon: 'drawable/audio_service_close',
+          label: 'إغلاق',
+          action: MediaAction.stop,
+        ),
       ],
       systemActions: const {
         MediaAction.seek,
