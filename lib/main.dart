@@ -60,7 +60,7 @@ Future<void> main() async {
 
   // Set user properties
   analytics.setUserProperties(
-    appVersion: '1.0.14+2',
+    appVersion: '1.0.15+3',
     platform: kIsWeb ? 'web' : defaultTargetPlatform.name,
     language: 'ar',
     themeMode: 'dark',
