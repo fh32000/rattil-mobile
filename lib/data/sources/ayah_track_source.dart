@@ -1,8 +1,21 @@
+import 'package:flutter/services.dart' show rootBundle;
 import '../models/audio_track.dart';
 import '../models/surah.dart';
 import '../../core/constants/app_constants.dart';
 import 'juz_amma_data.dart';
 
+/// Source of ayah-level audio tracks for Memorization (Hifz) Mode.
+///
+/// ### Validation
+///
+/// [init] must be called once at app startup.  It spot-checks the first and
+/// last audio file of every surah listed in [ayahFileCounts] to confirm the
+/// files are bundled in the APK.  Any surah whose files fail to load is
+/// excluded from [hasAyahAudio] — Memorization Mode will not be offered for
+/// that surah.
+///
+/// This design eliminates runtime fallback / recovery logic: an unsupported
+/// surah is simply hidden from the user rather than repaired dynamically.
 class AyahTrackSource {
   AyahTrackSource._();
 
@@ -10,8 +23,6 @@ class AyahTrackSource {
 
   /// Actual number of ayah audio files per surah
   static const Map<int, int> ayahFileCounts = {
-    78: 44,
-    79: 46,
     80: 43,
     81: 30,
     82: 20,
@@ -49,8 +60,48 @@ class AyahTrackSource {
     114: 7,
   };
 
+  /// Surahs whose audio files have been verified at runtime.
+  static final Set<int> _validatedSurahs = {};
+  static bool _initDone = false;
+
+  /// Must be called once at app startup (e.g. in `AudioService.init` or
+  /// the audio-handler constructor).  Spot-checks the first and last ayah
+  /// file of each surah; surahs whose assets can't be loaded are excluded.
+  static Future<void> init() async {
+    if (_initDone) return;
+    _initDone = true;
+
+    for (final entry in ayahFileCounts.entries) {
+      final surah = entry.key;
+      final count = entry.value;
+
+      final first = ayahAssetPath(surah, 1);
+      final last = ayahAssetPath(surah, count);
+
+      try {
+        await rootBundle.load(first);
+        await rootBundle.load(last);
+        _validatedSurahs.add(surah);
+        // ignore: avoid_print
+        print('[AyahTrackSource] Surah $surah validated ($count files)');
+      } catch (_) {
+        // ignore: avoid_print
+        print(
+          '[AyahTrackSource] Surah $surah SKIPPED — '
+          'file(s) not bundled',
+        );
+      }
+    }
+  }
+
+  /// Whether Memorization Mode is available for [surahNumber].
+  ///
+  /// Returns `true` only when the surah is listed in [ayahFileCounts] AND
+  /// [init] has confirmed its audio files are accessible.
   static bool hasAyahAudio(int surahNumber) {
-    return ayahFileCounts.containsKey(surahNumber);
+    if (!ayahFileCounts.containsKey(surahNumber)) return false;
+    if (!_validatedSurahs.contains(surahNumber)) return false;
+    return true;
   }
 
   static int getAyahCount(int surahNumber) {
