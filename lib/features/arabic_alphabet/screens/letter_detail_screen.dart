@@ -86,12 +86,16 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
   void _navigate(int delta) {
     final newNum = _currentNumber + delta;
     if (newNum >= 1 && newNum <= 28) {
-      // Stop current playback when navigating
-      final handler = ref.read(audioHandlerProvider);
-      handler.stop();
       setState(() {
         _currentNumber = newNum;
       });
+      // Auto-load and play the new letter
+      final handler = ref.read(audioHandlerProvider);
+      final letterTracks = ArabicAlphabetData.toAudioTracks();
+      handler.loadLetterTracks(
+        letterTracks: letterTracks,
+        startIndex: newNum - 1,
+      );
     }
   }
 

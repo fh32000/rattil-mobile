@@ -21,6 +21,7 @@ class MiniPlayer extends ConsumerWidget {
     final isHifz = ref.watch(isHifzModeActiveProvider);
     final memStateAsync = ref.watch(memorizationPlaybackStateProvider);
     final memSettingsAsync = ref.watch(memorizationSettingsProvider);
+    final playlistNameAsync = ref.watch(currentPlaylistNameProvider);
 
     return trackAsync.when(
       data: (track) {
@@ -108,7 +109,9 @@ class MiniPlayer extends ConsumerWidget {
                           ),
                           child: Center(
                             child: Text(
-                              track.surahNumber.toString(),
+                              track.trackType == 'alphabet'
+                                  ? '${int.tryParse(track.id.split('_').last) ?? 0}'
+                                  : track.surahNumber.toString(),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -139,9 +142,16 @@ class MiniPlayer extends ConsumerWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
-                                isHifz && memState.totalAyahs > 0
-                                    ? 'آية ${memState.currentAyah} من ${memState.totalAyahs}  ·  ${formatDuration(position)}  ${memState.phase == HifzPhase.reciting ? '🔊' : '👂'}'
-                                    : '${track.reciterName}  ·  ${formatDuration(position)}',
+                                () {
+                                  if (isHifz && memState.totalAyahs > 0) {
+                                    return 'آية ${memState.currentAyah} من ${memState.totalAyahs}  ·  ${formatDuration(position)}  ${memState.phase == HifzPhase.reciting ? '🔊' : '👂'}';
+                                  }
+                                  final pname = playlistNameAsync.valueOrNull;
+                                  final source = pname != null
+                                      ? 'قائمة التشغيل: $pname'
+                                      : track.reciterName;
+                                  return '$source  ·  ${formatDuration(position)}';
+                                }(),
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.6),
                                   fontSize: 12,

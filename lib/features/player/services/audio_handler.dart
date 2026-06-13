@@ -61,6 +61,8 @@ class QuranAudioHandler extends BaseAudioHandler
       BehaviorSubject.seeded(const MemorizationSettings());
   final BehaviorSubject<MemorizationPlaybackState> _memStateSubject =
       BehaviorSubject.seeded(const MemorizationPlaybackState());
+  final BehaviorSubject<String?> _currentPlaylistName =
+      BehaviorSubject<String?>.seeded(null);
 
   // ─── Public Streams ───
 
@@ -72,6 +74,7 @@ class QuranAudioHandler extends BaseAudioHandler
       _memSettingsSubject.stream;
   Stream<MemorizationPlaybackState> get memStateStream =>
       _memStateSubject.stream;
+  Stream<String?> get currentPlaylistNameStream => _currentPlaylistName.stream;
 
   // ─── Public Getters ───
 
@@ -131,9 +134,14 @@ class QuranAudioHandler extends BaseAudioHandler
   // ─── Legacy Track Loading ───
 
   /// Load a list of tracks and start playing from the given index
-  Future<void> loadTracks(List<AudioTrack> tracks, {int startIndex = 0}) async {
+  Future<void> loadTracks(
+    List<AudioTrack> tracks, {
+    int startIndex = 0,
+    String? playlistName,
+  }) async {
     if (tracks.isEmpty) return;
     _disableHifzMode();
+    _currentPlaylistName.add(playlistName);
 
     _trackList.add(tracks);
     _currentIndex.add(startIndex);
@@ -178,9 +186,11 @@ class QuranAudioHandler extends BaseAudioHandler
   Future<void> loadLetterTracks({
     required List<AudioTrack> letterTracks,
     required int startIndex,
+    String? playlistName,
   }) async {
     if (letterTracks.isEmpty) return;
     _disableHifzMode();
+    _currentPlaylistName.add(playlistName);
 
     _trackList.add(letterTracks);
     _currentIndex.add(startIndex);

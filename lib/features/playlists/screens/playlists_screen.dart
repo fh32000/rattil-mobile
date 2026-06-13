@@ -165,7 +165,9 @@ class PlaylistsScreen extends ConsumerWidget {
                               .toList();
                           if (playlistTracks.isNotEmpty) {
                             handler.loadTracks(
-                                playlistTracks, startIndex: 0);
+                                playlistTracks,
+                                startIndex: 0,
+                                playlistName: playlist.name);
                           }
                         }
                       },
@@ -180,9 +182,8 @@ class PlaylistsScreen extends ConsumerWidget {
 
           Positioned(
             left: 16,
-            bottom: hasTrack
-                ? AppConstants.miniPlayerHeight + 8
-                : 16,
+            bottom: (hasTrack ? AppConstants.miniPlayerHeight + 8 : 16) +
+                MediaQuery.of(context).padding.bottom,
             child: FloatingActionButton(
               onPressed: () => _showCreateDialog(context, ref),
               child: const Icon(Icons.add),
@@ -344,6 +345,7 @@ class _PlaylistDetailSheetState extends ConsumerState<_PlaylistDetailSheet> {
                         handler.loadTracks(
                           playlistTracks,
                           startIndex: 0,
+                          playlistName: playlist.name,
                         );
                       },
                     ),
@@ -426,6 +428,7 @@ class _PlaylistDetailSheetState extends ConsumerState<_PlaylistDetailSheet> {
                                   handler.loadTracks(
                                     playlistTracks,
                                     startIndex: index,
+                                    playlistName: playlist.name,
                                   );
                                 },
                               ),
@@ -455,6 +458,7 @@ class _PlaylistDetailSheetState extends ConsumerState<_PlaylistDetailSheet> {
                             handler.loadTracks(
                               playlistTracks,
                               startIndex: index,
+                              playlistName: playlist.name,
                             );
                           },
                         );

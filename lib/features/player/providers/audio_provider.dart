@@ -127,6 +127,12 @@ final currentSpeedProvider = Provider<double>((ref) {
   return memSettings?.playbackSpeed ?? 1.0;
 });
 
+/// Current playlist name (non-null when playing from a playlist)
+final currentPlaylistNameProvider = StreamProvider<String?>((ref) {
+  final handler = ref.watch(audioHandlerProvider);
+  return handler.currentPlaylistNameStream;
+});
+
 /// Memorization playback state
 final memorizationPlaybackStateProvider =
     StreamProvider<MemorizationPlaybackState>((ref) {
