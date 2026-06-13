@@ -42,5 +42,5 @@ class AppConstants {
 
   // Mini Player dimensions
   static const double miniPlayerHeight = 80.0;
-  static const double miniPlayerBottomPadding = 100.0;
+  static const double miniPlayerBottomPadding = 125.0;
 }
