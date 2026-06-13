@@ -103,7 +103,6 @@ class QuranAudioHandler extends BaseAudioHandler
   LoopMode get currentLoopMode => _loopMode.value;
 
   QuranAudioHandler() {
-    AyahTrackSource.init();
     _memSettings = _memSettingsRepo.load();
     _memSettingsSubject.add(_memSettings);
 

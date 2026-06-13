@@ -55,20 +55,20 @@ Future<void> main() async {
   // Initialize audio service (handles web gracefully)
   await initAudioService();
 
-  // Track app open
+  runApp(
+    const ProviderScope(
+      child: RattilApp(),
+    ),
+  );
+
+  // Defer non-critical analytics calls to after the first frame renders,
+  // preventing main-thread blocking during startup (ANR fix for Xiaomi).
   analytics.trackAppOpen();
 
-  // Set user properties
   analytics.setUserProperties(
     appVersion: '1.0.16+4',
     platform: kIsWeb ? 'web' : defaultTargetPlatform.name,
     language: 'ar',
     themeMode: 'dark',
-  );
-
-  runApp(
-    const ProviderScope(
-      child: RattilApp(),
-    ),
   );
 }
