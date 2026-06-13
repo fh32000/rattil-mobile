@@ -44,6 +44,7 @@ class QuranAudioHandler extends BaseAudioHandler
   );
   DateTime _lastSkipTime = DateTime(2000);
   bool _isAutoAdvancing = false;
+  int _loadGeneration = 0;
 
   // ─── Hifz / Memorization Mode ───
   bool _hifzMode = false;
@@ -299,17 +300,21 @@ class QuranAudioHandler extends BaseAudioHandler
     final track = currentTrack;
     if (track == null) return;
 
+    final gen = ++_loadGeneration;
+
     mediaItem.add(_trackToMediaItem(track));
 
     _AudioLog.track('Loading track: ${track.id} - ${track.assetPath}');
 
     try {
       await _player.setAudioSource(AudioLoader.createSource(track.assetPath));
+      if (gen != _loadGeneration) return;
 
       // Apply saved playback speed globally (not just in hifz mode)
       if (_memSettings.playbackSpeed != 1.0) {
         await _player.setSpeed(_memSettings.playbackSpeed);
       }
+      if (gen != _loadGeneration) return;
 
       if (!_isAutoAdvancing) {
         final savedPosition = _playbackRepo.getPosition(track.id);
@@ -319,6 +324,7 @@ class QuranAudioHandler extends BaseAudioHandler
           );
 
           final duration = await _resolveDuration(timeout: const Duration(seconds: 3));
+          if (gen != _loadGeneration) return;
           final isValid = duration > Duration.zero &&
               savedPosition < duration.inMilliseconds;
 
@@ -329,6 +335,7 @@ class QuranAudioHandler extends BaseAudioHandler
 
           if (isValid) {
             await _player.seek(Duration(milliseconds: savedPosition));
+            if (gen != _loadGeneration) return;
             _AudioLog.track('Seeked to saved position: ${savedPosition}ms');
           } else {
             _AudioLog.track(
@@ -342,11 +349,14 @@ class QuranAudioHandler extends BaseAudioHandler
         _AudioLog.track('Auto-advancing — starting from beginning');
       }
 
+      if (gen != _loadGeneration) return;
       await _player.play();
+      if (gen != _loadGeneration) return;
       _isAutoAdvancing = false;
       _AudioLog.track('Playback started for ${track.id}');
       AnalyticsService.instance.trackPlaybackStarted(track.surahNumber, 0);
     } catch (e) {
+      if (gen != _loadGeneration) return;
       _AudioLog.track('Error loading track: ${track.assetPath} - $e');
       _isAutoAdvancing = false;
       AnalyticsService.instance.recordError(
@@ -397,6 +407,7 @@ class QuranAudioHandler extends BaseAudioHandler
       return;
     }
 
+    final gen = ++_loadGeneration;
     final track = _ayahTracks[ayahIndex];
 
     _memState = _memState.copyWith(
@@ -416,18 +427,24 @@ class QuranAudioHandler extends BaseAudioHandler
 
     try {
       await _player.setAudioSource(AudioLoader.createSource(track.assetPath));
+      if (gen != _loadGeneration) return;
       _AudioLog.hifz('Source set for ayah $ayahNumber');
 
       await _player.setSpeed(_memSettings.playbackSpeed);
+      if (gen != _loadGeneration) return;
       await _player.setVolume(_memSettings.volume);
+      if (gen != _loadGeneration) return;
 
       await _player.play().timeout(const Duration(seconds: 8));
+      if (gen != _loadGeneration) return;
       _AudioLog.hifz('Playback started for ayah $ayahNumber');
 
       analytics.trackPlaybackStarted(track.surahNumber, ayahNumber);
     } on TimeoutException {
+      if (gen != _loadGeneration) return;
       _AudioLog.hifz('Timeout playing ayah $ayahNumber — no fallback, skipping');
     } catch (e) {
+      if (gen != _loadGeneration) return;
       _AudioLog.hifz('Error playing ayah: ${track.assetPath} - $e');
       analytics.recordError(
         e,
