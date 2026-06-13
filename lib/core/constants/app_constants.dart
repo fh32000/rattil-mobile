@@ -3,7 +3,7 @@ class AppConstants {
 
   static const String appName = 'ورتِّله';
   static const String appNameEn = 'Warattilhu';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '1.0.15';
   static const String appReleaseDate = '07-03-2026 7:30AM';
   static const String appDescription =
       'تطبيق ورتِّله للاستماع إلى تلاوات القرآن الكريم';
@@ -39,4 +39,8 @@ class AppConstants {
   // Asset paths
   static const String audioBasePath = 'assets/audio/juz_amma';
   static const String imagesPath = 'assets/images';
+
+  // Mini Player dimensions
+  static const double miniPlayerHeight = 80.0;
+  static const double miniPlayerBottomPadding = 125.0;
 }

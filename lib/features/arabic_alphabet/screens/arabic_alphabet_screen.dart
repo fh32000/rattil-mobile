@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/models/arabic_letter.dart';
 import '../../../data/sources/arabic_alphabet_data.dart';
@@ -204,7 +205,7 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
 
               // Grid of letter cards
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, AppConstants.miniPlayerBottomPadding),
                 sliver: SliverGrid(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,

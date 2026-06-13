@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/models/surah.dart';
 import '../../../data/sources/juz_amma_data.dart';
@@ -126,7 +127,7 @@ class SurahDetailScreen extends ConsumerWidget {
                       if (track != null)
                         _buildPlaySection(track, handler, isFav, ref, theme),
 
-                      const SizedBox(height: 100),
+                      const SizedBox(height: AppConstants.miniPlayerBottomPadding),
                     ],
                   ),
                 ),

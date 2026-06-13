@@ -10,6 +10,22 @@ import '../../../data/repositories/playback_repository.dart';
 import '../../../data/sources/ayah_track_source.dart';
 import 'audio_loader.dart';
 
+/// Structured debug logger for audio playback diagnostics.
+/// All hifz/memorization logs use the [Hifz] prefix;
+/// general track logs use the [Track] prefix.
+// ignore: avoid_classes_with_only_static_members
+class _AudioLog {
+  static void hifz(String msg) {
+    // ignore: avoid_print
+    print('[Hifz] $msg');
+  }
+
+  static void track(String msg) {
+    // ignore: avoid_print
+    print('[Track] $msg');
+  }
+}
+
 /// Audio handler for background playback and media controls
 /// Supports both legacy track-level and Hifz (ayah-level memorization) modes
 class QuranAudioHandler extends BaseAudioHandler
@@ -27,6 +43,7 @@ class QuranAudioHandler extends BaseAudioHandler
     LoopMode.off,
   );
   DateTime _lastSkipTime = DateTime(2000);
+  bool _isAutoAdvancing = false;
 
   // ─── Hifz / Memorization Mode ───
   bool _hifzMode = false;
@@ -44,6 +61,8 @@ class QuranAudioHandler extends BaseAudioHandler
       BehaviorSubject.seeded(const MemorizationSettings());
   final BehaviorSubject<MemorizationPlaybackState> _memStateSubject =
       BehaviorSubject.seeded(const MemorizationPlaybackState());
+  final BehaviorSubject<String?> _currentPlaylistName =
+      BehaviorSubject<String?>.seeded(null);
 
   // ─── Public Streams ───
 
@@ -55,6 +74,7 @@ class QuranAudioHandler extends BaseAudioHandler
       _memSettingsSubject.stream;
   Stream<MemorizationPlaybackState> get memStateStream =>
       _memStateSubject.stream;
+  Stream<String?> get currentPlaylistNameStream => _currentPlaylistName.stream;
 
   // ─── Public Getters ───
 
@@ -82,6 +102,7 @@ class QuranAudioHandler extends BaseAudioHandler
   LoopMode get currentLoopMode => _loopMode.value;
 
   QuranAudioHandler() {
+    AyahTrackSource.init();
     _memSettings = _memSettingsRepo.load();
     _memSettingsSubject.add(_memSettings);
 
@@ -113,9 +134,14 @@ class QuranAudioHandler extends BaseAudioHandler
   // ─── Legacy Track Loading ───
 
   /// Load a list of tracks and start playing from the given index
-  Future<void> loadTracks(List<AudioTrack> tracks, {int startIndex = 0}) async {
+  Future<void> loadTracks(
+    List<AudioTrack> tracks, {
+    int startIndex = 0,
+    String? playlistName,
+  }) async {
     if (tracks.isEmpty) return;
     _disableHifzMode();
+    _currentPlaylistName.add(playlistName);
 
     _trackList.add(tracks);
     _currentIndex.add(startIndex);
@@ -160,9 +186,11 @@ class QuranAudioHandler extends BaseAudioHandler
   Future<void> loadLetterTracks({
     required List<AudioTrack> letterTracks,
     required int startIndex,
+    String? playlistName,
   }) async {
     if (letterTracks.isEmpty) return;
     _disableHifzMode();
+    _currentPlaylistName.add(playlistName);
 
     _trackList.add(letterTracks);
     _currentIndex.add(startIndex);
@@ -273,21 +301,59 @@ class QuranAudioHandler extends BaseAudioHandler
 
     mediaItem.add(_trackToMediaItem(track));
 
+    _AudioLog.track('Loading track: ${track.id} - ${track.assetPath}');
+
     try {
       await _player.setAudioSource(AudioLoader.createSource(track.assetPath));
-      final savedPosition = _playbackRepo.getPosition(track.id);
-      if (savedPosition != null && savedPosition > 0) {
-        await _player.seek(Duration(milliseconds: savedPosition));
+
+      // Apply saved playback speed globally (not just in hifz mode)
+      if (_memSettings.playbackSpeed != 1.0) {
+        await _player.setSpeed(_memSettings.playbackSpeed);
       }
+
+      if (!_isAutoAdvancing) {
+        final savedPosition = _playbackRepo.getPosition(track.id);
+        if (savedPosition != null && savedPosition > 0) {
+          _AudioLog.track(
+            'Stored position for ${track.id}: ${savedPosition}ms',
+          );
+
+          final duration = await _resolveDuration(timeout: const Duration(seconds: 3));
+          final isValid = duration > Duration.zero &&
+              savedPosition < duration.inMilliseconds;
+
+          _AudioLog.track(
+            'Position validation: duration=${duration.inMilliseconds}ms, '
+            'saved=${savedPosition}ms, valid=$isValid',
+          );
+
+          if (isValid) {
+            await _player.seek(Duration(milliseconds: savedPosition));
+            _AudioLog.track('Seeked to saved position: ${savedPosition}ms');
+          } else {
+            _AudioLog.track(
+              'Invalid position ${savedPosition}ms for duration '
+              '${duration.inMilliseconds}ms — resetting to 0',
+            );
+            _playbackRepo.savePosition(track.id, 0);
+          }
+        }
+      } else {
+        _AudioLog.track('Auto-advancing — starting from beginning');
+      }
+
       await _player.play();
+      _isAutoAdvancing = false;
+      _AudioLog.track('Playback started for ${track.id}');
       AnalyticsService.instance.trackPlaybackStarted(track.surahNumber, 0);
     } catch (e) {
+      _AudioLog.track('Error loading track: ${track.assetPath} - $e');
+      _isAutoAdvancing = false;
       AnalyticsService.instance.recordError(
         e,
         StackTrace.current,
         reason: 'track_playback_failed',
       );
-      print('Error loading track: ${track.assetPath} - $e');
     }
   }
 
@@ -346,30 +412,42 @@ class QuranAudioHandler extends BaseAudioHandler
     final analytics = AnalyticsService.instance;
     analytics.setCurrentAyah(ayahNumber);
 
+    _AudioLog.hifz('Loading ayah $ayahNumber: ${track.assetPath}');
+
     try {
-      await _player.stop();
       await _player.setAudioSource(AudioLoader.createSource(track.assetPath));
+      _AudioLog.hifz('Source set for ayah $ayahNumber');
+
       await _player.setSpeed(_memSettings.playbackSpeed);
       await _player.setVolume(_memSettings.volume);
-      await _player.play();
+
+      await _player.play().timeout(const Duration(seconds: 8));
+      _AudioLog.hifz('Playback started for ayah $ayahNumber');
+
       analytics.trackPlaybackStarted(track.surahNumber, ayahNumber);
+    } on TimeoutException {
+      _AudioLog.hifz('Timeout playing ayah $ayahNumber — no fallback, skipping');
     } catch (e) {
+      _AudioLog.hifz('Error playing ayah: ${track.assetPath} - $e');
       analytics.recordError(
         e,
         StackTrace.current,
         reason: 'ayah_playback_failed',
       );
-      print('Error playing ayah: ${track.assetPath} - $e');
     }
   }
 
-  Future<Duration> _resolveDuration() async {
+  Future<Duration> _resolveDuration({Duration timeout = const Duration(seconds: 5)}) async {
     final d = _player.duration;
     if (d != null && d > Duration.zero) return d;
-    final resolved = await _player.durationStream.firstWhere(
-      (d) => d != null && d > Duration.zero,
-    );
-    return resolved ?? Duration.zero;
+    try {
+      final resolved = await _player.durationStream
+          .firstWhere((d) => d != null && d > Duration.zero)
+          .timeout(timeout);
+      return resolved ?? Duration.zero;
+    } on TimeoutException {
+      return Duration.zero;
+    }
   }
 
   Future<void> _handleAyahCompleted() async {
@@ -501,8 +579,6 @@ class QuranAudioHandler extends BaseAudioHandler
   // ─── Track Completion ───
 
   Future<void> _onTrackCompleted() async {
-    _saveCurrentPosition(completed: true);
-
     if (_hifzMode) {
       await _handleAyahCompleted();
       return;
@@ -520,10 +596,12 @@ class QuranAudioHandler extends BaseAudioHandler
         _player.play();
         break;
       case LoopMode.all:
+        _isAutoAdvancing = true;
         skipToNext();
         break;
       case LoopMode.off:
         if (_currentIndex.value < _trackList.value.length - 1) {
+          _isAutoAdvancing = true;
           skipToNext();
         }
         break;
@@ -531,7 +609,7 @@ class QuranAudioHandler extends BaseAudioHandler
   }
 
   void _saveCurrentPosition({bool completed = false}) {
-    if (_hifzMode) return;
+    if (_hifzMode || _isAutoAdvancing) return;
 
     final track = currentTrack;
     if (track == null) return;
@@ -578,10 +656,20 @@ class QuranAudioHandler extends BaseAudioHandler
 
   @override
   Future<void> stop() async {
+    _AudioLog.track('stop() called — stopping playback');
     _pauseTimer?.cancel();
-    _disableHifzMode();
-    _saveCurrentPosition();
+    _stopPauseCountdown();
+    _hifzMode = false;
+    _ayahTracks = [];
+    _memState = const MemorizationPlaybackState();
+    _memStateSubject.add(_memState);
+    _savedTrackList = null;
+    _trackList.add([]);
+    _currentIndex.add(0);
     await _player.stop();
+    mediaItem.add(null);
+    queue.add([]);
+    _AudioLog.track('stop() complete — player stopped, media cleared');
   }
 
   @override
@@ -720,6 +808,11 @@ class QuranAudioHandler extends BaseAudioHandler
         MediaControl.skipToPrevious,
         if (_player.playing) MediaControl.pause else MediaControl.play,
         MediaControl.skipToNext,
+        const MediaControl(
+          androidIcon: 'drawable/audio_service_close',
+          label: 'إغلاق',
+          action: MediaAction.stop,
+        ),
       ],
       systemActions: const {
         MediaAction.seek,

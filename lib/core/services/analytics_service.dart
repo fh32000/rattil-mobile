@@ -135,7 +135,7 @@ class AnalyticsService {
         parameters: {
           'surah_id': surahId,
           'repeat_count': repeatCount,
-          'pause_mode': pauseMode,
+          'pause_mode': pauseMode ? 'true' : 'false',
         },
       );
     });
@@ -184,7 +184,7 @@ class AnalyticsService {
     _guard(() {
       _analytics!.logEvent(
         name: 'hifz_hide_verses_enabled',
-        parameters: {'enabled': enabled},
+        parameters: {'enabled': enabled ? 'true' : 'false'},
       );
     });
   }
@@ -193,7 +193,7 @@ class AnalyticsService {
     _guard(() {
       _analytics!.logEvent(
         name: 'hifz_pause_mode_changed',
-        parameters: {'enabled': enabled},
+        parameters: {'enabled': enabled ? 'true' : 'false'},
       );
     });
   }
@@ -202,7 +202,7 @@ class AnalyticsService {
     _guard(() {
       _analytics!.logEvent(
         name: 'hifz_surah_repeat_changed',
-        parameters: {'enabled': enabled},
+        parameters: {'enabled': enabled ? 'true' : 'false'},
       );
     });
   }

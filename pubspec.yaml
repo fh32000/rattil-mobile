@@ -1,7 +1,7 @@
 name: rattil
 description: "ورتِّله - تطبيق القرآن الكريم"
 publish_to: 'none'
-version: 1.0.13+1
+version: 1.0.15+3
 
 environment:
   sdk: ^3.8.1
@@ -48,7 +48,43 @@ flutter:
 
   assets:
     - assets/audio/juz_amma/
-    - assets/audio/juz_amma_ayahs/
+    - assets/audio/juz_amma_ayahs/surah_078/
+    - assets/audio/juz_amma_ayahs/surah_079/
+    - assets/audio/juz_amma_ayahs/surah_080/
+    - assets/audio/juz_amma_ayahs/surah_081/
+    - assets/audio/juz_amma_ayahs/surah_082/
+    - assets/audio/juz_amma_ayahs/surah_083/
+    - assets/audio/juz_amma_ayahs/surah_084/
+    - assets/audio/juz_amma_ayahs/surah_085/
+    - assets/audio/juz_amma_ayahs/surah_086/
+    - assets/audio/juz_amma_ayahs/surah_087/
+    - assets/audio/juz_amma_ayahs/surah_088/
+    - assets/audio/juz_amma_ayahs/surah_089/
+    - assets/audio/juz_amma_ayahs/surah_090/
+    - assets/audio/juz_amma_ayahs/surah_091/
+    - assets/audio/juz_amma_ayahs/surah_092/
+    - assets/audio/juz_amma_ayahs/surah_093/
+    - assets/audio/juz_amma_ayahs/surah_094/
+    - assets/audio/juz_amma_ayahs/surah_095/
+    - assets/audio/juz_amma_ayahs/surah_096/
+    - assets/audio/juz_amma_ayahs/surah_097/
+    - assets/audio/juz_amma_ayahs/surah_098/
+    - assets/audio/juz_amma_ayahs/surah_099/
+    - assets/audio/juz_amma_ayahs/surah_100/
+    - assets/audio/juz_amma_ayahs/surah_101/
+    - assets/audio/juz_amma_ayahs/surah_102/
+    - assets/audio/juz_amma_ayahs/surah_103/
+    - assets/audio/juz_amma_ayahs/surah_104/
+    - assets/audio/juz_amma_ayahs/surah_105/
+    - assets/audio/juz_amma_ayahs/surah_106/
+    - assets/audio/juz_amma_ayahs/surah_107/
+    - assets/audio/juz_amma_ayahs/surah_108/
+    - assets/audio/juz_amma_ayahs/surah_109/
+    - assets/audio/juz_amma_ayahs/surah_110/
+    - assets/audio/juz_amma_ayahs/surah_111/
+    - assets/audio/juz_amma_ayahs/surah_112/
+    - assets/audio/juz_amma_ayahs/surah_113/
+    - assets/audio/juz_amma_ayahs/surah_114/
     - assets/audio/arabic_alphabet/
     - assets/images/
 

@@ -119,6 +119,9 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                       if (canHifz && !isHifz) ...[
                         const SizedBox(height: 8),
                         _buildMemorizationToggle(handler, isHifz),
+                      ] else if (!canHifz && !isHifz && track.isSurah) ...[
+                        const SizedBox(height: 8),
+                        _buildMemorizationUnavailable(),
                       ],
                       if (isHifz) ...[
                         const SizedBox(height: 6),
@@ -134,22 +137,30 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                               color: Colors.white.withValues(alpha: 0.04),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Column(
-                              children: [
-                                VolumeControl(
-                                  handler: handler,
-                                  currentVolume: memSettings.volume,
-                                ),
-                                const Divider(height: 4, color: Colors.white10),
-                                PlaybackSpeedControl(
-                                  handler: handler,
-                                  currentSpeed: memSettings.playbackSpeed,
-                                ),
-                              ],
+                            child: VolumeControl(
+                              handler: handler,
+                              currentVolume: memSettings.volume,
                             ),
                           ),
                         ),
                       ],
+
+                      // Global speed control (always visible)
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.04),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: PlaybackSpeedControl(
+                            handler: handler,
+                            currentSpeed: memSettings.playbackSpeed,
+                          ),
+                        ),
+                      ),
 
                       const SizedBox(height: 12),
 
@@ -401,6 +412,40 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMemorizationUnavailable() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.1),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.info_outline,
+              color: Colors.white38,
+              size: 20,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              'وضع الحفظ غير متوفر لهذه السورة',
+              style: TextStyle(
+                color: Colors.white38,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -810,108 +855,169 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     bool isHifz,
   ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          // Loop (hide in hifz mode, as repeat surah replaces it)
-          if (!isHifz)
-            IconButton(
-              icon: Icon(
-                loopMode == LoopMode.one ? Icons.repeat_one : Icons.repeat,
-                color: loopMode == LoopMode.off
-                    ? Colors.white60
-                    : AppColors.accent,
-              ),
-              iconSize: 28,
-              onPressed: () => handler.cycleLoopMode(),
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final itemCount = isHifz ? 6 : 7;
+          final gapWidth = constraints.maxWidth / itemCount;
 
-          // Previous
-          IconButton(
-            icon: Icon(
-              isHifz ? Icons.skip_previous_rounded : Icons.skip_next_rounded,
-            ),
-            color: Colors.white,
-            iconSize: 40,
-            onPressed: () => handler.skipToPrevious(),
-          ),
+          // Scale icon sizes and hit targets for narrow screens
+          final double buttonSize;
+          final double playSize;
+          final double smallIconSize;
+          final double largeIconSize;
+          if (gapWidth < 42) {
+            buttonSize = 34;
+            playSize = 36;
+            smallIconSize = 22;
+            largeIconSize = 32;
+          } else if (gapWidth < 48) {
+            buttonSize = 38;
+            playSize = 40;
+            smallIconSize = 24;
+            largeIconSize = 36;
+          } else {
+            buttonSize = 48;
+            playSize = 48;
+            smallIconSize = 28;
+            largeIconSize = 40;
+          }
 
-          // Rewind 10s
-          IconButton(
-            icon: const Icon(Icons.replay_10_rounded),
-            color: Colors.white,
-            iconSize: 32,
-            onPressed: () => handler.rewind10(),
-          ),
-
-          // Play/Pause
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: isHifz
-                    ? [const Color(0xFF4CAF50), const Color(0xFF81C784)]
-                    : [AppColors.accent, AppColors.accentLight],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: (isHifz
-                          ? const Color(0xFF4CAF50)
-                          : AppColors.accent)
-                      .withValues(alpha: 0.4),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
+          return Row(
+            textDirection: TextDirection.rtl,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // Loop (hide in hifz mode, as repeat surah replaces it)
+              if (!isHifz)
+                _responsiveIconButton(
+                  icon: Icon(
+                    loopMode == LoopMode.one ? Icons.repeat_one : Icons.repeat,
+                    color: loopMode == LoopMode.off
+                        ? Colors.white60
+                        : AppColors.accent,
+                  ),
+                  size: buttonSize,
+                  iconSize: smallIconSize,
+                  onPressed: () => handler.cycleLoopMode(),
                 ),
-              ],
-            ),
-            child: IconButton(
-              icon: Icon(
-                isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+
+              // Previous
+              _responsiveIconButton(
+                icon: Icon(
+                  Icons.skip_next_rounded,
+                  color: Colors.white,
+                ),
+                size: buttonSize,
+                iconSize: largeIconSize,
+                onPressed: () => handler.skipToPrevious(),
               ),
-              color: Colors.black,
-              iconSize: 44,
-              onPressed: () {
-                if (isPlaying) {
-                  handler.pause();
-                } else {
-                  handler.play();
-                }
-              },
-            ),
-          ),
 
-          // Forward 10s
-          IconButton(
-            icon: const Icon(Icons.forward_10_rounded),
-            color: Colors.white,
-            iconSize: 32,
-            onPressed: () => handler.fastForward10(),
-          ),
+              // Rewind 10s
+              _responsiveIconButton(
+                icon: const Icon(Icons.forward_10_rounded, color: Colors.white),
+                size: buttonSize,
+                iconSize: smallIconSize,
+                onPressed: () => handler.rewind10(),
+              ),
 
-          // Next
-          IconButton(
-            icon: Icon(
-              isHifz ? Icons.skip_next_rounded : Icons.skip_previous_rounded,
-            ),
-            color: Colors.white,
-            iconSize: 40,
-            onPressed: () => handler.skipToNext(),
-          ),
+              // Play/Pause
+              Container(
+                width: playSize,
+                height: playSize,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: isHifz
+                        ? [const Color(0xFF4CAF50), const Color(0xFF81C784)]
+                        : [AppColors.accent, AppColors.accentLight],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: (isHifz
+                              ? const Color(0xFF4CAF50)
+                              : AppColors.accent)
+                          .withValues(alpha: 0.4),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    isPlaying
+                        ? Icons.pause_rounded
+                        : Icons.play_arrow_rounded,
+                  ),
+                  color: Colors.black,
+                  iconSize: playSize * 0.85,
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(
+                    minWidth: playSize,
+                    minHeight: playSize,
+                  ),
+                  onPressed: () {
+                    if (isPlaying) {
+                      handler.pause();
+                    } else {
+                      handler.play();
+                    }
+                  },
+                ),
+              ),
 
-          // Favorite
-          IconButton(
-            icon: Icon(
-              isFav ? Icons.favorite : Icons.favorite_border,
-              color: isFav ? AppColors.error : Colors.white60,
-            ),
-            iconSize: 28,
-            onPressed: () {
-              ref.read(favoritesProvider.notifier).toggle(track.id);
-            },
-          ),
-        ],
+              // Forward 10s
+              _responsiveIconButton(
+                icon: const Icon(Icons.replay_10_rounded, color: Colors.white),
+                size: buttonSize,
+                iconSize: smallIconSize,
+                onPressed: () => handler.fastForward10(),
+              ),
+
+              // Next
+              _responsiveIconButton(
+                icon: Icon(
+                  Icons.skip_previous_rounded,
+                  color: Colors.white,
+                ),
+                size: buttonSize,
+                iconSize: largeIconSize,
+                onPressed: () => handler.skipToNext(),
+              ),
+
+              // Favorite
+              _responsiveIconButton(
+                icon: Icon(
+                  isFav ? Icons.favorite : Icons.favorite_border,
+                  color: isFav ? AppColors.error : Colors.white60,
+                ),
+                size: buttonSize,
+                iconSize: smallIconSize,
+                onPressed: () {
+                  ref.read(favoritesProvider.notifier).toggle(track.id);
+                },
+              ),
+            ],
+          );
+        },
       ),
+    );
+  }
+
+  Widget _responsiveIconButton({
+    required Widget icon,
+    required double size,
+    required double iconSize,
+    required VoidCallback onPressed,
+  }) {
+    return IconButton(
+      icon: icon,
+      iconSize: iconSize,
+      padding: EdgeInsets.zero,
+      constraints: BoxConstraints(
+        minWidth: size,
+        minHeight: size,
+      ),
+      onPressed: onPressed,
     );
   }
 }
