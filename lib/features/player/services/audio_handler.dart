@@ -43,6 +43,7 @@ class QuranAudioHandler extends BaseAudioHandler
     LoopMode.off,
   );
   DateTime _lastSkipTime = DateTime(2000);
+  bool _isAutoAdvancing = false;
 
   // ─── Hifz / Memorization Mode ───
   bool _hifzMode = false;
@@ -60,6 +61,8 @@ class QuranAudioHandler extends BaseAudioHandler
       BehaviorSubject.seeded(const MemorizationSettings());
   final BehaviorSubject<MemorizationPlaybackState> _memStateSubject =
       BehaviorSubject.seeded(const MemorizationPlaybackState());
+  final BehaviorSubject<String?> _currentPlaylistName =
+      BehaviorSubject<String?>.seeded(null);
 
   // ─── Public Streams ───
 
@@ -71,6 +74,7 @@ class QuranAudioHandler extends BaseAudioHandler
       _memSettingsSubject.stream;
   Stream<MemorizationPlaybackState> get memStateStream =>
       _memStateSubject.stream;
+  Stream<String?> get currentPlaylistNameStream => _currentPlaylistName.stream;
 
   // ─── Public Getters ───
 
@@ -130,9 +134,14 @@ class QuranAudioHandler extends BaseAudioHandler
   // ─── Legacy Track Loading ───
 
   /// Load a list of tracks and start playing from the given index
-  Future<void> loadTracks(List<AudioTrack> tracks, {int startIndex = 0}) async {
+  Future<void> loadTracks(
+    List<AudioTrack> tracks, {
+    int startIndex = 0,
+    String? playlistName,
+  }) async {
     if (tracks.isEmpty) return;
     _disableHifzMode();
+    _currentPlaylistName.add(playlistName);
 
     _trackList.add(tracks);
     _currentIndex.add(startIndex);
@@ -177,9 +186,11 @@ class QuranAudioHandler extends BaseAudioHandler
   Future<void> loadLetterTracks({
     required List<AudioTrack> letterTracks,
     required int startIndex,
+    String? playlistName,
   }) async {
     if (letterTracks.isEmpty) return;
     _disableHifzMode();
+    _currentPlaylistName.add(playlistName);
 
     _trackList.add(letterTracks);
     _currentIndex.add(startIndex);
@@ -295,38 +306,49 @@ class QuranAudioHandler extends BaseAudioHandler
     try {
       await _player.setAudioSource(AudioLoader.createSource(track.assetPath));
 
-      final savedPosition = _playbackRepo.getPosition(track.id);
-      if (savedPosition != null && savedPosition > 0) {
-        _AudioLog.track(
-          'Stored position for ${track.id}: ${savedPosition}ms',
-        );
+      // Apply saved playback speed globally (not just in hifz mode)
+      if (_memSettings.playbackSpeed != 1.0) {
+        await _player.setSpeed(_memSettings.playbackSpeed);
+      }
 
-        final duration = await _resolveDuration(timeout: const Duration(seconds: 3));
-        final isValid = duration > Duration.zero &&
-            savedPosition < duration.inMilliseconds;
-
-        _AudioLog.track(
-          'Position validation: duration=${duration.inMilliseconds}ms, '
-          'saved=${savedPosition}ms, valid=$isValid',
-        );
-
-        if (isValid) {
-          await _player.seek(Duration(milliseconds: savedPosition));
-          _AudioLog.track('Seeked to saved position: ${savedPosition}ms');
-        } else {
+      if (!_isAutoAdvancing) {
+        final savedPosition = _playbackRepo.getPosition(track.id);
+        if (savedPosition != null && savedPosition > 0) {
           _AudioLog.track(
-            'Invalid position ${savedPosition}ms for duration '
-            '${duration.inMilliseconds}ms — resetting to 0',
+            'Stored position for ${track.id}: ${savedPosition}ms',
           );
-          _playbackRepo.savePosition(track.id, 0);
+
+          final duration = await _resolveDuration(timeout: const Duration(seconds: 3));
+          final isValid = duration > Duration.zero &&
+              savedPosition < duration.inMilliseconds;
+
+          _AudioLog.track(
+            'Position validation: duration=${duration.inMilliseconds}ms, '
+            'saved=${savedPosition}ms, valid=$isValid',
+          );
+
+          if (isValid) {
+            await _player.seek(Duration(milliseconds: savedPosition));
+            _AudioLog.track('Seeked to saved position: ${savedPosition}ms');
+          } else {
+            _AudioLog.track(
+              'Invalid position ${savedPosition}ms for duration '
+              '${duration.inMilliseconds}ms — resetting to 0',
+            );
+            _playbackRepo.savePosition(track.id, 0);
+          }
         }
+      } else {
+        _AudioLog.track('Auto-advancing — starting from beginning');
       }
 
       await _player.play();
+      _isAutoAdvancing = false;
       _AudioLog.track('Playback started for ${track.id}');
       AnalyticsService.instance.trackPlaybackStarted(track.surahNumber, 0);
     } catch (e) {
       _AudioLog.track('Error loading track: ${track.assetPath} - $e');
+      _isAutoAdvancing = false;
       AnalyticsService.instance.recordError(
         e,
         StackTrace.current,
@@ -557,8 +579,6 @@ class QuranAudioHandler extends BaseAudioHandler
   // ─── Track Completion ───
 
   Future<void> _onTrackCompleted() async {
-    _saveCurrentPosition(completed: true);
-
     if (_hifzMode) {
       await _handleAyahCompleted();
       return;
@@ -576,10 +596,12 @@ class QuranAudioHandler extends BaseAudioHandler
         _player.play();
         break;
       case LoopMode.all:
+        _isAutoAdvancing = true;
         skipToNext();
         break;
       case LoopMode.off:
         if (_currentIndex.value < _trackList.value.length - 1) {
+          _isAutoAdvancing = true;
           skipToNext();
         }
         break;
@@ -587,7 +609,7 @@ class QuranAudioHandler extends BaseAudioHandler
   }
 
   void _saveCurrentPosition({bool completed = false}) {
-    if (_hifzMode) return;
+    if (_hifzMode || _isAutoAdvancing) return;
 
     final track = currentTrack;
     if (track == null) return;

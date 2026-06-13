@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/models/surah.dart';
 import '../../../data/sources/juz_amma_data.dart';
@@ -135,7 +136,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         ),
                       )
                     : ListView.builder(
-                        padding: const EdgeInsets.only(bottom: 100),
+                        padding: const EdgeInsets.only(bottom: AppConstants.miniPlayerBottomPadding),
                         itemCount: _results.length,
                         itemBuilder: (context, index) {
                           final surah = _results[index];

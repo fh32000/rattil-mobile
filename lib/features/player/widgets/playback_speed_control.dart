@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../services/audio_handler.dart';
 
 class PlaybackSpeedControl extends StatelessWidget {
@@ -13,6 +12,7 @@ class PlaybackSpeedControl extends StatelessWidget {
   });
 
   static const List<double> speedOptions = [
+    0.5,
     0.75,
     1.0,
     1.25,

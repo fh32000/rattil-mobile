@@ -64,52 +64,57 @@ class LetterCard extends StatelessWidget {
                 ]
               : null,
         ),
-        child: Stack(
-          children: [
-            // Subtle number in corner
-            Positioned(
-              top: 6,
-              left: 8,
-              child: Text(
-                letter.number.toString(),
-                style: TextStyle(
-                  fontSize: 10,
-                  color: color.withValues(alpha: 0.5),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-
-            // Main content
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Arabic letter — big
-                Text(
-                  letter.arabicLetter,
-                  style: TextStyle(
-                    fontSize: 36,
-                    color: isPlaying ? AppColors.accentLight : Colors.white,
-                    fontFamily: 'Amiri',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                // Letter name
-                Text(
-                  letter.name,
+          child: Stack(
+            children: [
+              // Subtle number in corner
+              Positioned(
+                top: 6,
+                left: 8,
+                child: Text(
+                  letter.number.toString(),
                   style: TextStyle(
                     fontSize: 10,
-                    color: isPlaying
-                        ? AppColors.accentLight
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    color: color.withValues(alpha: 0.5),
                     fontWeight: FontWeight.w500,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 6),
-                // Play button
-                GestureDetector(
+              ),
+
+              // Main content
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Arabic letter — big
+                  Text(
+                    letter.arabicLetter,
+                    style: TextStyle(
+                      fontSize: 36,
+                      color: isPlaying ? AppColors.accentLight : Colors.white,
+                      fontFamily: 'Amiri',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  // Letter name
+                  Text(
+                    letter.name,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: isPlaying
+                          ? AppColors.accentLight
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+
+              // Play button — bottom-left inside card
+              Positioned(
+                bottom: 6,
+                left: 6,
+                child: GestureDetector(
                   onTap: onPlay,
                   behavior: HitTestBehavior.opaque,
                   child: Container(
@@ -130,10 +135,9 @@ class LetterCard extends StatelessWidget {
                     ),
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
       ),
     );
   }
