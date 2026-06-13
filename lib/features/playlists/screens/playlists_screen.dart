@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../data/models/audio_track.dart';
 import '../../../data/models/playlist.dart';
 import '../../../data/repositories/playlist_repository.dart';
 import '../../../data/sources/juz_amma_data.dart';
@@ -160,11 +161,11 @@ class PlaylistsScreen extends ConsumerWidget {
                                   return null;
                                 }
                               })
-                              .whereType<dynamic>()
+                              .whereType<AudioTrack>()
                               .toList();
                           if (playlistTracks.isNotEmpty) {
                             handler.loadTracks(
-                                playlistTracks.cast(), startIndex: 0);
+                                playlistTracks, startIndex: 0);
                           }
                         }
                       },
@@ -300,7 +301,7 @@ class _PlaylistDetailSheetState extends ConsumerState<_PlaylistDetailSheet> {
             return null;
           }
         })
-        .whereType<dynamic>()
+        .whereType<AudioTrack>()
         .toList();
     final currentTrack = ref.watch(currentTrackProvider).valueOrNull;
 
@@ -333,6 +334,19 @@ class _PlaylistDetailSheetState extends ConsumerState<_PlaylistDetailSheet> {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const Spacer(),
+                  // Play all
+                  if (playlistTracks.isNotEmpty)
+                    IconButton(
+                      icon: const Icon(Icons.play_circle_fill_rounded),
+                      color: AppColors.accent,
+                      tooltip: 'تشغيل الكل',
+                      onPressed: () {
+                        handler.loadTracks(
+                          playlistTracks,
+                          startIndex: 0,
+                        );
+                      },
+                    ),
                   // Sort by surah number
                   IconButton(
                     icon: const Icon(Icons.sort),
@@ -406,13 +420,11 @@ class _PlaylistDetailSheetState extends ConsumerState<_PlaylistDetailSheet> {
                               IconButton(
                                 icon: Icon(
                                   Icons.play_arrow_rounded,
-                                  color: isPlaying
-                                      ? AppColors.accent
-                                      : AppColors.accent,
+                                  color: AppColors.accent,
                                 ),
                                 onPressed: () {
                                   handler.loadTracks(
-                                    playlistTracks.cast(),
+                                    playlistTracks,
                                     startIndex: index,
                                   );
                                 },
@@ -428,7 +440,7 @@ class _PlaylistDetailSheetState extends ConsumerState<_PlaylistDetailSheet> {
                                       .read(playlistsProvider.notifier)
                                       .removeTrack(
                                         playlist.id,
-                                        track.id as String,
+                                        track.id,
                                       );
                                 },
                               ),
@@ -441,7 +453,7 @@ class _PlaylistDetailSheetState extends ConsumerState<_PlaylistDetailSheet> {
                           ),
                           onTap: () {
                             handler.loadTracks(
-                              playlistTracks.cast(),
+                              playlistTracks,
                               startIndex: index,
                             );
                           },
