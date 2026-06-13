@@ -121,6 +121,12 @@ final memorizationSettingsProvider = StreamProvider<MemorizationSettings>((
   return handler.memSettingsStream;
 });
 
+/// Current playback speed (derived from memorization settings)
+final currentSpeedProvider = Provider<double>((ref) {
+  final memSettings = ref.watch(memorizationSettingsProvider).valueOrNull;
+  return memSettings?.playbackSpeed ?? 1.0;
+});
+
 /// Memorization playback state
 final memorizationPlaybackStateProvider =
     StreamProvider<MemorizationPlaybackState>((ref) {

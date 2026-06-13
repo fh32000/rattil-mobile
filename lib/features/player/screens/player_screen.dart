@@ -119,7 +119,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                       if (canHifz && !isHifz) ...[
                         const SizedBox(height: 8),
                         _buildMemorizationToggle(handler, isHifz),
-                      ] else if (!canHifz && !isHifz) ...[
+                      ] else if (!canHifz && !isHifz && track.isSurah) ...[
                         const SizedBox(height: 8),
                         _buildMemorizationUnavailable(),
                       ],
@@ -137,22 +137,30 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                               color: Colors.white.withValues(alpha: 0.04),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Column(
-                              children: [
-                                VolumeControl(
-                                  handler: handler,
-                                  currentVolume: memSettings.volume,
-                                ),
-                                const Divider(height: 4, color: Colors.white10),
-                                PlaybackSpeedControl(
-                                  handler: handler,
-                                  currentSpeed: memSettings.playbackSpeed,
-                                ),
-                              ],
+                            child: VolumeControl(
+                              handler: handler,
+                              currentVolume: memSettings.volume,
                             ),
                           ),
                         ),
                       ],
+
+                      // Global speed control (always visible)
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.04),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: PlaybackSpeedControl(
+                            handler: handler,
+                            currentSpeed: memSettings.playbackSpeed,
+                          ),
+                        ),
+                      ),
 
                       const SizedBox(height: 12),
 
@@ -876,6 +884,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
           }
 
           return Row(
+            textDirection: TextDirection.rtl,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               // Loop (hide in hifz mode, as repeat surah replaces it)
@@ -895,9 +904,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
               // Previous
               _responsiveIconButton(
                 icon: Icon(
-                  isHifz
-                      ? Icons.skip_previous_rounded
-                      : Icons.skip_next_rounded,
+                  Icons.skip_next_rounded,
                   color: Colors.white,
                 ),
                 size: buttonSize,
@@ -907,7 +914,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
 
               // Rewind 10s
               _responsiveIconButton(
-                icon: const Icon(Icons.replay_10_rounded, color: Colors.white),
+                icon: const Icon(Icons.forward_10_rounded, color: Colors.white),
                 size: buttonSize,
                 iconSize: smallIconSize,
                 onPressed: () => handler.rewind10(),
@@ -960,7 +967,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
 
               // Forward 10s
               _responsiveIconButton(
-                icon: const Icon(Icons.forward_10_rounded, color: Colors.white),
+                icon: const Icon(Icons.replay_10_rounded, color: Colors.white),
                 size: buttonSize,
                 iconSize: smallIconSize,
                 onPressed: () => handler.fastForward10(),
@@ -969,9 +976,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
               // Next
               _responsiveIconButton(
                 icon: Icon(
-                  isHifz
-                      ? Icons.skip_next_rounded
-                      : Icons.skip_previous_rounded,
+                  Icons.skip_previous_rounded,
                   color: Colors.white,
                 ),
                 size: buttonSize,
