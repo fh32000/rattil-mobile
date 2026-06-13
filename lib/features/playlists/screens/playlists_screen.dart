@@ -7,6 +7,7 @@ import '../../../data/models/playlist.dart';
 import '../../../data/repositories/playlist_repository.dart';
 import '../../../data/sources/juz_amma_data.dart';
 import '../../player/providers/audio_provider.dart';
+import '../../player/services/audio_handler.dart';
 import '../../player/widgets/mini_player.dart';
 
 // Playlist providers
@@ -239,7 +240,7 @@ class PlaylistsScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     Playlist playlist,
-    dynamic handler,
+    QuranAudioHandler handler,
   ) {
     showModalBottomSheet(
       context: context,
@@ -258,7 +259,7 @@ class PlaylistsScreen extends ConsumerWidget {
 
 class _PlaylistDetailSheet extends ConsumerStatefulWidget {
   final Playlist playlist;
-  final dynamic handler;
+  final QuranAudioHandler handler;
 
   const _PlaylistDetailSheet({
     required this.playlist,
