@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/sources/juz_amma_data.dart';
 import '../../player/providers/audio_provider.dart';
@@ -244,7 +245,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
               // Surah list
               SliverPadding(
-                padding: const EdgeInsets.only(bottom: 100),
+                padding: const EdgeInsets.only(bottom: AppConstants.miniPlayerBottomPadding),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final surah = surahs[index];

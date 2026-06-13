@@ -39,4 +39,8 @@ class AppConstants {
   // Asset paths
   static const String audioBasePath = 'assets/audio/juz_amma';
   static const String imagesPath = 'assets/images';
+
+  // Mini Player dimensions
+  static const double miniPlayerHeight = 80.0;
+  static const double miniPlayerBottomPadding = 100.0;
 }

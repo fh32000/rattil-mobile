@@ -1,6 +1,7 @@
 import 'dart:convert';
 import '../hive/hive_service.dart';
 import '../models/playlist.dart';
+import '../sources/juz_amma_data.dart';
 
 /// Repository for CRUD operations on playlists
 class PlaylistRepository {
@@ -42,6 +43,20 @@ class PlaylistRepository {
       );
       savePlaylist(updated);
     }
+  }
+
+  void sortTracksBySurahNumber(String playlistId) {
+    final playlist = getPlaylist(playlistId);
+    if (playlist == null) return;
+    final allTracks = JuzAmmaData.tracks;
+    final sorted = List<String>.from(playlist.trackIds);
+    sorted.sort((a, b) {
+      final trackA = allTracks.where((t) => t.id == a).firstOrNull;
+      final trackB = allTracks.where((t) => t.id == b).firstOrNull;
+      if (trackA == null || trackB == null) return 0;
+      return trackA.surahNumber.compareTo(trackB.surahNumber);
+    });
+    savePlaylist(playlist.copyWith(trackIds: sorted));
   }
 
   void reorderTracks(String playlistId, int oldIndex, int newIndex) {

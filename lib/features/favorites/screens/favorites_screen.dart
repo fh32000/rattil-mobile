@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/sources/juz_amma_data.dart';
 import '../../player/providers/audio_provider.dart';
@@ -57,7 +58,7 @@ class FavoritesScreen extends ConsumerWidget {
             )
           else
             ListView.builder(
-              padding: const EdgeInsets.only(bottom: 100),
+              padding: const EdgeInsets.only(bottom: AppConstants.miniPlayerBottomPadding),
               itemCount: favTracks.length,
               itemBuilder: (context, index) {
                 final track = favTracks[index];
