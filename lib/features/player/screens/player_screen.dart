@@ -21,7 +21,6 @@ class PlayerScreen extends ConsumerStatefulWidget {
 }
 
 class _PlayerScreenState extends ConsumerState<PlayerScreen> {
-  bool _showMemControls = false;
 
   @override
   Widget build(BuildContext context) {
@@ -506,7 +505,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     handler.enableHifzMode();
                   }
                 },
-                activeColor: const Color(0xFF4CAF50),
+                activeThumbColor: const Color(0xFF4CAF50),
                 activeTrackColor: const Color(0xFF4CAF50).withValues(alpha: 0.4),
               ),
             ],
@@ -607,7 +606,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     );
                     AnalyticsService.instance.trackHifzPauseMode(value);
                   },
-                  activeColor: AppColors.accent,
+                  activeThumbColor: AppColors.accent,
                 ),
               ],
             ),
@@ -629,7 +628,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     );
                     AnalyticsService.instance.trackHifzSurahRepeat(value);
                   },
-                  activeColor: AppColors.accent,
+                  activeThumbColor: AppColors.accent,
                 ),
               ],
             ),
@@ -665,7 +664,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     );
                     AnalyticsService.instance.trackHifzHideVerses(value);
                   },
-                  activeColor: AppColors.accent,
+                  activeThumbColor: AppColors.accent,
                 ),
               ],
             ),

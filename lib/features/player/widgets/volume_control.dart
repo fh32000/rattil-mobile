@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../services/audio_handler.dart';
 
 class VolumeControl extends StatelessWidget {

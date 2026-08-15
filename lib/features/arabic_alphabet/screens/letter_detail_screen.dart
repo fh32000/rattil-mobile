@@ -4,6 +4,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/models/arabic_letter.dart';
 import '../../../data/models/audio_track.dart';
+import '../../../data/models/memorization_settings.dart';
 import '../../../data/sources/arabic_alphabet_data.dart';
 import '../../player/providers/audio_provider.dart';
 import '../../player/widgets/mini_player.dart';
@@ -333,6 +334,241 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
                             ),
                           ],
                         ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Letter Repetition Mode Card (وضع ترديد الحروف بالحركات)
+                      Builder(
+                        builder: (context) {
+                          final isHifzActive = ref.watch(isHifzModeActiveProvider);
+                          final memState = ref.watch(memorizationPlaybackStateProvider).valueOrNull;
+                          final currentTrack = ref.watch(currentTrackProvider).valueOrNull;
+
+                          final isLetterHifzActive = isHifzActive &&
+                              currentTrack != null &&
+                              currentTrack.isAlphabetSegment &&
+                              currentTrack.id.startsWith('letter_${_currentNumber.toString().padLeft(3, '0')}');
+
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: theme.cardTheme.color,
+                              borderRadius: BorderRadius.circular(16),
+                              border: isLetterHifzActive
+                                  ? Border.all(
+                                      color: const Color(0xFF4CAF50).withValues(alpha: 0.6),
+                                      width: 1.5,
+                                    )
+                                  : null,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 4,
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF4CAF50),
+                                            borderRadius: BorderRadius.circular(2),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        const Text(
+                                          'وضع ترديد الحركات',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: isLetterHifzActive
+                                            ? const Color(0xFF4CAF50)
+                                            : color.withValues(alpha: 0.2),
+                                        foregroundColor: Colors.white,
+                                        elevation: isLetterHifzActive ? 4 : 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                      onPressed: () async {
+                                        final handler = ref.read(audioHandlerProvider);
+                                        if (isLetterHifzActive) {
+                                          handler.disableHifzMode();
+                                        } else {
+                                          await handler.enableHifzMode(
+                                            letterNumber: _currentNumber,
+                                          );
+                                        }
+                                      },
+                                      icon: Icon(
+                                        isLetterHifzActive
+                                            ? Icons.stop_rounded
+                                            : Icons.repeat_rounded,
+                                        size: 18,
+                                      ),
+                                      label: Text(
+                                        isLetterHifzActive ? 'إيقاف' : 'بدء الترديد',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  'ترديد الحرف بأسائه وحركاته مع الاستماع والترديد الذاتي',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+
+                                // 5 Diacritic chips
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: List.generate(5, (index) {
+                                    final segNum = index + 1;
+                                    final isSelectedSeg = isLetterHifzActive &&
+                                        (memState?.currentAyah == segNum);
+                                    final symbol = letter.getSegmentSymbol(segNum);
+                                    final title = letter.getSegmentTitle(segNum);
+
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        final handler = ref.read(audioHandlerProvider);
+                                        if (!isLetterHifzActive) {
+                                          await handler.enableHifzMode(
+                                            letterNumber: _currentNumber,
+                                          );
+                                        }
+                                        await handler.jumpToAyah(segNum);
+                                      },
+                                      child: Tooltip(
+                                        message: title,
+                                        child: AnimatedContainer(
+                                          duration: const Duration(milliseconds: 250),
+                                          width: 52,
+                                          height: 52,
+                                          decoration: BoxDecoration(
+                                            color: isSelectedSeg
+                                                ? const Color(0xFF4CAF50)
+                                                : theme
+                                                    .colorScheme
+                                                    .surfaceContainerHighest
+                                                    .withValues(alpha: 0.5),
+                                            borderRadius: BorderRadius.circular(14),
+                                            boxShadow: isSelectedSeg
+                                                ? [
+                                                    BoxShadow(
+                                                      color: const Color(0xFF4CAF50)
+                                                          .withValues(alpha: 0.4),
+                                                      blurRadius: 10,
+                                                      spreadRadius: 2,
+                                                    ),
+                                                  ]
+                                                : null,
+                                            border: Border.all(
+                                              color: isSelectedSeg
+                                                  ? Colors.white
+                                                  : Colors.white.withValues(
+                                                      alpha: 0.1,
+                                                    ),
+                                              width: isSelectedSeg ? 2 : 1,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              symbol,
+                                              style: TextStyle(
+                                                fontSize: 22,
+                                                fontFamily: 'Amiri',
+                                                fontWeight: FontWeight.bold,
+                                                color: isSelectedSeg
+                                                    ? Colors.black
+                                                    : Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+
+                                if (isLetterHifzActive && memState != null) ...[
+                                  const SizedBox(height: 14),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withValues(alpha: 0.2),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          letter.getSegmentTitle(
+                                            memState.currentAyah,
+                                          ),
+                                          style: const TextStyle(
+                                            color: Color(0xFF81C784),
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              memState.phase == HifzPhase.reciting
+                                                  ? Icons.record_voice_over
+                                                  : Icons.hearing,
+                                              size: 16,
+                                              color: memState.phase ==
+                                                      HifzPhase.reciting
+                                                  ? Colors.orange
+                                                  : const Color(0xFF4CAF50),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              memState.phase == HifzPhase.reciting
+                                                  ? 'ترديد'
+                                                  : 'استماع',
+                                              style: TextStyle(
+                                                color: memState.phase ==
+                                                        HifzPhase.reciting
+                                                    ? Colors.orange
+                                                    : const Color(0xFF4CAF50),
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          );
+                        },
                       ),
 
                       const SizedBox(height: 20),

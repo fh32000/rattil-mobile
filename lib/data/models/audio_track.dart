@@ -23,10 +23,15 @@ class AudioTrack {
 
   bool get isSurah => trackType == 'surah';
   bool get isAyah => trackType == 'ayah';
+  bool get isLetter => trackType == 'alphabet' || trackType == 'alphabet_segment';
+  bool get isAlphabetSegment => trackType == 'alphabet_segment';
 
   String get displayName {
     if (isAyah && ayahNumber != null) {
       return '$surahNameArabic - $ayahNumber';
+    }
+    if (isAlphabetSegment) {
+      return surahNameArabic;
     }
     return isSurah ? 'سورة $surahNameArabic' : surahNameArabic;
   }
