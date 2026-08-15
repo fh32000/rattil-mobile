@@ -22,6 +22,9 @@ class AyahTrackSource {
 
   /// Actual number of ayah audio files per surah
   static const Map<int, int> ayahFileCounts = {
+    1: 7,
+    78: 44,
+    79: 46,
     80: 43,
     81: 30,
     82: 20,
@@ -62,6 +65,11 @@ class AyahTrackSource {
   /// Surahs whose audio files have been verified at runtime.
   /// `true` = validated & OK, `false` = validated & FAILED.
   static final Map<int, bool> _validationCache = {};
+
+  /// For testing: manually set or override validation status.
+  static void setValidationStatusForTesting(int surahNumber, bool isValid) {
+    _validationCache[surahNumber] = isValid;
+  }
 
   /// Whether a background validation is in-flight for a surah.
   static final Set<int> _validating = {};

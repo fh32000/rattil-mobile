@@ -291,4 +291,33 @@ class ArabicAlphabetData {
       return null;
     }
   }
+
+  /// Generate 5 cut tracks for letter repetition mode (1 name + 4 diacritics)
+  static List<AudioTrack> getLetterRepeatTracks(int letterNumber) {
+    final letter = getByNumber(letterNumber);
+    if (letter == null) return [];
+
+    final numStr = letter.number.toString().padLeft(3, '0');
+    final engName = letter.nameEnglish;
+
+    final cutNames = ['1-name', '2-sukun', '3-fatha', '4-kasra', '5-damma'];
+
+    final tracks = <AudioTrack>[];
+    for (int i = 0; i < 5; i++) {
+      final segNum = i + 1;
+      tracks.add(AudioTrack(
+        id: 'letter_${numStr}_seg_$segNum',
+        surahNumber: 0,
+        surahNameArabic: '${letter.name} (${letter.getSegmentSymbol(segNum)})',
+        surahNameEnglish: letter.nameEnglish,
+        reciterName: 'مخارج الحروف (ترديد)',
+        assetPath:
+            'assets/audio/arabic_alphabet_cuts/$numStr-$engName-${cutNames[i]}.mp3',
+        pageNumber: 0,
+        trackType: 'alphabet_segment',
+        ayahNumber: segNum,
+      ));
+    }
+    return tracks;
+  }
 }

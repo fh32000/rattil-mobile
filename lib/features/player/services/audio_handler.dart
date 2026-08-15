@@ -7,6 +7,7 @@ import '../../../data/models/audio_track.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../../../data/repositories/memorization_settings_repository.dart';
 import '../../../data/repositories/playback_repository.dart';
+import '../../../data/sources/arabic_alphabet_data.dart';
 import '../../../data/sources/ayah_track_source.dart';
 import 'audio_loader.dart';
 
@@ -213,12 +214,53 @@ class QuranAudioHandler extends BaseAudioHandler
   bool get canEnableHifzMode {
     final track = currentTrack;
     if (track == null) return false;
+    if (track.isLetter) return true;
     return AyahTrackSource.hasAyahAudio(track.surahNumber);
   }
 
-  Future<void> enableHifzMode() async {
+  Future<void> enableHifzMode({int? letterNumber}) async {
     if (_hifzMode) return;
     final track = currentTrack;
+
+    int targetLetterNumber = letterNumber ?? 0;
+    if (targetLetterNumber == 0 && track != null && track.isLetter) {
+      targetLetterNumber = track.surahNumber;
+      if (targetLetterNumber == 0 && track.id.startsWith('letter_')) {
+        final parts = track.id.split('_');
+        if (parts.length >= 2) {
+          targetLetterNumber = int.tryParse(parts[1]) ?? 0;
+        }
+      }
+    }
+
+    if (targetLetterNumber > 0) {
+      _savedTrackList = List.from(_trackList.value);
+      _savedTrackIndex = _currentIndex.value;
+
+      _hifzMode = true;
+      _ayahTracks = ArabicAlphabetData.getLetterRepeatTracks(targetLetterNumber);
+      if (_ayahTracks.isEmpty) {
+        _hifzMode = false;
+        return;
+      }
+
+      _trackList.add(_ayahTracks);
+      _currentIndex.add(0);
+
+      _memState = MemorizationPlaybackState(
+        currentAyah: 1,
+        currentRepetition: 0,
+        currentAyahDuration: Duration.zero,
+        totalAyahs: _ayahTracks.length,
+        isHifzActive: true,
+        isPauseModeActive: _memSettings.pauseForRecitation,
+      );
+      _memStateSubject.add(_memState);
+
+      await _playAyah(1);
+      return;
+    }
+
     if (track == null || !AyahTrackSource.hasAyahAudio(track.surahNumber)) {
       return;
     }
@@ -466,6 +508,23 @@ class QuranAudioHandler extends BaseAudioHandler
     }
   }
 
+  Future<void> jumpToAyah(int ayahNumber) async {
+    if (!_hifzMode || _ayahTracks.isEmpty) return;
+    if (ayahNumber < 1 || ayahNumber > _ayahTracks.length) return;
+
+    _pauseTimer?.cancel();
+    _stopPauseCountdown();
+    _memState = _memState.copyWith(
+      currentAyah: ayahNumber,
+      currentRepetition: 0,
+      phase: HifzPhase.listening,
+      pauseRemaining: null,
+      pauseTotalDuration: null,
+    );
+    _memStateSubject.add(_memState);
+    await _playAyah(ayahNumber);
+  }
+
   Future<void> _handleAyahCompleted() async {
     if (!_hifzMode) return;
 
@@ -475,10 +534,16 @@ class QuranAudioHandler extends BaseAudioHandler
 
     final nextRep = _memState.currentRepetition + 1;
 
-    // Basmala (currentAyah == 1) repeats only once for all surahs except Al-Fatihah
-    final surahNumber = _ayahTracks.first.surahNumber;
-    final isBasmala = surahNumber != 1 && _memState.currentAyah == 1;
-    final repCount = isBasmala ? 1 : _memSettings.ayahRepeatCount;
+    // Basmala (currentAyah == 1) repeats only once for all surahs except Al-Fatihah.
+    // For letter repetition mode, segment 1 (letter name) repeats only once.
+    final firstTrack = _ayahTracks.first;
+    final isAlphabetSegment = firstTrack.isAlphabetSegment;
+    final surahNumber = firstTrack.surahNumber;
+    final isNonRepeatingFirstSegment = isAlphabetSegment
+        ? _memState.currentAyah == 1
+        : (surahNumber != 1 && _memState.currentAyah == 1);
+
+    final repCount = isNonRepeatingFirstSegment ? 1 : _memSettings.ayahRepeatCount;
 
     // Track ayah repetition
     final analytics = AnalyticsService.instance;
