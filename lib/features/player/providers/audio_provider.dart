@@ -6,7 +6,6 @@ import '../../../core/services/analytics_service.dart';
 import '../../../data/models/audio_track.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../../../data/repositories/favorites_repository.dart';
-import '../../../data/sources/ayah_track_source.dart';
 import '../services/audio_handler.dart';
 
 // ─── Global audio handler initialization ───
@@ -102,9 +101,7 @@ final currentIndexProvider = StreamProvider<int>((ref) {
 /// Whether hifz mode is available for the current track
 final canEnableHifzModeProvider = Provider<bool>((ref) {
   final handler = ref.watch(audioHandlerProvider);
-  final track = ref.watch(currentTrackProvider).valueOrNull;
-  if (track == null) return false;
-  return AyahTrackSource.hasAyahAudio(track.surahNumber);
+  return handler.canEnableHifzMode;
 });
 
 /// Whether hifz mode is currently active

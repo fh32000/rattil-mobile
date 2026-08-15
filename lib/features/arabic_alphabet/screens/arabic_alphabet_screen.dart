@@ -137,7 +137,7 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'تصفية حسب المخرج',
+                        'تصنيفه حسب المخرج',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.5,

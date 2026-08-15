@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../data/models/memorization_settings.dart';
-import '../../../../core/theme/app_colors.dart';
 
 class HifzProgressBar extends StatelessWidget {
   final MemorizationPlaybackState state;

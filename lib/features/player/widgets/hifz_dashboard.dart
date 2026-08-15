@@ -32,9 +32,15 @@ class HifzDashboard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _row('السورة', track.surahNameArabic),
+          _row(
+            track.isAlphabetSegment || track.isLetter ? 'المادة' : 'السورة',
+            track.surahNameArabic,
+          ),
           const SizedBox(height: 6),
-          _row('الآية', '${state.currentAyah} من ${state.totalAyahs}'),
+          _row(
+            track.isAlphabetSegment ? 'المقطع' : 'الآية',
+            '${state.currentAyah} من ${state.totalAyahs}',
+          ),
           const SizedBox(height: 6),
           _row('التكرار', '${state.currentRepetition + 1}/${settings.ayahRepeatCount}'),
           const SizedBox(height: 6),

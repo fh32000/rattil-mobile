@@ -63,6 +63,7 @@ flutter:
 
   assets:
     - assets/audio/juz_amma/
+    - assets/audio/juz_amma_ayahs/surah_001/
     - assets/audio/juz_amma_ayahs/surah_078/
     - assets/audio/juz_amma_ayahs/surah_079/
     - assets/audio/juz_amma_ayahs/surah_080/
@@ -101,6 +102,7 @@ flutter:
     - assets/audio/juz_amma_ayahs/surah_113/
     - assets/audio/juz_amma_ayahs/surah_114/
     - assets/audio/arabic_alphabet/
+    - assets/audio/arabic_alphabet_cuts/
     - assets/images/
     - assets/fonts/
 
