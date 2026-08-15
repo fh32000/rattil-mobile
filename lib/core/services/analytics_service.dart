@@ -264,28 +264,28 @@ class AnalyticsService {
 
   // ─── Non-fatal Error Recording ───
 
-  void recordError(
+  Future<void> recordError(
     Object exception,
     StackTrace? stack, {
     String? reason,
     bool fatal = false,
-  }) {
-    _guard(() {
-      _crashlytics!.recordError(exception, stack, reason: reason, fatal: fatal);
+  }) async {
+    await _guardAsync(() async {
+      await _crashlytics!.recordError(exception, stack, reason: reason, fatal: fatal);
     });
   }
 
-  void recordFlutterError(FlutterErrorDetails details, {bool fatal = false}) {
-    _guard(() {
-      _crashlytics!.recordFlutterError(details, fatal: fatal);
+  Future<void> recordFlutterError(FlutterErrorDetails details, {bool fatal = false}) async {
+    await _guardAsync(() async {
+      await _crashlytics!.recordFlutterError(details, fatal: fatal);
     });
   }
 
   // ─── Crashlytics Custom Keys ───
 
-  void setCustomKey(String key, Object value) {
-    _guard(() {
-      _crashlytics!.setCustomKey(key, value);
+  Future<void> setCustomKey(String key, Object value) async {
+    await _guardAsync(() async {
+      await _crashlytics!.setCustomKey(key, value);
     });
   }
 

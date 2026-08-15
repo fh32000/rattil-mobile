@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../services/verse_service.dart';
@@ -123,12 +122,14 @@ class VerseDisplayWidget extends StatelessWidget {
         const SizedBox(height: 12),
         Text(
           isReciting ? '👄 ردد الآية الآن' : '👂 استمع للآية',
-          style: GoogleFonts.amiri(
+          style: const TextStyle(
+            fontFamily: 'Amiri',
             fontSize: 22,
             fontWeight: FontWeight.w600,
+            height: 1.6,
+          ).copyWith(
             color: (isReciting ? Colors.orange : const Color(0xFF81C784))
                 .withValues(alpha: 0.8),
-            height: 1.6,
           ),
         ),
       ],
@@ -167,7 +168,8 @@ class VerseDisplayWidget extends StatelessWidget {
     final Widget verseWidget = Text(
       text,
       textAlign: TextAlign.center,
-      style: GoogleFonts.amiri(
+      style: TextStyle(
+        fontFamily: 'Amiri',
         fontSize: isCurrent ? 28 : 20,
         fontWeight: isCurrent ? FontWeight.bold : FontWeight.w400,
         color: isCurrent

@@ -10,11 +10,17 @@ class HiveService {
   static Future<void> init() async {
     await Hive.initFlutter();
 
-    _playbackBox = await Hive.openBox<int>(AppConstants.playbackBox);
-    _favoritesBox =
-        await Hive.openBox<List<String>>(AppConstants.favoritesBox);
-    _playlistsBox = await Hive.openBox<String>(AppConstants.playlistsBox);
-    _settingsBox = await Hive.openBox<dynamic>(AppConstants.settingsBox);
+    final results = await Future.wait([
+      Hive.openBox<int>(AppConstants.playbackBox),
+      Hive.openBox<List<String>>(AppConstants.favoritesBox),
+      Hive.openBox<String>(AppConstants.playlistsBox),
+      Hive.openBox<dynamic>(AppConstants.settingsBox),
+    ]);
+
+    _playbackBox = results[0] as Box<int>;
+    _favoritesBox = results[1] as Box<List<String>>;
+    _playlistsBox = results[2] as Box<String>;
+    _settingsBox = results[3];
   }
 
   static Box<int> get playbackBox => _playbackBox;

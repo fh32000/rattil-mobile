@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart' show rootBundle;
 import '../models/audio_track.dart';
-import '../models/surah.dart';
 import '../../core/constants/app_constants.dart';
 import 'juz_amma_data.dart';
 
@@ -8,14 +7,14 @@ import 'juz_amma_data.dart';
 ///
 /// ### Validation
 ///
-/// [init] must be called once at app startup.  It spot-checks the first and
-/// last audio file of every surah listed in [ayahFileCounts] to confirm the
-/// files are bundled in the APK.  Any surah whose files fail to load is
-/// excluded from [hasAyahAudio] — Memorization Mode will not be offered for
-/// that surah.
+/// Validation is lazy and per-surah.  When [hasAyahAudio] is called for a
+/// surah that hasn't been validated yet, it returns `true` optimistically
+/// (the surah is in [ayahFileCounts]) and kicks off a background validation.
+/// Once the background check completes, the cached result is used for
+/// subsequent calls.
 ///
-/// This design eliminates runtime fallback / recovery logic: an unsupported
-/// surah is simply hidden from the user rather than repaired dynamically.
+/// This eliminates the 70-call startup bottleneck that was causing ANRs on
+/// low-end devices.
 class AyahTrackSource {
   AyahTrackSource._();
 
@@ -61,47 +60,57 @@ class AyahTrackSource {
   };
 
   /// Surahs whose audio files have been verified at runtime.
-  static final Set<int> _validatedSurahs = {};
-  static bool _initDone = false;
+  /// `true` = validated & OK, `false` = validated & FAILED.
+  static final Map<int, bool> _validationCache = {};
 
-  /// Must be called once at app startup (e.g. in `AudioService.init` or
-  /// the audio-handler constructor).  Spot-checks the first and last ayah
-  /// file of each surah; surahs whose assets can't be loaded are excluded.
-  static Future<void> init() async {
-    if (_initDone) return;
-    _initDone = true;
+  /// Whether a background validation is in-flight for a surah.
+  static final Set<int> _validating = {};
 
-    for (final entry in ayahFileCounts.entries) {
-      final surah = entry.key;
-      final count = entry.value;
+  /// Whether Memorization Mode is available for [surahNumber].
+  ///
+  /// Synchronous check: returns the cached validation result if available,
+  /// otherwise returns `true` optimistically (surah is in [ayahFileCounts])
+  /// and triggers a background validation.
+  static bool hasAyahAudio(int surahNumber) {
+    if (!ayahFileCounts.containsKey(surahNumber)) return false;
 
-      final first = ayahAssetPath(surah, 1);
-      final last = ayahAssetPath(surah, count);
+    // Already validated?
+    if (_validationCache.containsKey(surahNumber)) {
+      return _validationCache[surahNumber]!;
+    }
+
+    // Not yet validated — trigger background check, return true optimistically
+    _validateSurahInBackground(surahNumber);
+    return true;
+  }
+
+  /// Validates a single surah in the background (fire-and-forget).
+  static void _validateSurahInBackground(int surahNumber) {
+    if (_validating.contains(surahNumber)) return;
+    _validating.add(surahNumber);
+
+    () async {
+      final count = ayahFileCounts[surahNumber]!;
+      final first = ayahAssetPath(surahNumber, 1);
+      final last = ayahAssetPath(surahNumber, count);
 
       try {
         await rootBundle.load(first);
         await rootBundle.load(last);
-        _validatedSurahs.add(surah);
+        _validationCache[surahNumber] = true;
         // ignore: avoid_print
-        print('[AyahTrackSource] Surah $surah validated ($count files)');
+        print('[AyahTrackSource] Surah $surahNumber validated ($count files)');
       } catch (_) {
+        _validationCache[surahNumber] = false;
         // ignore: avoid_print
         print(
-          '[AyahTrackSource] Surah $surah SKIPPED — '
+          '[AyahTrackSource] Surah $surahNumber SKIPPED — '
           'file(s) not bundled',
         );
+      } finally {
+        _validating.remove(surahNumber);
       }
-    }
-  }
-
-  /// Whether Memorization Mode is available for [surahNumber].
-  ///
-  /// Returns `true` only when the surah is listed in [ayahFileCounts] AND
-  /// [init] has confirmed its audio files are accessible.
-  static bool hasAyahAudio(int surahNumber) {
-    if (!ayahFileCounts.containsKey(surahNumber)) return false;
-    if (!_validatedSurahs.contains(surahNumber)) return false;
-    return true;
+    }();
   }
 
   static int getAyahCount(int surahNumber) {
