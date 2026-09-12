@@ -20,6 +20,7 @@ class VerseService {
   ///
   /// When [verseNumber] is `0` the basmala string is returned.
   String getVerseText(int surahNumber, int verseNumber) {
+    if (surahNumber < 1 || surahNumber > 114) return '';
     if (verseNumber < 1) return quran.basmala;
 
     final key = _key(surahNumber, verseNumber);
@@ -39,7 +40,7 @@ class VerseService {
         StackTrace.current,
         reason: 'verse_fetch_failed',
       );
-      rethrow;
+      return '';
     }
   }
 

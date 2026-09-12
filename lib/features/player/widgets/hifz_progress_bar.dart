@@ -3,12 +3,18 @@ import '../../../../data/models/memorization_settings.dart';
 
 class HifzProgressBar extends StatelessWidget {
   final MemorizationPlaybackState state;
+  final bool isLetter;
 
-  const HifzProgressBar({super.key, required this.state});
+  const HifzProgressBar({
+    super.key,
+    required this.state,
+    this.isLetter = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final progress = state.ayahProgress;
+    final prefix = isLetter ? 'مقطع' : 'آية';
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -27,7 +33,7 @@ class HifzProgressBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'آية ${state.currentAyah} من ${state.totalAyahs}',
+              '$prefix ${state.currentAyah} من ${state.totalAyahs}',
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.7),
                 fontSize: 12,

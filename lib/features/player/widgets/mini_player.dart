@@ -7,6 +7,7 @@ import '../../../data/models/memorization_settings.dart';
 import '../providers/audio_provider.dart';
 import '../widgets/playback_speed_control.dart';
 import 'hifz_progress_bar.dart';
+import 'letter_repetition_display_widget.dart';
 
 class MiniPlayer extends ConsumerWidget {
   const MiniPlayer({super.key});
@@ -83,7 +84,10 @@ class MiniPlayer extends ConsumerWidget {
                         horizontal: 12,
                         vertical: 4,
                       ),
-                      child: HifzProgressBar(state: memState),
+                      child: HifzProgressBar(
+                        state: memState,
+                        isLetter: track.isLetter,
+                      ),
                     ),
 
                   Padding(
@@ -109,8 +113,8 @@ class MiniPlayer extends ConsumerWidget {
                           ),
                           child: Center(
                             child: Text(
-                              track.trackType == 'alphabet'
-                                  ? '${int.tryParse(track.id.split('_').last) ?? 0}'
+                              track.isLetter
+                                  ? '${LetterRepetitionDisplayWidget.resolveLetterNumber(track) ?? 0}'
                                   : track.surahNumber.toString(),
                               style: const TextStyle(
                                 color: Colors.white,
@@ -144,7 +148,8 @@ class MiniPlayer extends ConsumerWidget {
                               Text(
                                 () {
                                   if (isHifz && memState.totalAyahs > 0) {
-                                    return 'آية ${memState.currentAyah} من ${memState.totalAyahs}  ·  ${formatDuration(position)}  ${memState.phase == HifzPhase.reciting ? '🔊' : '👂'}';
+                                    final label = track.isLetter ? 'مقطع' : 'آية';
+                                    return '$label ${memState.currentAyah} من ${memState.totalAyahs}  ·  ${formatDuration(position)}  ${memState.phase == HifzPhase.reciting ? '🔊' : '👂'}';
                                   }
                                   final pname = playlistNameAsync.valueOrNull;
                                   final source = pname != null

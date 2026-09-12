@@ -12,6 +12,7 @@ import '../widgets/pause_countdown_bar.dart';
 import '../widgets/volume_control.dart';
 import '../widgets/playback_speed_control.dart';
 import '../widgets/verse_display_widget.dart';
+import '../widgets/letter_repetition_display_widget.dart';
 
 class PlayerScreen extends ConsumerStatefulWidget {
   const PlayerScreen({super.key});
@@ -76,18 +77,29 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       // Top bar
-                      _buildTopBar(context),
+                      _buildTopBar(context, track),
 
                       if (isHifz) ...[
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                          child: VerseDisplayWidget(
-                            surahNumber: track.surahNumber,
-                            currentAudioIndex: memState.currentAyah,
-                            totalAudioFiles: memState.totalAyahs,
-                            phase: memState.phase,
-                            hideVerses: memSettings.hideVerses,
-                          ),
+                          child: track.isLetter
+                              ? LetterRepetitionDisplayWidget(
+                                  track: track,
+                                  currentSegment: memState.currentAyah,
+                                  totalSegments: memState.totalAyahs,
+                                  phase: memState.phase,
+                                  hideVerses: memSettings.hideVerses,
+                                  onSegmentSelected: (segNum) {
+                                    handler.jumpToAyah(segNum);
+                                  },
+                                )
+                              : VerseDisplayWidget(
+                                  surahNumber: track.surahNumber,
+                                  currentAudioIndex: memState.currentAyah,
+                                  totalAudioFiles: memState.totalAyahs,
+                                  phase: memState.phase,
+                                  hideVerses: memSettings.hideVerses,
+                                ),
                         ),
                       ] else ...[
                         // Surah artwork/decoration (non-Hifz only)
@@ -105,8 +117,14 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 32),
                           child: memState.phase == HifzPhase.reciting
-                              ? PauseCountdownBar(state: memState)
-                              : HifzProgressBar(state: memState),
+                              ? PauseCountdownBar(
+                                  state: memState,
+                                  isLetter: track.isLetter,
+                                )
+                              : HifzProgressBar(
+                                  state: memState,
+                                  isLetter: track.isLetter,
+                                ),
                         ),
                         const SizedBox(height: 16),
                       ],
@@ -117,16 +135,16 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                       // Memorization controls
                       if (canHifz && !isHifz) ...[
                         const SizedBox(height: 8),
-                        _buildMemorizationToggle(handler, isHifz),
+                        _buildMemorizationToggle(handler, isHifz, track),
                       ] else if (!canHifz && !isHifz && track.isSurah) ...[
                         const SizedBox(height: 8),
                         _buildMemorizationUnavailable(),
                       ],
                       if (isHifz) ...[
                         const SizedBox(height: 6),
-                        _buildMemorizationToggle(handler, isHifz),
+                        _buildMemorizationToggle(handler, isHifz, track),
                         const SizedBox(height: 6),
-                        _buildMemorizationControls(handler, memSettings),
+                        _buildMemorizationControls(handler, memSettings, track),
                         const SizedBox(height: 8),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -188,7 +206,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     );
   }
 
-  Widget _buildTopBar(BuildContext context) {
+  Widget _buildTopBar(BuildContext context, AudioTrack track) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
@@ -200,7 +218,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           Text(
-            'جزء عمّ',
+            track.isLetter ? 'مخارج الحروف' : 'جزء عمّ',
             style: Theme.of(
               context,
             ).textTheme.titleMedium?.copyWith(color: Colors.white70),
@@ -449,7 +467,16 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     );
   }
 
-  Widget _buildMemorizationToggle(QuranAudioHandler handler, bool isHifz) {
+  Widget _buildMemorizationToggle(
+    QuranAudioHandler handler,
+    bool isHifz,
+    AudioTrack track,
+  ) {
+    final isLetter = track.isLetter;
+    final toggleLabel = isLetter
+        ? (isHifz ? 'وضع ترديد الحركات (مفعل)' : 'وضع ترديد الحركات')
+        : (isHifz ? 'وضع الحفظ (مفعل)' : 'وضع الحفظ');
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: GestureDetector(
@@ -479,7 +506,9 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
               Row(
                 children: [
                   Icon(
-                    isHifz ? Icons.auto_stories : Icons.menu_book,
+                    isLetter
+                        ? Icons.repeat_rounded
+                        : (isHifz ? Icons.auto_stories : Icons.menu_book),
                     color: isHifz
                         ? const Color(0xFF4CAF50)
                         : Colors.white70,
@@ -487,7 +516,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                   ),
                   const SizedBox(width: 10),
                   Text(
-                    isHifz ? 'وضع الحفظ (مفعل)' : 'وضع الحفظ',
+                    toggleLabel,
                     style: TextStyle(
                       color: isHifz ? const Color(0xFF4CAF50) : Colors.white70,
                       fontSize: 14,
@@ -518,7 +547,10 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
   Widget _buildMemorizationControls(
     QuranAudioHandler handler,
     MemorizationSettings memSettings,
+    AudioTrack track,
   ) {
+    final isLetter = track.isLetter;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
       child: Container(
@@ -534,11 +566,16 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'تكرار الآية',
+                  isLetter ? 'تكرار الحركة' : 'تكرار الآية',
                   style: TextStyle(color: Colors.white70, fontSize: 14),
                 ),
                 GestureDetector(
-                  onTap: () => _showRepeatCountSheet(context, handler, memSettings),
+                  onTap: () => _showRepeatCountSheet(
+                    context,
+                    handler,
+                    memSettings,
+                    isLetter,
+                  ),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -585,11 +622,13 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'انتظار بعد الآية',
+                        isLetter ? 'انتظار بعد الحركة' : 'انتظار بعد الآية',
                         style: TextStyle(color: Colors.white70, fontSize: 14),
                       ),
                       Text(
-                        'انتظار لمدة الآية قبل المتابعة',
+                        isLetter
+                            ? 'انتظار لمدة الحركة قبل المتابعة'
+                            : 'انتظار لمدة الآية قبل المتابعة',
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.4),
                           fontSize: 11,
@@ -612,12 +651,12 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             ),
             const SizedBox(height: 4),
 
-            // Repeat Surah
+            // Repeat Surah / Letter
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'تكرار السورة',
+                  isLetter ? 'تكرار الحرف' : 'تكرار السورة',
                   style: TextStyle(color: Colors.white70, fontSize: 14),
                 ),
                 Switch(
@@ -634,7 +673,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             ),
             const SizedBox(height: 4),
 
-            // Hide Verses
+            // Hide Verses / Letter
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -643,11 +682,11 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'إخفاء الآيات أثناء الحفظ',
+                        isLetter ? 'إخفاء الحرف أثناء الترديد' : 'إخفاء الآيات أثناء الحفظ',
                         style: TextStyle(color: Colors.white70, fontSize: 14),
                       ),
                       Text(
-                        'للحفظ غيباً واختبار النفس',
+                        isLetter ? 'لاختبار النطق والتسميع غيباً' : 'للحفظ غيباً واختبار النفس',
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.4),
                           fontSize: 11,
@@ -753,8 +792,9 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
   void _showRepeatCountSheet(
     BuildContext context,
     QuranAudioHandler handler,
-    MemorizationSettings currentSettings,
-  ) {
+    MemorizationSettings currentSettings, [
+    bool isLetter = false,
+  ]) {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.cardDark,
@@ -770,7 +810,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'عدد مرات تكرار الآية',
+                  isLetter ? 'عدد مرات تكرار الحركة' : 'عدد مرات تكرار الآية',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,

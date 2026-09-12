@@ -4,8 +4,13 @@ import '../../../../core/utils/duration_helpers.dart';
 
 class PauseCountdownBar extends StatelessWidget {
   final MemorizationPlaybackState state;
+  final bool isLetter;
 
-  const PauseCountdownBar({super.key, required this.state});
+  const PauseCountdownBar({
+    super.key,
+    required this.state,
+    this.isLetter = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +36,7 @@ class PauseCountdownBar extends StatelessWidget {
               Icon(Icons.timer_outlined, color: Colors.orange.shade300, size: 18),
               const SizedBox(width: 8),
               Text(
-                'ردد الآية الآن',
+                isLetter ? 'ردد الحركة الآن' : 'ردد الآية الآن',
                 style: TextStyle(
                   color: Colors.orange.shade200,
                   fontSize: 13,
