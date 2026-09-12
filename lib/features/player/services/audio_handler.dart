@@ -470,6 +470,10 @@ class QuranAudioHandler extends BaseAudioHandler
     _memState = _memState.copyWith(
       currentAyah: ayahNumber,
       totalAyahs: _ayahTracks.length,
+      currentVerse: track.verseNumber ??
+          (track.surahNumber == 1 ? ayahNumber : ayahNumber - 1),
+      currentPart: track.partIndex,
+      totalPartsForAyah: track.totalParts,
       phase: HifzPhase.listening,
     );
     _memStateSubject.add(_memState);
@@ -560,18 +564,23 @@ class QuranAudioHandler extends BaseAudioHandler
 
       final nextRep = _memState.currentRepetition + 1;
 
-      // In letter repetition mode, segment 1 (letter name) repeats only once.
-      // For all Surahs, every ayah (including ayah 1) repeats according to ayahRepeatCount.
-      final firstTrack = _ayahTracks.first;
-      final isAlphabetSegment = firstTrack.isAlphabetSegment;
-      final isNonRepeatingFirstSegment = isAlphabetSegment && _memState.currentAyah == 1;
+      // Basmala (currentAyah == 1) repeats only once for all surahs except Al-Fatihah.
+      // In Al-Fatihah, verse 1 is part of the surah and repeats according to ayahRepeatCount.
+      // For letter repetition mode, segment 1 (letter name introduction) also repeats only once.
+      final currentTrack = _ayahTracks[_memState.currentAyah - 1];
+      final isAlphabetSegment = currentTrack.isAlphabetSegment;
+      final surahNumber = currentTrack.surahNumber;
+      final isNonRepeatingFirstSegment = isAlphabetSegment
+          ? _memState.currentAyah == 1
+          : (surahNumber != 1 &&
+              (currentTrack.verseNumber == 0 || _memState.currentAyah == 1));
 
       final repCount = isNonRepeatingFirstSegment ? 1 : _memSettings.ayahRepeatCount;
 
       // Track ayah repetition
       final analytics = AnalyticsService.instance;
       analytics.trackAyahRepeated(
-        firstTrack.surahNumber,
+        surahNumber,
         _memState.currentAyah,
         nextRep,
       );

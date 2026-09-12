@@ -1,6 +1,21 @@
 import 'package:quran/quran.dart' as quran;
 import '../../../core/services/analytics_service.dart';
 import '../../../data/sources/ayah_file_to_verse.dart';
+import '../../../data/sources/ayah_track_source.dart';
+
+class AyahPartInfo {
+  final int partIndex;
+  final int totalParts;
+  final int verseNumber;
+  final bool isMultiPart;
+
+  const AyahPartInfo({
+    required this.partIndex,
+    required this.totalParts,
+    required this.verseNumber,
+    required this.isMultiPart,
+  });
+}
 
 /// Lightweight service that wraps the `quran` package with caching.
 ///
@@ -53,6 +68,21 @@ class VerseService {
   /// Returns the verse number for a given audio file index.
   int getVerseForAudioIndex(int surahNumber, int audioIndex) {
     return ayahFileToVerseNumber(surahNumber, audioIndex);
+  }
+
+  /// Returns the part information (partIndex, totalParts, etc.) for a given audio file index.
+  AyahPartInfo? getPartInfoForAudioIndex(int surahNumber, int audioIndex) {
+    final segments = AyahTrackSource.getSegments(surahNumber);
+    if (audioIndex >= 1 && audioIndex <= segments.length) {
+      final seg = segments[audioIndex - 1];
+      return AyahPartInfo(
+        partIndex: seg.partIndex,
+        totalParts: seg.totalParts,
+        verseNumber: seg.verseNumber,
+        isMultiPart: seg.isMultiPart,
+      );
+    }
+    return null;
   }
 
   /// Pre‑fetch a range of verses so they are instantly available later.

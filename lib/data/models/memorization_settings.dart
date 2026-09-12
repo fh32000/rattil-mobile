@@ -74,6 +74,9 @@ class MemorizationPlaybackState {
   final HifzPhase phase;
   final Duration? pauseRemaining;
   final Duration? pauseTotalDuration;
+  final int currentVerse;
+  final int currentPart;
+  final int totalPartsForAyah;
 
   const MemorizationPlaybackState({
     this.currentAyah = 0,
@@ -85,7 +88,12 @@ class MemorizationPlaybackState {
     this.phase = HifzPhase.listening,
     this.pauseRemaining,
     this.pauseTotalDuration,
+    this.currentVerse = 0,
+    this.currentPart = 1,
+    this.totalPartsForAyah = 1,
   });
+
+  bool get isMultiPartAyah => totalPartsForAyah > 1;
 
   MemorizationPlaybackState copyWith({
     int? currentAyah,
@@ -97,6 +105,9 @@ class MemorizationPlaybackState {
     HifzPhase? phase,
     Duration? pauseRemaining,
     Duration? pauseTotalDuration,
+    int? currentVerse,
+    int? currentPart,
+    int? totalPartsForAyah,
   }) {
     return MemorizationPlaybackState(
       currentAyah: currentAyah ?? this.currentAyah,
@@ -108,6 +119,9 @@ class MemorizationPlaybackState {
       phase: phase ?? this.phase,
       pauseRemaining: pauseRemaining ?? this.pauseRemaining,
       pauseTotalDuration: pauseTotalDuration ?? this.pauseTotalDuration,
+      currentVerse: currentVerse ?? this.currentVerse,
+      currentPart: currentPart ?? this.currentPart,
+      totalPartsForAyah: totalPartsForAyah ?? this.totalPartsForAyah,
     );
   }
 

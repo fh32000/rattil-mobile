@@ -72,21 +72,39 @@ void main() {
       }
     });
 
-    test('Repetition rule: surahs repeat all ayahs including ayah 1', () {
-      // In surahs, track is NOT alphabet_segment
-      final surahTracks = AyahTrackSource.getAyahTracks(78);
-      final isAlphabetSegment = surahTracks.first.isAlphabetSegment;
+    test('Repetition rule: Basmala does not repeat in surahs (except Al-Fatihah), verses repeat', () {
       const repeatSettings = 3;
 
-      // Ayah 1
-      final isNonRepeatingAyah1 = isAlphabetSegment && 1 == 1;
-      final repCountAyah1 = isNonRepeatingAyah1 ? 1 : repeatSettings;
-      expect(repCountAyah1, equals(3), reason: 'Surah ayah 1 must repeat 3 times');
+      // Surah 78 (An-Naba):
+      final nabaTracks = AyahTrackSource.getAyahTracks(78);
+      final isAlphabetNaba = nabaTracks.first.isAlphabetSegment;
+      final surahNumNaba = nabaTracks.first.surahNumber;
 
-      // Ayah 2
-      final isNonRepeatingAyah2 = isAlphabetSegment && 2 == 1;
+      // Track 1 (Basmala) in Surah 78 -> 1 repetition (does not repeat)
+      final isNonRepeatingBasmala78 = isAlphabetNaba
+          ? 1 == 1
+          : (surahNumNaba != 1 && 1 == 1);
+      final repCountBasmala78 = isNonRepeatingBasmala78 ? 1 : repeatSettings;
+      expect(repCountBasmala78, equals(1), reason: 'Basmala in Surah 78 must NOT repeat');
+
+      // Track 2 (Ayah 1 of An-Naba: "عَمَّ يَتَسَاءَلُونَ") -> 3 repetitions
+      final isNonRepeatingAyah2 = isAlphabetNaba
+          ? 2 == 1
+          : (surahNumNaba != 1 && 2 == 1);
       final repCountAyah2 = isNonRepeatingAyah2 ? 1 : repeatSettings;
-      expect(repCountAyah2, equals(3), reason: 'Surah ayah 2 must repeat 3 times');
+      expect(repCountAyah2, equals(3), reason: 'Verses in Surah 78 must repeat according to repeat count');
+
+      // Surah 1 (Al-Fatihah):
+      final fatihaTracks = AyahTrackSource.getAyahTracks(1);
+      final isAlphabetFatiha = fatihaTracks.first.isAlphabetSegment;
+      final surahNumFatiha = fatihaTracks.first.surahNumber;
+
+      // Track 1 in Al-Fatihah (Ayah 1: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ") -> repeats according to repeatSettings
+      final isNonRepeatingAyah1Fatiha = isAlphabetFatiha
+          ? 1 == 1
+          : (surahNumFatiha != 1 && 1 == 1);
+      final repCountAyah1Fatiha = isNonRepeatingAyah1Fatiha ? 1 : repeatSettings;
+      expect(repCountAyah1Fatiha, equals(3), reason: 'Ayah 1 in Al-Fatihah must repeat');
     });
 
     test('Repetition rule: letters do not repeat segment 1, but repeat segments 2..5', () {

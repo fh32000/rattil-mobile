@@ -1,6 +1,10 @@
 import 'package:quran/quran.dart' as quran;
+import 'ayah_track_source.dart';
 
 /// Maps a 1‑based audio file index to the canonical Quran verse number.
+///
+/// If [AyahTrackSource] has segments for [surahNumber], it resolves
+/// directly from the segment's canonical [verseNumber].
 ///
 /// **Default rule (per‑surah)**
 /// ─────────────────────────────
@@ -9,18 +13,18 @@ import 'package:quran/quran.dart' as quran;
 ///  audio[3] → position 2 →  verse 2
 ///  …
 ///  audio[N] → position N‑1 (capped at [1, verseCount]).
-///
-/// If the result is less than 1 → `0` (basmala).
-/// If it exceeds the surah's canonical verse count → clamp to the last verse.
-///
-/// **TODO: verify against actual audio content for surahs where**
-/// `ayahFileCount != verseCount + 1`.
 int ayahFileToVerseNumber(int surahNumber, int audioIndex) {
   if (surahNumber < 1 || surahNumber > 114) return 0;
+
+  // Use registered/parsed segments if available
+  final segments = AyahTrackSource.getSegments(surahNumber);
+  if (audioIndex >= 1 && audioIndex <= segments.length) {
+    return segments[audioIndex - 1].verseNumber;
+  }
+
   final verseCount = quran.getVerseCount(surahNumber);
 
   // In Surah Al-Fatihah (surah 1), verse 1 IS the Basmala!
-  // Audio files 001.mp3 - 007.mp3 map directly to canonical verses 1 - 7:
   if (surahNumber == 1) {
     if (audioIndex < 1) return 1;
     if (audioIndex > verseCount) return verseCount;

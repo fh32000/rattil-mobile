@@ -149,7 +149,14 @@ class MiniPlayer extends ConsumerWidget {
                                 () {
                                   if (isHifz && memState.totalAyahs > 0) {
                                     final label = track.isLetter ? 'مقطع' : 'آية';
-                                    return '$label ${memState.currentAyah} من ${memState.totalAyahs}  ·  ${formatDuration(position)}  ${memState.phase == HifzPhase.reciting ? '🔊' : '👂'}';
+                                    final ayahText = track.isMultiPart
+                                        ? 'آية ${track.verseNumber ?? memState.currentVerse} (${track.partIndex}/${track.totalParts})'
+                                        : (track.verseNumber == 0 ||
+                                                (track.surahNumber != 1 &&
+                                                    memState.currentAyah == 1)
+                                            ? 'البسملة'
+                                            : '$label ${memState.currentVerse > 0 ? memState.currentVerse : memState.currentAyah} من ${memState.totalAyahs}');
+                                    return '$ayahText  ·  ${formatDuration(position)}  ${memState.phase == HifzPhase.reciting ? '🔊' : '👂'}';
                                   }
                                   final pname = playlistNameAsync.valueOrNull;
                                   final source = pname != null

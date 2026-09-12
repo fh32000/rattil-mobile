@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show rootBundle, AssetBundle, AssetManifest;
 import '../models/audio_track.dart';
 import '../../core/constants/app_constants.dart';
 import 'juz_amma_data.dart';
@@ -121,11 +121,193 @@ class AyahTrackSource {
     }();
   }
 
+  /// Registry of custom/parsed segments per surah.
+  static final Map<int, List<AyahTrackSegment>> _surahSegments = {};
+
+  /// Regex matching filenames like '001.mp3', '015-1.mp3', '15-2.mp3', '015_1.mp3'
+  static final RegExp _fileRegex = RegExp(r'^(\d+)(?:[-_](\d+))?\.mp3$');
+
+  /// Register custom segments for a surah (e.g. For surahs with split ayahs).
+  static void registerCustomSegments(
+    int surahNumber,
+    List<AyahTrackSegment> segments,
+  ) {
+    _surahSegments[surahNumber] = List.unmodifiable(segments);
+  }
+
+  /// Check whether custom segments are registered for [surahNumber].
+  static bool hasCustomTracks(int surahNumber) =>
+      _surahSegments.containsKey(surahNumber);
+
+  /// Clears custom segments (useful in testing).
+  static void clearCustomSegments() => _surahSegments.clear();
+
+  /// Parse a list of audio file names into ordered [AyahTrackSegment]s.
+  /// Supports:
+  /// - Standard: `['001.mp3', '002.mp3', ...]`
+  /// - Multi-part: `['001.mp3', ..., '015-1.mp3', '015-2.mp3', '016.mp3', ...]`
+  static List<AyahTrackSegment> parseFileNames(
+    int surahNumber,
+    List<String> fileNames,
+  ) {
+    if (fileNames.isEmpty) return [];
+
+    final parsed = <_RawFileInfo>[];
+    for (final name in fileNames) {
+      final baseName = name.split('/').last;
+      final match = _fileRegex.firstMatch(baseName);
+      if (match != null) {
+        final base = int.parse(match.group(1)!);
+        final part = match.group(2) != null ? int.parse(match.group(2)!) : 1;
+        parsed.add(_RawFileInfo(baseName, base, part));
+      } else if (baseName.toLowerCase().contains('basmala') ||
+          baseName.startsWith('000')) {
+        parsed.add(_RawFileInfo(baseName, 0, 1));
+      }
+    }
+
+    parsed.sort((a, b) {
+      final cmp = a.base.compareTo(b.base);
+      if (cmp != 0) return cmp;
+      return a.part.compareTo(b.part);
+    });
+
+    final partCounts = <int, int>{};
+    for (final f in parsed) {
+      partCounts[f.base] = (partCounts[f.base] ?? 0) + 1;
+    }
+
+    final hasMultiPart = parsed.any((f) =>
+        f.fileName.contains('-') ||
+        f.fileName.contains('_') ||
+        (partCounts[f.base] ?? 0) > 1);
+
+    final segments = <AyahTrackSegment>[];
+    for (int i = 0; i < parsed.length; i++) {
+      final f = parsed[i];
+      int verseNum;
+
+      if (surahNumber == 1) {
+        verseNum = f.base;
+      } else if (hasMultiPart) {
+        // In multi-part naming mode (where files like 15-1, 15-2, 16 exist):
+        if (f.base == 0 || (i == 0 && f.base == 1 && partCounts[f.base] == 1)) {
+          verseNum = 0; // Basmala
+        } else {
+          verseNum = f.base;
+        }
+      } else {
+        // Standard sequential mode (001.mp3 = basmala, 002.mp3 = verse 1...)
+        verseNum = i; // 0 for basmala, 1 for verse 1...
+      }
+
+      segments.add(AyahTrackSegment(
+        fileName: f.fileName,
+        verseNumber: verseNum,
+        partIndex: f.part,
+        totalParts: partCounts[f.base] ?? 1,
+      ));
+    }
+
+    return segments;
+  }
+
+  /// Scans the asset bundle manifest to dynamically discover all surah audio files.
+  static Future<void> initFromAssetBundle([AssetBundle? bundle]) async {
+    try {
+      final b = bundle ?? rootBundle;
+      final manifest = await AssetManifest.loadFromAssetBundle(b);
+      final assets = manifest.listAssets();
+      final surahFiles = <int, List<String>>{};
+
+      final pathRegex = RegExp(
+          r'^assets/audio/juz_amma_ayahs/surah_(\d+)/([^/]+\.mp3)$');
+      for (final asset in assets) {
+        final match = pathRegex.firstMatch(asset);
+        if (match != null) {
+          final surahNum = int.parse(match.group(1)!);
+          final fileName = match.group(2)!;
+          surahFiles.putIfAbsent(surahNum, () => []).add(fileName);
+        }
+      }
+
+      for (final entry in surahFiles.entries) {
+        final segments = parseFileNames(entry.key, entry.value);
+        if (segments.isNotEmpty) {
+          registerCustomSegments(entry.key, segments);
+        }
+      }
+    } catch (_) {
+      // Fallback silently to static definitions
+    }
+  }
+
+  /// Returns the ordered segments for a surah.
+  static List<AyahTrackSegment> getSegments(int surahNumber) {
+    if (_surahSegments.containsKey(surahNumber)) {
+      return _surahSegments[surahNumber]!;
+    }
+
+    if (surahNumber == 78) {
+      // Surah 78 has multi-part Ayah 15 (015-1.mp3, 015-2.mp3)
+      final segments = <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '001.mp3', verseNumber: 0),
+        for (int i = 2; i <= 14; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i - 1,
+          ),
+        const AyahTrackSegment(
+          fileName: '015-1.mp3',
+          verseNumber: 15,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '015-2.mp3',
+          verseNumber: 15,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        for (int i = 16; i <= 43; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+      return segments;
+    }
+
+    final count = ayahFileCounts[surahNumber] ?? 0;
+    if (count == 0) return [];
+
+    final segments = <AyahTrackSegment>[];
+    for (int i = 1; i <= count; i++) {
+      final fileName = '${i.toString().padLeft(3, '0')}.mp3';
+      final verseNum = surahNumber == 1 ? i : (i - 1);
+      segments.add(AyahTrackSegment(
+        fileName: fileName,
+        verseNumber: verseNum,
+        partIndex: 1,
+        totalParts: 1,
+      ));
+    }
+    return segments;
+  }
+
   static int getAyahCount(int surahNumber) {
+    if (_surahSegments.containsKey(surahNumber)) {
+      return _surahSegments[surahNumber]!.length;
+    }
     return ayahFileCounts[surahNumber] ?? 0;
   }
 
   static String ayahAssetPath(int surahNumber, int ayahNumber) {
+    final segments = getSegments(surahNumber);
+    if (ayahNumber >= 1 && ayahNumber <= segments.length) {
+      final surahPadded = surahNumber.toString().padLeft(3, '0');
+      return '$_basePath/surah_$surahPadded/${segments[ayahNumber - 1].fileName}';
+    }
     final surahPadded = surahNumber.toString().padLeft(3, '0');
     final ayahPadded = ayahNumber.toString().padLeft(3, '0');
     return '$_basePath/surah_$surahPadded/$ayahPadded.mp3';
@@ -135,23 +317,58 @@ class AyahTrackSource {
     final surah = JuzAmmaData.getSurahByNumber(surahNumber);
     if (surah == null) return [];
 
-    final count = getAyahCount(surahNumber);
-    if (count == 0) return [];
+    final segments = getSegments(surahNumber);
+    if (segments.isEmpty) return [];
 
+    final surahPadded = surahNumber.toString().padLeft(3, '0');
     final tracks = <AudioTrack>[];
-    for (int i = 1; i <= count; i++) {
+
+    for (int i = 0; i < segments.length; i++) {
+      final seg = segments[i];
       tracks.add(AudioTrack(
-        id: '${surahNumber}_ayah_${i.toString().padLeft(3, '0')}',
+        id: '${surahNumber}_track_${(i + 1).toString().padLeft(3, '0')}',
         surahNumber: surahNumber,
         surahNameArabic: surah.nameArabic,
         surahNameEnglish: surah.nameEnglish,
         reciterName: AppConstants.reciterName,
-        assetPath: ayahAssetPath(surahNumber, i),
+        assetPath: '$_basePath/surah_$surahPadded/${seg.fileName}',
         pageNumber: surah.pageStart,
         trackType: 'ayah',
-        ayahNumber: i,
+        ayahNumber: i + 1,
+        verseNumber: seg.verseNumber,
+        partIndex: seg.partIndex,
+        totalParts: seg.totalParts,
       ));
     }
     return tracks;
   }
+}
+
+/// Represents a single audio file segment for a Quran ayah.
+class AyahTrackSegment {
+  final String fileName;
+  final int verseNumber;
+  final int partIndex;
+  final int totalParts;
+
+  const AyahTrackSegment({
+    required this.fileName,
+    required this.verseNumber,
+    this.partIndex = 1,
+    this.totalParts = 1,
+  });
+
+  bool get isMultiPart => totalParts > 1;
+
+  @override
+  String toString() =>
+      'AyahTrackSegment(file: $fileName, verse: $verseNumber, part: $partIndex/$totalParts)';
+}
+
+class _RawFileInfo {
+  final String fileName;
+  final int base;
+  final int part;
+
+  const _RawFileInfo(this.fileName, this.base, this.part);
 }

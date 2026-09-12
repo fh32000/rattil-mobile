@@ -370,7 +370,18 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                'التكرار ${memState.currentRepetition + 1}/${memSettings.ayahRepeatCount}',
+                () {
+                  final isNonRepeating = track.isLetter
+                      ? memState.currentAyah == 1
+                      : (track.surahNumber != 1 && (track.verseNumber == 0 || memState.currentAyah == 1));
+                  if (isNonRepeating) {
+                    return track.isLetter ? 'اسم الحرف' : 'البسملة (مرة واحدة)';
+                  }
+                  final partSuffix = track.isMultiPart
+                      ? ' (مقطع ${track.partIndex}/${track.totalParts})'
+                      : '';
+                  return 'التكرار ${memState.currentRepetition + 1}/${memSettings.ayahRepeatCount}$partSuffix';
+                }(),
                 style: TextStyle(color: AppColors.accentLight, fontSize: 13),
               ),
             ),

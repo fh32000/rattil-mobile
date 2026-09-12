@@ -14,7 +14,6 @@ class HifzProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = state.ayahProgress;
-    final prefix = isLetter ? 'مقطع' : 'آية';
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -33,7 +32,18 @@ class HifzProgressBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '$prefix ${state.currentAyah} من ${state.totalAyahs}',
+              () {
+                if (isLetter) {
+                  return 'مقطع ${state.currentAyah} من ${state.totalAyahs}';
+                }
+                if (state.isMultiPartAyah) {
+                  return 'آية ${state.currentVerse} (مقطع ${state.currentPart}/${state.totalPartsForAyah})';
+                }
+                if (state.currentVerse == 0 && state.currentAyah == 1) {
+                  return 'البسملة';
+                }
+                return 'آية ${state.currentVerse > 0 ? state.currentVerse : state.currentAyah} من ${state.totalAyahs}';
+              }(),
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.7),
                 fontSize: 12,
