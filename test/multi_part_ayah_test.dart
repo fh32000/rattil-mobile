@@ -202,5 +202,75 @@ void main() {
       final repCountPart2 = isNonRepeatingPart2 ? 1 : repeatSetting;
       expect(repCountPart2, equals(3), reason: 'Ayah 15 Part 2 must repeat 3 times');
     });
+
+    test('Surah 78 default segments has all 44 clips mapped to canonical verses 1..40 and Basmala', () {
+      final segments = AyahTrackSource.getSegments(78);
+      expect(segments.length, equals(44));
+
+      // Track 1: Basmala (000.mp3, verse 0)
+      expect(segments[0].fileName, equals('000.mp3'));
+      expect(segments[0].verseNumber, equals(0));
+
+      // Tracks 2..14: Ayahs 1..13 (001.mp3 .. 013.mp3)
+      for (int i = 1; i <= 13; i++) {
+        expect(segments[i].verseNumber, equals(i));
+        expect(segments[i].fileName, equals('${i.toString().padLeft(3, '0')}.mp3'));
+        expect(segments[i].isMultiPart, isFalse);
+      }
+
+      // Track 15: Ayah 14 Part 1 (014-1.mp3)
+      expect(segments[14].fileName, equals('014-1.mp3'));
+      expect(segments[14].verseNumber, equals(14));
+      expect(segments[14].partIndex, equals(1));
+      expect(segments[14].totalParts, equals(2));
+
+      // Track 16: Ayah 14 Part 2 (014-2.mp3)
+      expect(segments[15].fileName, equals('014-2.mp3'));
+      expect(segments[15].verseNumber, equals(14));
+      expect(segments[15].partIndex, equals(2));
+      expect(segments[15].totalParts, equals(2));
+
+      // Tracks 17..38: Ayahs 15..36 (015.mp3 .. 036.mp3)
+      for (int i = 16; i < 38; i++) {
+        final verse = i - 1; // 15..36
+        expect(segments[i].verseNumber, equals(verse));
+        expect(segments[i].fileName, equals('${verse.toString().padLeft(3, '0')}.mp3'));
+        expect(segments[i].isMultiPart, isFalse);
+      }
+
+      // Track 39: Ayah 37 Part 1 (037-1.mp3)
+      expect(segments[38].fileName, equals('037-1.mp3'));
+      expect(segments[38].verseNumber, equals(37));
+      expect(segments[38].partIndex, equals(1));
+      expect(segments[38].totalParts, equals(2));
+
+      // Track 40: Ayah 37 Part 2 (037-2.mp3)
+      expect(segments[39].fileName, equals('037-2.mp3'));
+      expect(segments[39].verseNumber, equals(37));
+      expect(segments[39].partIndex, equals(2));
+      expect(segments[39].totalParts, equals(2));
+
+      // Track 41: Ayah 38 Part 1 (038-1.mp3)
+      expect(segments[40].fileName, equals('038-1.mp3'));
+      expect(segments[40].verseNumber, equals(38));
+      expect(segments[40].partIndex, equals(1));
+      expect(segments[40].totalParts, equals(2));
+
+      // Track 42: Ayah 38 Part 2 (038-2.mp3)
+      expect(segments[41].fileName, equals('038-2.mp3'));
+      expect(segments[41].verseNumber, equals(38));
+      expect(segments[41].partIndex, equals(2));
+      expect(segments[41].totalParts, equals(2));
+
+      // Track 43: Ayah 39 (039.mp3)
+      expect(segments[42].fileName, equals('039.mp3'));
+      expect(segments[42].verseNumber, equals(39));
+      expect(segments[42].isMultiPart, isFalse);
+
+      // Track 44: Ayah 40 (040.mp3) - the final verse!
+      expect(segments[43].fileName, equals('040.mp3'));
+      expect(segments[43].verseNumber, equals(40));
+      expect(segments[43].isMultiPart, isFalse);
+    });
   });
 }

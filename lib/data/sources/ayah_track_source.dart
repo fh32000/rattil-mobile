@@ -249,31 +249,62 @@ class AyahTrackSource {
     }
 
     if (surahNumber == 78) {
-      // Surah 78 has multi-part Ayah 15 (015-1.mp3, 015-2.mp3)
       final segments = <AyahTrackSegment>[
-        const AyahTrackSegment(fileName: '001.mp3', verseNumber: 0),
-        for (int i = 2; i <= 14; i++)
-          AyahTrackSegment(
-            fileName: '${i.toString().padLeft(3, '0')}.mp3',
-            verseNumber: i - 1,
-          ),
-        const AyahTrackSegment(
-          fileName: '015-1.mp3',
-          verseNumber: 15,
-          partIndex: 1,
-          totalParts: 2,
-        ),
-        const AyahTrackSegment(
-          fileName: '015-2.mp3',
-          verseNumber: 15,
-          partIndex: 2,
-          totalParts: 2,
-        ),
-        for (int i = 16; i <= 43; i++)
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 13; i++)
           AyahTrackSegment(
             fileName: '${i.toString().padLeft(3, '0')}.mp3',
             verseNumber: i,
           ),
+        const AyahTrackSegment(
+          fileName: '014-1.mp3',
+          verseNumber: 14,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '014-2.mp3',
+          verseNumber: 14,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        for (int i = 15; i <= 36; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+        const AyahTrackSegment(
+          fileName: '037-1.mp3',
+          verseNumber: 37,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '037-2.mp3',
+          verseNumber: 37,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '038-1.mp3',
+          verseNumber: 38,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '038-2.mp3',
+          verseNumber: 38,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '039.mp3',
+          verseNumber: 39,
+        ),
+        const AyahTrackSegment(
+          fileName: '040.mp3',
+          verseNumber: 40,
+        ),
       ];
       return segments;
     }

@@ -27,7 +27,17 @@ void main() {
       final tracks = AyahTrackSource.getAyahTracks(78);
       expect(tracks.length, equals(44));
       expect(tracks[0].ayahNumber, equals(1));
+      expect(tracks[0].verseNumber, equals(0));
+      expect(tracks[0].assetPath, contains('000.mp3'));
+      expect(tracks[14].verseNumber, equals(14));
+      expect(tracks[14].partIndex, equals(1));
+      expect(tracks[14].assetPath, contains('014-1.mp3'));
+      expect(tracks[15].verseNumber, equals(14));
+      expect(tracks[15].partIndex, equals(2));
+      expect(tracks[15].assetPath, contains('014-2.mp3'));
       expect(tracks[43].ayahNumber, equals(44));
+      expect(tracks[43].verseNumber, equals(40));
+      expect(tracks[43].assetPath, contains('040.mp3'));
     });
 
     test('Surah An-Naziat audio tracks count and mapping', () {
