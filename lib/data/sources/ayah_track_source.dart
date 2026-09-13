@@ -24,13 +24,13 @@ class AyahTrackSource {
   static const Map<int, int> ayahFileCounts = {
     1: 7,
     78: 44,
-    79: 46,
+    79: 47,
     80: 43,
     81: 30,
     82: 20,
     83: 39,
     84: 27,
-    85: 22,
+    85: 23,
     86: 18,
     87: 21,
     88: 27,
@@ -307,6 +307,112 @@ class AyahTrackSource {
         ),
       ];
       return segments;
+    }
+
+    if (surahNumber == 79) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 46; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+    }
+
+    if (surahNumber == 83) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 12; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+        const AyahTrackSegment(
+          fileName: '013-1.mp3',
+          verseNumber: 13,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '013-2.mp3',
+          verseNumber: 13,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        for (int i = 14; i <= 31; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+        const AyahTrackSegment(
+          fileName: '032-1.mp3',
+          verseNumber: 32,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '032-2.mp3',
+          verseNumber: 32,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        for (int i = 33; i <= 36; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+    }
+
+    if (surahNumber == 84) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 5; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+        const AyahTrackSegment(
+          fileName: '006-1.mp3',
+          verseNumber: 6,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '006-2.mp3',
+          verseNumber: 6,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        for (int i = 7; i <= 25; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+    }
+
+    if (surahNumber == 85) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 22; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+    }
+
+    if (surahNumber == 86) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 17; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
     }
 
     final count = ayahFileCounts[surahNumber] ?? 0;

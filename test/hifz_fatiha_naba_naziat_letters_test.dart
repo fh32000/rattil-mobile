@@ -43,9 +43,17 @@ void main() {
     test('Surah An-Naziat audio tracks count and mapping', () {
       expect(AyahTrackSource.hasAyahAudio(79), isTrue);
       final tracks = AyahTrackSource.getAyahTracks(79);
-      expect(tracks.length, equals(46));
+      expect(tracks.length, equals(47));
       expect(tracks[0].ayahNumber, equals(1));
-      expect(tracks[45].ayahNumber, equals(46));
+      expect(tracks[0].verseNumber, equals(0));
+      expect(tracks[0].assetPath, contains('000.mp3'));
+      expect(tracks[36].verseNumber, equals(36));
+      expect(tracks[36].assetPath, contains('036.mp3'));
+      expect(tracks[37].verseNumber, equals(37));
+      expect(tracks[37].assetPath, contains('037.mp3'));
+      expect(tracks[46].ayahNumber, equals(47));
+      expect(tracks[46].verseNumber, equals(46));
+      expect(tracks[46].assetPath, contains('046.mp3'));
     });
 
     test('Arabic alphabet repetition tracks generation', () {
