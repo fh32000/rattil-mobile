@@ -1,0 +1,626 @@
+[
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/001.mp3",
+    "duration": 8.829375,
+    "text": "بسم الله الرحمن الرحيم",
+    "clean": "بسم الله الرحمن الرحيم",
+    "words": [
+      {
+        "word": " بسم",
+        "start": 0.0,
+        "end": 1.6,
+        "probability": 0.6553783118724823
+      },
+      {
+        "word": " الله",
+        "start": 1.6,
+        "end": 2.62,
+        "probability": 0.52931147813797
+      },
+      {
+        "word": " الرحمن",
+        "start": 2.62,
+        "end": 4.62,
+        "probability": 0.6060390472412109
+      },
+      {
+        "word": " الرحيم",
+        "start": 4.62,
+        "end": 8.36,
+        "probability": 0.814872940381368
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/002.mp3",
+    "duration": 7.471,
+    "text": "و السماء  او او او او او",
+    "clean": "و السماء او او او او او",
+    "words": [
+      {
+        "word": " و",
+        "start": 0.0,
+        "end": 1.3,
+        "probability": 0.1980065405368805
+      },
+      {
+        "word": " السماء",
+        "start": 1.3,
+        "end": 4.18,
+        "probability": 0.3361716891328494
+      },
+      {
+        "word": " او",
+        "start": 4.18,
+        "end": 4.68,
+        "probability": 0.2670338526368141
+      },
+      {
+        "word": " او",
+        "start": 4.68,
+        "end": 5.22,
+        "probability": 0.3670678548514843
+      },
+      {
+        "word": " او",
+        "start": 5.22,
+        "end": 5.48,
+        "probability": 0.46366843581199646
+      },
+      {
+        "word": " او",
+        "start": 5.48,
+        "end": 5.84,
+        "probability": 0.6453846544027328
+      },
+      {
+        "word": " او",
+        "start": 5.84,
+        "end": 6.1,
+        "probability": 0.7884604632854462
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/003.mp3",
+    "duration": 7.2359375,
+    "text": "وما عند راكنا الطريق",
+    "clean": "وما عند راكنا الطريق",
+    "words": [
+      {
+        "word": " وما",
+        "start": 0.0,
+        "end": 1.54,
+        "probability": 0.5322279185056686
+      },
+      {
+        "word": " عند",
+        "start": 1.54,
+        "end": 3.04,
+        "probability": 0.1509363353252411
+      },
+      {
+        "word": " راكنا",
+        "start": 3.04,
+        "end": 4.32,
+        "probability": 0.5265468060970306
+      },
+      {
+        "word": " الطريق",
+        "start": 4.32,
+        "end": 5.98,
+        "probability": 0.6916980544726054
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/004.mp3",
+    "duration": 5.06775,
+    "text": "أن نجمس في بيب",
+    "clean": "ان نجمس في بيب",
+    "words": [
+      {
+        "word": " أن",
+        "start": 0.0,
+        "end": 1.66,
+        "probability": 0.16038723289966583
+      },
+      {
+        "word": " نجمس",
+        "start": 1.66,
+        "end": 2.9,
+        "probability": 0.5462386533617973
+      },
+      {
+        "word": " في",
+        "start": 2.9,
+        "end": 3.72,
+        "probability": 0.0683010146021843
+      },
+      {
+        "word": " بيب",
+        "start": 3.72,
+        "end": 4.4,
+        "probability": 0.4505675286054611
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/005.mp3",
+    "duration": 9.7436875,
+    "text": "إن كلون في سلم ما عليها حافر",
+    "clean": "ان كلون في سلم ما عليها حافر",
+    "words": [
+      {
+        "word": " إن",
+        "start": 0.0,
+        "end": 1.22,
+        "probability": 0.14338703453540802
+      },
+      {
+        "word": " كلون",
+        "start": 1.22,
+        "end": 2.96,
+        "probability": 0.615579828619957
+      },
+      {
+        "word": " في",
+        "start": 2.96,
+        "end": 3.34,
+        "probability": 0.4615277647972107
+      },
+      {
+        "word": " سلم",
+        "start": 3.34,
+        "end": 4.48,
+        "probability": 0.46265365183353424
+      },
+      {
+        "word": " ما",
+        "start": 4.48,
+        "end": 6.08,
+        "probability": 0.32081136107444763
+      },
+      {
+        "word": " عليها",
+        "start": 6.08,
+        "end": 7.72,
+        "probability": 0.8706412315368652
+      },
+      {
+        "word": " حافر",
+        "start": 7.72,
+        "end": 9.1,
+        "probability": 0.7163856625556946
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/006.mp3",
+    "duration": 10.057125,
+    "text": "فاليا غري الإنسان من مخليق",
+    "clean": "فاليا غري الانسان من مخليق",
+    "words": [
+      {
+        "word": " فاليا",
+        "start": 0.0,
+        "end": 1.82,
+        "probability": 0.3687452624241511
+      },
+      {
+        "word": " غري",
+        "start": 1.82,
+        "end": 3.36,
+        "probability": 0.41870148479938507
+      },
+      {
+        "word": " الإنسان",
+        "start": 3.36,
+        "end": 6.1,
+        "probability": 0.7034740522503853
+      },
+      {
+        "word": " من",
+        "start": 6.1,
+        "end": 6.92,
+        "probability": 0.3093988001346588
+      },
+      {
+        "word": " مخليق",
+        "start": 6.92,
+        "end": 9.1,
+        "probability": 0.6720579192042351
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/007.mp3",
+    "duration": 9.247375,
+    "text": "خلق من ما إن دافيق",
+    "clean": "خلق من ما ان دافيق",
+    "words": [
+      {
+        "word": " خلق",
+        "start": 0.0,
+        "end": 1.24,
+        "probability": 0.37777256965637207
+      },
+      {
+        "word": " من",
+        "start": 1.24,
+        "end": 1.88,
+        "probability": 0.8205412030220032
+      },
+      {
+        "word": " ما",
+        "start": 1.88,
+        "end": 4.86,
+        "probability": 0.3240072429180145
+      },
+      {
+        "word": " إن",
+        "start": 4.86,
+        "end": 6.42,
+        "probability": 0.38554462790489197
+      },
+      {
+        "word": " دافيق",
+        "start": 6.42,
+        "end": 8.12,
+        "probability": 0.6734816282987595
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/008.mp3",
+    "duration": 10.29225,
+    "text": "يحروجم بين يصول بيوتا راويب",
+    "clean": "يحروجم بين يصول بيوتا راويب",
+    "words": [
+      {
+        "word": " يحروجم",
+        "start": 0.0,
+        "end": 1.94,
+        "probability": 0.4647193968296051
+      },
+      {
+        "word": " بين",
+        "start": 1.94,
+        "end": 3.62,
+        "probability": 0.32827453315258026
+      },
+      {
+        "word": " يصول",
+        "start": 3.62,
+        "end": 4.74,
+        "probability": 0.5982936024665833
+      },
+      {
+        "word": " بيوتا",
+        "start": 4.74,
+        "end": 6.1,
+        "probability": 0.3946436084806919
+      },
+      {
+        "word": " راويب",
+        "start": 6.1,
+        "end": 8.68,
+        "probability": 0.41992495208978653
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/009.mp3",
+    "duration": 7.5755,
+    "text": "إنه على رجري هلا قادر",
+    "clean": "انه علي رجري هلا قادر",
+    "words": [
+      {
+        "word": " إنه",
+        "start": 0.0,
+        "end": 2.62,
+        "probability": 0.5872068256139755
+      },
+      {
+        "word": " على",
+        "start": 2.62,
+        "end": 3.3,
+        "probability": 0.6022053956985474
+      },
+      {
+        "word": " رجري",
+        "start": 3.3,
+        "end": 4.78,
+        "probability": 0.6845449308554331
+      },
+      {
+        "word": " هلا",
+        "start": 4.78,
+        "end": 5.7,
+        "probability": 0.3231600150465965
+      },
+      {
+        "word": " قادر",
+        "start": 5.7,
+        "end": 6.94,
+        "probability": 0.8276505668958029
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/010.mp3",
+    "duration": 6.191,
+    "text": "يومة بلسة روائر",
+    "clean": "يومه بلسه روائر",
+    "words": [
+      {
+        "word": " يومة",
+        "start": 0.0,
+        "end": 1.62,
+        "probability": 0.5482090413570404
+      },
+      {
+        "word": " بلسة",
+        "start": 1.62,
+        "end": 2.92,
+        "probability": 0.5196437109261751
+      },
+      {
+        "word": " روائر",
+        "start": 2.92,
+        "end": 5.36,
+        "probability": 0.4683208726346493
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/011.mp3",
+    "duration": 10.057125,
+    "text": "فما لهم يوقوتي و لنا صير",
+    "clean": "فما لهم يوقوتي و لنا صير",
+    "words": [
+      {
+        "word": " فما",
+        "start": 0.0,
+        "end": 1.22,
+        "probability": 0.3300617132335901
+      },
+      {
+        "word": " لهم",
+        "start": 1.22,
+        "end": 2.38,
+        "probability": 0.40834788978099823
+      },
+      {
+        "word": " يوقوتي",
+        "start": 2.38,
+        "end": 5.56,
+        "probability": 0.5082261376082897
+      },
+      {
+        "word": " و",
+        "start": 5.56,
+        "end": 7.08,
+        "probability": 0.6128144264221191
+      },
+      {
+        "word": " لنا",
+        "start": 7.08,
+        "end": 8.4,
+        "probability": 0.5560594648122787
+      },
+      {
+        "word": " صير",
+        "start": 8.4,
+        "end": 9.12,
+        "probability": 0.6475722193717957
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/012.mp3",
+    "duration": 6.8701875,
+    "text": "وسماء إذا تيروج",
+    "clean": "وسماء اذا تيروج",
+    "words": [
+      {
+        "word": " وسماء",
+        "start": 1.94,
+        "end": 3.34,
+        "probability": 0.263623649875323
+      },
+      {
+        "word": " إذا",
+        "start": 3.34,
+        "end": 4.36,
+        "probability": 0.4142373949289322
+      },
+      {
+        "word": " تيروج",
+        "start": 4.36,
+        "end": 5.58,
+        "probability": 0.5672443509101868
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/013.mp3",
+    "duration": 5.17225,
+    "text": "والأرضي ذات الصادة",
+    "clean": "والارضي ذات الصاده",
+    "words": [
+      {
+        "word": " والأرضي",
+        "start": 0.0,
+        "end": 2.06,
+        "probability": 0.4945132225751877
+      },
+      {
+        "word": " ذات",
+        "start": 2.06,
+        "end": 2.96,
+        "probability": 0.5378302186727524
+      },
+      {
+        "word": " الصادة",
+        "start": 2.96,
+        "end": 4.3,
+        "probability": 0.43184244136015576
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/014.mp3",
+    "duration": 7.73225,
+    "text": "إنه لرقال والفصل",
+    "clean": "انه لرقال والفصل",
+    "words": [
+      {
+        "word": " إنه",
+        "start": 0.0,
+        "end": 2.6,
+        "probability": 0.495109885931015
+      },
+      {
+        "word": " لرقال",
+        "start": 2.6,
+        "end": 4.16,
+        "probability": 0.40516624227166176
+      },
+      {
+        "word": " والفصل",
+        "start": 4.16,
+        "end": 6.88,
+        "probability": 0.4228339344263077
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/015.mp3",
+    "duration": 4.8849375,
+    "text": "وما هو بالهزل",
+    "clean": "وما هو بالهزل",
+    "words": [
+      {
+        "word": " وما",
+        "start": 0.0,
+        "end": 1.34,
+        "probability": 0.6349621713161469
+      },
+      {
+        "word": " هو",
+        "start": 1.34,
+        "end": 1.88,
+        "probability": 0.8756011724472046
+      },
+      {
+        "word": " بالهزل",
+        "start": 1.88,
+        "end": 3.8,
+        "probability": 0.7250415682792664
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/016.mp3",
+    "duration": 7.653875,
+    "text": "إنا هم يا كيدون كيدا",
+    "clean": "انا هم يا كيدون كيدا",
+    "words": [
+      {
+        "word": " إنا",
+        "start": 0.0,
+        "end": 2.16,
+        "probability": 0.2772160619497299
+      },
+      {
+        "word": " هم",
+        "start": 2.16,
+        "end": 2.84,
+        "probability": 0.5950713902711868
+      },
+      {
+        "word": " يا",
+        "start": 2.84,
+        "end": 3.22,
+        "probability": 0.2546434998512268
+      },
+      {
+        "word": " كيدون",
+        "start": 3.22,
+        "end": 4.66,
+        "probability": 0.7122819821039835
+      },
+      {
+        "word": " كيدا",
+        "start": 4.66,
+        "end": 6.66,
+        "probability": 0.6106608311335245
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/017.mp3",
+    "duration": 4.8588125,
+    "text": "وأكيد كيدا",
+    "clean": "واكيد كيدا",
+    "words": [
+      {
+        "word": " وأكيد",
+        "start": 0.0,
+        "end": 1.76,
+        "probability": 0.5369829311966896
+      },
+      {
+        "word": " كيدا",
+        "start": 1.76,
+        "end": 3.4,
+        "probability": 0.4881252894798915
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_086/018.mp3",
+    "duration": 8.6726875,
+    "text": "فما هي للكافرين أنه الهن روايدا",
+    "clean": "فما هي للكافرين انه الهن روايدا",
+    "words": [
+      {
+        "word": " فما",
+        "start": 0.0,
+        "end": 1.22,
+        "probability": 0.6153506338596344
+      },
+      {
+        "word": " هي",
+        "start": 1.22,
+        "end": 1.86,
+        "probability": 0.21696878969669342
+      },
+      {
+        "word": " للكافرين",
+        "start": 1.86,
+        "end": 4.54,
+        "probability": 0.7106849312782287
+      },
+      {
+        "word": " أنه",
+        "start": 4.54,
+        "end": 5.94,
+        "probability": 0.43667110800743103
+      },
+      {
+        "word": " الهن",
+        "start": 5.94,
+        "end": 6.86,
+        "probability": 0.4982517858346303
+      },
+      {
+        "word": " روايدا",
+        "start": 6.86,
+        "end": 8.48,
+        "probability": 0.30185340717434883
+      }
+    ]
+  }
+]

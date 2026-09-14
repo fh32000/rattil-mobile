@@ -46,6 +46,7 @@ class QuranAudioHandler extends BaseAudioHandler
   DateTime _lastSkipTime = DateTime(2000);
   bool _isAutoAdvancing = false;
   int _loadGeneration = 0;
+  bool _isCompletingTrack = false;
 
   // ─── Hifz / Memorization Mode ───
   bool _hifzMode = false;
@@ -112,10 +113,25 @@ class QuranAudioHandler extends BaseAudioHandler
     _player.processingStateStream.listen((state) {
       if (state == ProcessingState.completed) {
         _onTrackCompleted();
+      } else if (state == ProcessingState.idle) {
+        // Stall recovery: if player went idle near the end of the track, trigger completion
+        final d = _player.duration;
+        final p = _player.position;
+        if (d != null && d > Duration.zero && p >= d - const Duration(milliseconds: 600)) {
+          _onTrackCompleted();
+        }
       }
     }).onError((e) {
       // ignore: avoid_print
       print('processingStateStream error: $e');
+    });
+
+    _player.positionStream.listen((pos) {
+      if (_isCompletingTrack) return;
+      final d = _player.duration;
+      if (d != null && d > Duration.zero && pos >= d) {
+        _onTrackCompleted();
+      }
     });
 
     _player.positionStream.throttleTime(const Duration(seconds: 3)).listen((
@@ -454,6 +470,10 @@ class QuranAudioHandler extends BaseAudioHandler
     _memState = _memState.copyWith(
       currentAyah: ayahNumber,
       totalAyahs: _ayahTracks.length,
+      currentVerse: track.verseNumber ??
+          (track.surahNumber == 1 ? ayahNumber : ayahNumber - 1),
+      currentPart: track.partIndex,
+      totalPartsForAyah: track.totalParts,
       phase: HifzPhase.listening,
     );
     _memStateSubject.add(_memState);
@@ -471,6 +491,9 @@ class QuranAudioHandler extends BaseAudioHandler
       if (gen != _loadGeneration) return;
       _AudioLog.hifz('Source set for ayah $ayahNumber');
 
+      await _player.seek(Duration.zero);
+      if (gen != _loadGeneration) return;
+
       await _player.setSpeed(_memSettings.playbackSpeed);
       if (gen != _loadGeneration) return;
       await _player.setVolume(_memSettings.volume);
@@ -483,7 +506,11 @@ class QuranAudioHandler extends BaseAudioHandler
       analytics.trackPlaybackStarted(track.surahNumber, ayahNumber);
     } on TimeoutException {
       if (gen != _loadGeneration) return;
-      _AudioLog.hifz('Timeout playing ayah $ayahNumber — no fallback, skipping');
+      _AudioLog.hifz('Timeout playing ayah $ayahNumber — fallback retry');
+      try {
+        await _player.seek(Duration.zero);
+        await _player.play();
+      } catch (_) {}
     } catch (e) {
       if (gen != _loadGeneration) return;
       _AudioLog.hifz('Error playing ayah: ${track.assetPath} - $e');
@@ -495,16 +522,18 @@ class QuranAudioHandler extends BaseAudioHandler
     }
   }
 
-  Future<Duration> _resolveDuration({Duration timeout = const Duration(seconds: 5)}) async {
+  Future<Duration> _resolveDuration({Duration timeout = const Duration(milliseconds: 500)}) async {
     final d = _player.duration;
     if (d != null && d > Duration.zero) return d;
+    final p = _player.position;
+    if (p > Duration.zero) return p;
     try {
       final resolved = await _player.durationStream
           .firstWhere((d) => d != null && d > Duration.zero)
           .timeout(timeout);
-      return resolved ?? Duration.zero;
+      return resolved ?? const Duration(seconds: 3);
     } on TimeoutException {
-      return Duration.zero;
+      return const Duration(seconds: 3);
     }
   }
 
@@ -526,55 +555,66 @@ class QuranAudioHandler extends BaseAudioHandler
   }
 
   Future<void> _handleAyahCompleted() async {
-    if (!_hifzMode) return;
+    if (!_hifzMode || _ayahTracks.isEmpty) return;
 
-    final ayahDuration = await _resolveDuration();
-    _memState = _memState.copyWith(currentAyahDuration: ayahDuration);
-    _memStateSubject.add(_memState);
-
-    final nextRep = _memState.currentRepetition + 1;
-
-    // Basmala (currentAyah == 1) repeats only once for all surahs except Al-Fatihah.
-    // For letter repetition mode, segment 1 (letter name) repeats only once.
-    final firstTrack = _ayahTracks.first;
-    final isAlphabetSegment = firstTrack.isAlphabetSegment;
-    final surahNumber = firstTrack.surahNumber;
-    final isNonRepeatingFirstSegment = isAlphabetSegment
-        ? _memState.currentAyah == 1
-        : (surahNumber != 1 && _memState.currentAyah == 1);
-
-    final repCount = isNonRepeatingFirstSegment ? 1 : _memSettings.ayahRepeatCount;
-
-    // Track ayah repetition
-    final analytics = AnalyticsService.instance;
-    analytics.trackAyahRepeated(
-      surahNumber,
-      _memState.currentAyah,
-      nextRep,
-    );
-
-    if (nextRep < repCount) {
-      _memState = _memState.copyWith(currentRepetition: nextRep);
+    try {
+      final ayahDuration = await _resolveDuration();
+      _memState = _memState.copyWith(currentAyahDuration: ayahDuration);
       _memStateSubject.add(_memState);
-      _scheduleNextPlayback(() => _playAyah(_memState.currentAyah));
-      return;
-    }
 
-    final nextAyah = _memState.currentAyah + 1;
-    if (nextAyah <= _ayahTracks.length) {
-      // Don't advance currentAyah yet — wait until pause finishes
-      _scheduleNextPlayback(() async {
-        _memState = _memState.copyWith(
-          currentAyah: nextAyah,
-          currentRepetition: 0,
-        );
+      final nextRep = _memState.currentRepetition + 1;
+
+      // Basmala (currentAyah == 1) repeats only once for all surahs except Al-Fatihah.
+      // In Al-Fatihah, verse 1 is part of the surah and repeats according to ayahRepeatCount.
+      // For letter repetition mode, segment 1 (letter name introduction) also repeats only once.
+      final currentTrack = _ayahTracks[_memState.currentAyah - 1];
+      final isAlphabetSegment = currentTrack.isAlphabetSegment;
+      final surahNumber = currentTrack.surahNumber;
+      final isNonRepeatingFirstSegment = isAlphabetSegment
+          ? _memState.currentAyah == 1
+          : (surahNumber != 1 &&
+              (currentTrack.verseNumber == 0 || _memState.currentAyah == 1));
+
+      final repCount = isNonRepeatingFirstSegment ? 1 : _memSettings.ayahRepeatCount;
+
+      // Track ayah repetition
+      final analytics = AnalyticsService.instance;
+      analytics.trackAyahRepeated(
+        surahNumber,
+        _memState.currentAyah,
+        nextRep,
+      );
+
+      if (nextRep < repCount) {
+        _memState = _memState.copyWith(currentRepetition: nextRep);
         _memStateSubject.add(_memState);
-        await _playAyah(nextAyah);
-      });
-      return;
-    }
+        _scheduleNextPlayback(() => _playAyah(_memState.currentAyah));
+        return;
+      }
 
-    _handleSurahComplete();
+      final nextAyah = _memState.currentAyah + 1;
+      if (nextAyah <= _ayahTracks.length) {
+        // Don't advance currentAyah yet — wait until pause finishes
+        _scheduleNextPlayback(() async {
+          _memState = _memState.copyWith(
+            currentAyah: nextAyah,
+            currentRepetition: 0,
+          );
+          _memStateSubject.add(_memState);
+          await _playAyah(nextAyah);
+        });
+        return;
+      }
+
+      _handleSurahComplete();
+    } catch (e, st) {
+      _AudioLog.hifz('Error in _handleAyahCompleted: $e\n$st');
+      AnalyticsService.instance.recordError(
+        e,
+        st,
+        reason: 'ayah_completed_handling_failed',
+      );
+    }
   }
 
   void _handleSurahComplete() {
@@ -660,32 +700,39 @@ class QuranAudioHandler extends BaseAudioHandler
   // ─── Track Completion ───
 
   Future<void> _onTrackCompleted() async {
-    if (_hifzMode) {
-      await _handleAyahCompleted();
-      return;
-    }
+    if (_isCompletingTrack) return;
+    _isCompletingTrack = true;
 
-    // Track playback completion for non-Hifz mode
-    final track = currentTrack;
-    if (track != null) {
-      AnalyticsService.instance.trackPlaybackCompleted(track.surahNumber);
-    }
+    try {
+      if (_hifzMode) {
+        await _handleAyahCompleted();
+        return;
+      }
 
-    switch (_loopMode.value) {
-      case LoopMode.one:
-        _player.seek(Duration.zero);
-        _player.play();
-        break;
-      case LoopMode.all:
-        _isAutoAdvancing = true;
-        skipToNext();
-        break;
-      case LoopMode.off:
-        if (_currentIndex.value < _trackList.value.length - 1) {
+      // Track playback completion for non-Hifz mode
+      final track = currentTrack;
+      if (track != null) {
+        AnalyticsService.instance.trackPlaybackCompleted(track.surahNumber);
+      }
+
+      switch (_loopMode.value) {
+        case LoopMode.one:
+          await _player.seek(Duration.zero);
+          await _player.play();
+          break;
+        case LoopMode.all:
           _isAutoAdvancing = true;
           skipToNext();
-        }
-        break;
+          break;
+        case LoopMode.off:
+          if (_currentIndex.value < _trackList.value.length - 1) {
+            _isAutoAdvancing = true;
+            skipToNext();
+          }
+          break;
+      }
+    } finally {
+      _isCompletingTrack = false;
     }
   }
 

@@ -1,0 +1,228 @@
+{
+  "number": 87,
+  "name": "سُورَةُ الأَعۡلَىٰ",
+  "englishName": "Al-A'laa",
+  "englishNameTranslation": "The Most High",
+  "revelationType": "Meccan",
+  "numberOfAyahs": 19,
+  "ayahs": [
+    {
+      "number": 5949,
+      "text": "بسم الله الرحمن الرحيم سبح اسم ربك الأعلى",
+      "numberInSurah": 1,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5950,
+      "text": "الذي خلق فسوى",
+      "numberInSurah": 2,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5951,
+      "text": "والذي قدر فهدى",
+      "numberInSurah": 3,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5952,
+      "text": "والذي أخرج المرعى",
+      "numberInSurah": 4,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5953,
+      "text": "فجعله غثاء أحوى",
+      "numberInSurah": 5,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5954,
+      "text": "سنقرئك فلا تنسى",
+      "numberInSurah": 6,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5955,
+      "text": "إلا ما شاء الله ۚ إنه يعلم الجهر وما يخفى",
+      "numberInSurah": 7,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5956,
+      "text": "ونيسرك لليسرى",
+      "numberInSurah": 8,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5957,
+      "text": "فذكر إن نفعت الذكرى",
+      "numberInSurah": 9,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5958,
+      "text": "سيذكر من يخشى",
+      "numberInSurah": 10,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5959,
+      "text": "ويتجنبها الأشقى",
+      "numberInSurah": 11,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5960,
+      "text": "الذي يصلى النار الكبرى",
+      "numberInSurah": 12,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5961,
+      "text": "ثم لا يموت فيها ولا يحيى",
+      "numberInSurah": 13,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5962,
+      "text": "قد أفلح من تزكى",
+      "numberInSurah": 14,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5963,
+      "text": "وذكر اسم ربه فصلى",
+      "numberInSurah": 15,
+      "juz": 30,
+      "manzil": 7,
+      "page": 591,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5964,
+      "text": "بل تؤثرون الحياة الدنيا",
+      "numberInSurah": 16,
+      "juz": 30,
+      "manzil": 7,
+      "page": 592,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5965,
+      "text": "والآخرة خير وأبقى",
+      "numberInSurah": 17,
+      "juz": 30,
+      "manzil": 7,
+      "page": 592,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5966,
+      "text": "إن هذا لفي الصحف الأولى",
+      "numberInSurah": 18,
+      "juz": 30,
+      "manzil": 7,
+      "page": 592,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    },
+    {
+      "number": 5967,
+      "text": "صحف إبراهيم وموسى",
+      "numberInSurah": 19,
+      "juz": 30,
+      "manzil": 7,
+      "page": 592,
+      "ruku": 529,
+      "hizbQuarter": 237,
+      "sajda": false
+    }
+  ],
+  "edition": {
+    "identifier": "quran-simple-clean",
+    "language": "ar",
+    "name": "القرآن الكريم المبسط (بدون تشكيل) (simple-clean)",
+    "englishName": "Simple Clean",
+    "format": "text",
+    "type": "quran",
+    "direction": "rtl"
+  }
+}

@@ -1,0 +1,162 @@
+[
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_112/001.mp3",
+    "duration": 9.9265625,
+    "text": "بسم الله الرحمن الرحيم",
+    "clean": "بسم الله الرحمن الرحيم",
+    "words": [
+      {
+        "word": " بسم",
+        "start": 0.0,
+        "end": 2.04,
+        "probability": 0.6508875787258148
+      },
+      {
+        "word": " الله",
+        "start": 2.04,
+        "end": 3.18,
+        "probability": 0.7723311185836792
+      },
+      {
+        "word": " الرحمن",
+        "start": 3.18,
+        "end": 5.1,
+        "probability": 0.618244061867396
+      },
+      {
+        "word": " الرحيم",
+        "start": 5.1,
+        "end": 8.76,
+        "probability": 0.8577742775281271
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_112/002.mp3",
+    "duration": 5.407375,
+    "text": "أل هو الله أحد",
+    "clean": "ال هو الله احد",
+    "words": [
+      {
+        "word": " أل",
+        "start": 0.0,
+        "end": 1.4,
+        "probability": 0.11838532611727715
+      },
+      {
+        "word": " هو",
+        "start": 1.4,
+        "end": 1.84,
+        "probability": 0.542304515838623
+      },
+      {
+        "word": " الله",
+        "start": 1.84,
+        "end": 3.04,
+        "probability": 0.7381452918052673
+      },
+      {
+        "word": " أحد",
+        "start": 3.04,
+        "end": 4.06,
+        "probability": 0.7062800526618958
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_112/003.mp3",
+    "duration": 4.7281875,
+    "text": "ألوه سامد",
+    "clean": "الوه سامد",
+    "words": [
+      {
+        "word": " ألوه",
+        "start": 0.0,
+        "end": 2.12,
+        "probability": 0.44476455450057983
+      },
+      {
+        "word": " سامد",
+        "start": 2.12,
+        "end": 3.2,
+        "probability": 0.31148024400075275
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_112/004.mp3",
+    "duration": 5.27675,
+    "text": "لن يليد و لن يولد",
+    "clean": "لن يليد و لن يولد",
+    "words": [
+      {
+        "word": " لن",
+        "start": 0.0,
+        "end": 1.04,
+        "probability": 0.44298796355724335
+      },
+      {
+        "word": " يليد",
+        "start": 1.04,
+        "end": 1.98,
+        "probability": 0.35984592139720917
+      },
+      {
+        "word": " و",
+        "start": 1.98,
+        "end": 2.28,
+        "probability": 0.331061989068985
+      },
+      {
+        "word": " لن",
+        "start": 2.28,
+        "end": 3.0,
+        "probability": 0.5459085628390312
+      },
+      {
+        "word": " يولد",
+        "start": 3.0,
+        "end": 4.24,
+        "probability": 0.737129787604014
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_112/005.mp3",
+    "duration": 6.7135,
+    "text": "ولم يقول له كفوان أحادي",
+    "clean": "ولم يقول له كفوان احادي",
+    "words": [
+      {
+        "word": " ولم",
+        "start": 0.0,
+        "end": 1.56,
+        "probability": 0.3274945840239525
+      },
+      {
+        "word": " يقول",
+        "start": 1.56,
+        "end": 2.46,
+        "probability": 0.5005797147750854
+      },
+      {
+        "word": " له",
+        "start": 2.46,
+        "end": 3.28,
+        "probability": 0.8400408029556274
+      },
+      {
+        "word": " كفوان",
+        "start": 3.28,
+        "end": 5.06,
+        "probability": 0.6733022332191467
+      },
+      {
+        "word": " أحادي",
+        "start": 5.06,
+        "end": 6.12,
+        "probability": 0.5025603845715523
+      }
+    ]
+  }
+]

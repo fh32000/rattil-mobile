@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran/quran.dart' as quran;
 import '../../../core/theme/app_colors.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../services/verse_service.dart';
@@ -73,21 +74,32 @@ class VerseDisplayWidget extends StatelessWidget {
   }
 
   Widget _buildVerseContent(VerseService service) {
-    final prevAudioIndex =
-        currentAudioIndex > 1 ? currentAudioIndex - 1 : null;
-    final nextAudioIndex =
-        currentAudioIndex < totalAudioFiles ? currentAudioIndex + 1 : null;
-
-    final prevText = prevAudioIndex != null
-        ? service.getTextForAudioIndex(surahNumber, prevAudioIndex)
-        : null;
+    final currentVerse =
+        service.getVerseForAudioIndex(surahNumber, currentAudioIndex);
     final currentText = service.getTextForAudioIndex(
       surahNumber,
       currentAudioIndex,
     );
-    final nextText = nextAudioIndex != null
-        ? service.getTextForAudioIndex(surahNumber, nextAudioIndex)
-        : null;
+
+    // Canonical previous verse:
+    // If current is Basmala (0) -> no previous verse
+    // If current is Verse 1 -> previous is Basmala (for surahs != 1) or null
+    // If current is Verse V > 1 -> previous is Verse V - 1
+    String? prevText;
+    if (currentVerse > 1) {
+      prevText = service.getVerseText(surahNumber, currentVerse - 1);
+    } else if (currentVerse == 1 && surahNumber != 1) {
+      prevText = service.getVerseText(surahNumber, 0); // Basmala
+    }
+
+    // Canonical next verse:
+    // If current is Basmala (0) -> next is Verse 1
+    // If current is Verse V < verseCount -> next is Verse V + 1
+    String? nextText;
+    final maxVerse = quran.getVerseCount(surahNumber);
+    if (currentVerse < maxVerse) {
+      nextText = service.getVerseText(surahNumber, currentVerse + 1);
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -200,9 +212,21 @@ class VerseDisplayWidget extends StatelessWidget {
   Widget _buildFooter() {
     final service = VerseService();
     final verse = service.getVerseForAudioIndex(surahNumber, currentAudioIndex);
+    final partInfo =
+        service.getPartInfoForAudioIndex(surahNumber, currentAudioIndex);
+
+    String label;
+    if (verse < 1) {
+      label = 'بسملة';
+    } else if (partInfo != null && partInfo.isMultiPart) {
+      label =
+          'الآية $verse (مقطع ${partInfo.partIndex} من ${partInfo.totalParts})';
+    } else {
+      label = 'الآية $verse';
+    }
 
     return Text(
-      verse < 1 ? 'بسملة' : 'الآية $verse',
+      label,
       style: TextStyle(
         color: Colors.white.withValues(alpha: 0.5),
         fontSize: 12,

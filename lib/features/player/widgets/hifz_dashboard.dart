@@ -39,7 +39,18 @@ class HifzDashboard extends StatelessWidget {
           const SizedBox(height: 6),
           _row(
             track.isAlphabetSegment ? 'المقطع' : 'الآية',
-            '${state.currentAyah} من ${state.totalAyahs}',
+            () {
+              if (track.isAlphabetSegment) {
+                return '${state.currentAyah} من ${state.totalAyahs}';
+              }
+              if (state.isMultiPartAyah) {
+                return '${state.currentVerse} (مقطع ${state.currentPart} من ${state.totalPartsForAyah})';
+              }
+              if (state.currentVerse == 0 && state.currentAyah == 1) {
+                return 'البسملة';
+              }
+              return '${state.currentVerse > 0 ? state.currentVerse : state.currentAyah} من ${state.totalAyahs}';
+            }(),
           ),
           const SizedBox(height: 6),
           _row('التكرار', '${state.currentRepetition + 1}/${settings.ayahRepeatCount}'),

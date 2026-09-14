@@ -170,6 +170,18 @@ class ReciterInfoScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+
+                  const SizedBox(height: 12),
+
+                  _buildInfoCard(
+                    icon: Icons.auto_stories,
+                    label: 'المركز',
+                    value: AppConstants.reciterCenter,
+                    theme: theme,
+                    fullWidth: true,
+                  ),
+
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
@@ -184,34 +196,40 @@ class ReciterInfoScreen extends StatelessWidget {
     required String label,
     required String value,
     required ThemeData theme,
+    bool fullWidth = false,
   }) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: theme.cardTheme.color,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: AppColors.primaryLight, size: 22),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+    final card = Container(
+      width: fullWidth ? double.infinity : null,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.cardTheme.color,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: AppColors.primaryLight, size: 22),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
             ),
-            Text(
-              label,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-              ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+
+    if (fullWidth) {
+      return card;
+    }
+    return Expanded(child: card);
   }
 }

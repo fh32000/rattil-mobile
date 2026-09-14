@@ -1,0 +1,278 @@
+[
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_094/001.mp3",
+    "duration": 8.7249375,
+    "text": "بسم الله الرحمن الرحيم",
+    "clean": "بسم الله الرحمن الرحيم",
+    "words": [
+      {
+        "word": " بسم",
+        "start": 0.0,
+        "end": 1.08,
+        "probability": 0.6566886901855469
+      },
+      {
+        "word": " الله",
+        "start": 1.08,
+        "end": 2.1,
+        "probability": 0.6314734220504761
+      },
+      {
+        "word": " الرحمن",
+        "start": 2.1,
+        "end": 4.14,
+        "probability": 0.6182666420936584
+      },
+      {
+        "word": " الرحيم",
+        "start": 4.14,
+        "end": 7.82,
+        "probability": 0.8599529266357422
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_094/002.mp3",
+    "duration": 6.635125,
+    "text": "ألم نشروح لك صدورك",
+    "clean": "الم نشروح لك صدورك",
+    "words": [
+      {
+        "word": " ألم",
+        "start": 0.0,
+        "end": 2.04,
+        "probability": 0.3247305676341057
+      },
+      {
+        "word": " نشروح",
+        "start": 2.04,
+        "end": 3.44,
+        "probability": 0.603994108736515
+      },
+      {
+        "word": " لك",
+        "start": 3.44,
+        "end": 3.96,
+        "probability": 0.7860965430736542
+      },
+      {
+        "word": " صدورك",
+        "start": 3.96,
+        "end": 5.14,
+        "probability": 0.47967470809817314
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_094/003.mp3",
+    "duration": 7.1836875,
+    "text": "ورنبع أنا  كوزر",
+    "clean": "ورنبع انا كوزر",
+    "words": [
+      {
+        "word": " ورنبع",
+        "start": 0.0,
+        "end": 1.7,
+        "probability": 0.13379619941115378
+      },
+      {
+        "word": " أنا",
+        "start": 1.7,
+        "end": 2.4,
+        "probability": 0.02275453321635723
+      },
+      {
+        "word": " كوزر",
+        "start": 4.02,
+        "end": 5.42,
+        "probability": 0.21191034279763699
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_094/004.mp3",
+    "duration": 8.04575,
+    "text": "اللي في أن طوضه رك",
+    "clean": "اللي في ان طوضه رك",
+    "words": [
+      {
+        "word": " اللي",
+        "start": 0.0,
+        "end": 1.9,
+        "probability": 0.2645411118865013
+      },
+      {
+        "word": " في",
+        "start": 1.9,
+        "end": 3.3,
+        "probability": 0.3515399694442749
+      },
+      {
+        "word": " أن",
+        "start": 3.3,
+        "end": 4.3,
+        "probability": 0.31699931621551514
+      },
+      {
+        "word": " طوضه",
+        "start": 4.3,
+        "end": 5.96,
+        "probability": 0.3882644437253475
+      },
+      {
+        "word": " رك",
+        "start": 5.96,
+        "end": 6.52,
+        "probability": 0.7164243757724762
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_094/005.mp3",
+    "duration": 6.1649375,
+    "text": "ورفان لكذي فرأك",
+    "clean": "ورفان لكذي فراك",
+    "words": [
+      {
+        "word": " ورفان",
+        "start": 0.0,
+        "end": 1.92,
+        "probability": 0.22212152928113937
+      },
+      {
+        "word": " لكذي",
+        "start": 1.92,
+        "end": 3.76,
+        "probability": 0.46183875016868114
+      },
+      {
+        "word": " فرأك",
+        "start": 3.76,
+        "end": 4.5,
+        "probability": 0.3030138276517391
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_094/006.mp3",
+    "duration": 6.9746875,
+    "text": "فإننا مع الوسري وصرق",
+    "clean": "فاننا مع الوسري وصرق",
+    "words": [
+      {
+        "word": " فإننا",
+        "start": 0.0,
+        "end": 2.8,
+        "probability": 0.6760169118642807
+      },
+      {
+        "word": " مع",
+        "start": 2.8,
+        "end": 3.36,
+        "probability": 0.2537152171134949
+      },
+      {
+        "word": " الوسري",
+        "start": 3.36,
+        "end": 4.68,
+        "probability": 0.34805046766996384
+      },
+      {
+        "word": " وصرق",
+        "start": 4.68,
+        "end": 6.16,
+        "probability": 0.5223479457199574
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_094/007.mp3",
+    "duration": 6.609,
+    "text": "إن أنا ألوسر وصرق",
+    "clean": "ان انا الوسر وصرق",
+    "words": [
+      {
+        "word": " إن",
+        "start": 0.0,
+        "end": 1.76,
+        "probability": 0.4640648663043976
+      },
+      {
+        "word": " أنا",
+        "start": 1.76,
+        "end": 2.36,
+        "probability": 0.17062830924987793
+      },
+      {
+        "word": " ألوسر",
+        "start": 2.36,
+        "end": 4.12,
+        "probability": 0.4078008905053139
+      },
+      {
+        "word": " وصرق",
+        "start": 4.12,
+        "end": 5.74,
+        "probability": 0.46911882795393467
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_094/008.mp3",
+    "duration": 6.609,
+    "text": "فإذا فارلت فان صبب",
+    "clean": "فاذا فارلت فان صبب",
+    "words": [
+      {
+        "word": " فإذا",
+        "start": 0.0,
+        "end": 1.6,
+        "probability": 0.5162388359506925
+      },
+      {
+        "word": " فارلت",
+        "start": 1.6,
+        "end": 2.94,
+        "probability": 0.40003716200590134
+      },
+      {
+        "word": " فان",
+        "start": 2.94,
+        "end": 4.32,
+        "probability": 0.41491080075502396
+      },
+      {
+        "word": " صبب",
+        "start": 4.32,
+        "end": 5.24,
+        "probability": 0.29779591659704846
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_094/009.mp3",
+    "duration": 4.989375,
+    "text": "وإلا رميكة فررهب",
+    "clean": "والا رميكه فررهب",
+    "words": [
+      {
+        "word": " وإلا",
+        "start": 0.0,
+        "end": 1.74,
+        "probability": 0.5351990262667338
+      },
+      {
+        "word": " رميكة",
+        "start": 1.74,
+        "end": 3.44,
+        "probability": 0.5056469962000847
+      },
+      {
+        "word": " فررهب",
+        "start": 3.44,
+        "end": 4.64,
+        "probability": 0.39110652506351473
+      }
+    ]
+  }
+]

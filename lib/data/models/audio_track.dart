@@ -8,6 +8,9 @@ class AudioTrack {
   final int pageNumber;
   final String trackType; // 'surah', 'alphabet', or 'ayah'
   final int? ayahNumber;
+  final int? verseNumber;
+  final int partIndex;
+  final int totalParts;
 
   const AudioTrack({
     required this.id,
@@ -19,15 +22,24 @@ class AudioTrack {
     required this.pageNumber,
     this.trackType = 'surah',
     this.ayahNumber,
+    this.verseNumber,
+    this.partIndex = 1,
+    this.totalParts = 1,
   });
 
   bool get isSurah => trackType == 'surah';
   bool get isAyah => trackType == 'ayah';
   bool get isLetter => trackType == 'alphabet' || trackType == 'alphabet_segment';
   bool get isAlphabetSegment => trackType == 'alphabet_segment';
+  bool get isMultiPart => totalParts > 1;
+  String get partLabel => isMultiPart ? 'مقطع $partIndex من $totalParts' : '';
 
   String get displayName {
     if (isAyah && ayahNumber != null) {
+      if (isMultiPart) {
+        final vNum = verseNumber ?? ayahNumber;
+        return '$surahNameArabic - آية $vNum (مقطع $partIndex/$totalParts)';
+      }
       return '$surahNameArabic - $ayahNumber';
     }
     if (isAlphabetSegment) {

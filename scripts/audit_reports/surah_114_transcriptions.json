@@ -1,0 +1,214 @@
+[
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_114/001.mp3",
+    "duration": 9.7698125,
+    "text": "بسم الله الرحمن الرحيم",
+    "clean": "بسم الله الرحمن الرحيم",
+    "words": [
+      {
+        "word": " بسم",
+        "start": 0.0,
+        "end": 1.7,
+        "probability": 0.6556947529315948
+      },
+      {
+        "word": " الله",
+        "start": 1.7,
+        "end": 2.78,
+        "probability": 0.5514902472496033
+      },
+      {
+        "word": " الرحمن",
+        "start": 2.78,
+        "end": 4.74,
+        "probability": 0.667961448431015
+      },
+      {
+        "word": " الرحيم",
+        "start": 4.74,
+        "end": 8.46,
+        "probability": 0.9116722345352173
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_114/002.mp3",
+    "duration": 8.5420625,
+    "text": "أول ألوز بيرابين ناس",
+    "clean": "اول الوز بيرابين ناس",
+    "words": [
+      {
+        "word": " أول",
+        "start": 0.0,
+        "end": 1.34,
+        "probability": 0.16679564490914345
+      },
+      {
+        "word": " ألوز",
+        "start": 1.34,
+        "end": 2.54,
+        "probability": 0.4692041389644146
+      },
+      {
+        "word": " بيرابين",
+        "start": 2.54,
+        "end": 4.58,
+        "probability": 0.3823997378349304
+      },
+      {
+        "word": " ناس",
+        "start": 4.58,
+        "end": 7.38,
+        "probability": 0.7551420032978058
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_114/003.mp3",
+    "duration": 6.191,
+    "text": "مليكين ناس",
+    "clean": "مليكين ناس",
+    "words": [
+      {
+        "word": " مليكين",
+        "start": 0.0,
+        "end": 2.04,
+        "probability": 0.40079138427972794
+      },
+      {
+        "word": " ناس",
+        "start": 2.04,
+        "end": 4.94,
+        "probability": 0.6673053950071335
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_114/004.mp3",
+    "duration": 7.1836875,
+    "text": "إلا همناس",
+    "clean": "الا همناس",
+    "words": [
+      {
+        "word": " إلا",
+        "start": 0.0,
+        "end": 1.5,
+        "probability": 0.6073422431945801
+      },
+      {
+        "word": " همناس",
+        "start": 1.5,
+        "end": 5.38,
+        "probability": 0.4247194305062294
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_114/005.mp3",
+    "duration": 10.631875,
+    "text": "من شرل والسواصل خنناس",
+    "clean": "من شرل والسواصل خنناس",
+    "words": [
+      {
+        "word": " من",
+        "start": 0.0,
+        "end": 1.42,
+        "probability": 0.08539841324090958
+      },
+      {
+        "word": " شرل",
+        "start": 1.42,
+        "end": 3.3,
+        "probability": 0.5944851438204447
+      },
+      {
+        "word": " والسواصل",
+        "start": 3.3,
+        "end": 5.44,
+        "probability": 0.4405065387487411
+      },
+      {
+        "word": " خنناس",
+        "start": 5.44,
+        "end": 9.84,
+        "probability": 0.745485782623291
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_114/006.mp3",
+    "duration": 10.579625,
+    "text": "اللي فيه واسوي سوفي سو دورين ناس",
+    "clean": "اللي فيه واسوي سوفي سو دورين ناس",
+    "words": [
+      {
+        "word": " اللي",
+        "start": 0.0,
+        "end": 1.42,
+        "probability": 0.15657885000109673
+      },
+      {
+        "word": " فيه",
+        "start": 1.42,
+        "end": 2.28,
+        "probability": 0.21297992020845413
+      },
+      {
+        "word": " واسوي",
+        "start": 2.28,
+        "end": 3.22,
+        "probability": 0.32034652431805927
+      },
+      {
+        "word": " سوفي",
+        "start": 3.22,
+        "end": 4.26,
+        "probability": 0.64958056807518
+      },
+      {
+        "word": " سو",
+        "start": 4.26,
+        "end": 4.68,
+        "probability": 0.5880338847637177
+      },
+      {
+        "word": " دورين",
+        "start": 4.68,
+        "end": 6.8,
+        "probability": 0.37301557262738544
+      },
+      {
+        "word": " ناس",
+        "start": 6.8,
+        "end": 9.26,
+        "probability": 0.6269689649343491
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_114/007.mp3",
+    "duration": 10.18775,
+    "text": "من الجنة ونناس",
+    "clean": "من الجنه ونناس",
+    "words": [
+      {
+        "word": " من",
+        "start": 0.0,
+        "end": 1.06,
+        "probability": 0.5713304281234741
+      },
+      {
+        "word": " الجنة",
+        "start": 1.06,
+        "end": 3.48,
+        "probability": 0.722328245639801
+      },
+      {
+        "word": " ونناس",
+        "start": 3.48,
+        "end": 8.26,
+        "probability": 0.49612950906157494
+      }
+    ]
+  }
+]

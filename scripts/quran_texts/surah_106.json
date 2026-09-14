@@ -1,0 +1,63 @@
+{
+  "number": 106,
+  "name": "سُورَةُ قُرَيۡشٍ",
+  "englishName": "Quraish",
+  "englishNameTranslation": "Quraysh",
+  "revelationType": "Meccan",
+  "numberOfAyahs": 4,
+  "ayahs": [
+    {
+      "number": 6194,
+      "text": "بسم الله الرحمن الرحيم لإيلاف قريش",
+      "numberInSurah": 1,
+      "juz": 30,
+      "manzil": 7,
+      "page": 602,
+      "ruku": 548,
+      "hizbQuarter": 240,
+      "sajda": false
+    },
+    {
+      "number": 6195,
+      "text": "إيلافهم رحلة الشتاء والصيف",
+      "numberInSurah": 2,
+      "juz": 30,
+      "manzil": 7,
+      "page": 602,
+      "ruku": 548,
+      "hizbQuarter": 240,
+      "sajda": false
+    },
+    {
+      "number": 6196,
+      "text": "فليعبدوا رب هذا البيت",
+      "numberInSurah": 3,
+      "juz": 30,
+      "manzil": 7,
+      "page": 602,
+      "ruku": 548,
+      "hizbQuarter": 240,
+      "sajda": false
+    },
+    {
+      "number": 6197,
+      "text": "الذي أطعمهم من جوع وآمنهم من خوف",
+      "numberInSurah": 4,
+      "juz": 30,
+      "manzil": 7,
+      "page": 602,
+      "ruku": 548,
+      "hizbQuarter": 240,
+      "sajda": false
+    }
+  ],
+  "edition": {
+    "identifier": "quran-simple-clean",
+    "language": "ar",
+    "name": "القرآن الكريم المبسط (بدون تشكيل) (simple-clean)",
+    "englishName": "Simple Clean",
+    "format": "text",
+    "type": "quran",
+    "direction": "rtl"
+  }
+}

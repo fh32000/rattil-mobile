@@ -1,0 +1,332 @@
+[
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_099/001.mp3",
+    "duration": 9.038375,
+    "text": "بسم الله الرحمن الرحيم",
+    "clean": "بسم الله الرحمن الرحيم",
+    "words": [
+      {
+        "word": " بسم",
+        "start": 0.0,
+        "end": 1.3,
+        "probability": 0.6227536797523499
+      },
+      {
+        "word": " الله",
+        "start": 1.3,
+        "end": 2.28,
+        "probability": 0.5864760279655457
+      },
+      {
+        "word": " الرحمن",
+        "start": 2.28,
+        "end": 4.14,
+        "probability": 0.5555022656917572
+      },
+      {
+        "word": " الرحيم",
+        "start": 4.14,
+        "end": 8.02,
+        "probability": 0.8145163853963217
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_099/002.mp3",
+    "duration": 7.2881875,
+    "text": "إذا زلزلة الأرض مزلز لها",
+    "clean": "اذا زلزله الارض مزلز لها",
+    "words": [
+      {
+        "word": " إذا",
+        "start": 0.0,
+        "end": 1.16,
+        "probability": 0.884963184595108
+      },
+      {
+        "word": " زلزلة",
+        "start": 1.16,
+        "end": 2.5,
+        "probability": 0.3555347751826048
+      },
+      {
+        "word": " الأرض",
+        "start": 2.5,
+        "end": 3.6,
+        "probability": 0.5983112156391144
+      },
+      {
+        "word": " مزلز",
+        "start": 3.6,
+        "end": 5.04,
+        "probability": 0.7200331091880798
+      },
+      {
+        "word": " لها",
+        "start": 5.04,
+        "end": 5.96,
+        "probability": 0.6373671144247055
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_099/003.mp3",
+    "duration": 6.818,
+    "text": "واخراجة الارضو أفقالها",
+    "clean": "واخراجه الارضو افقالها",
+    "words": [
+      {
+        "word": " واخراجة",
+        "start": 0.0,
+        "end": 2.12,
+        "probability": 0.50480996966362
+      },
+      {
+        "word": " الارضو",
+        "start": 2.12,
+        "end": 3.5,
+        "probability": 0.5426962152123451
+      },
+      {
+        "word": " أفقالها",
+        "start": 3.5,
+        "end": 5.6,
+        "probability": 0.44663689732551576
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_099/004.mp3",
+    "duration": 7.68,
+    "text": "وقول الإنسان ملها",
+    "clean": "وقول الانسان ملها",
+    "words": [
+      {
+        "word": " وقول",
+        "start": 0.0,
+        "end": 1.62,
+        "probability": 0.5585134277741114
+      },
+      {
+        "word": " الإنسان",
+        "start": 1.62,
+        "end": 4.34,
+        "probability": 0.7440919280052185
+      },
+      {
+        "word": " ملها",
+        "start": 4.34,
+        "end": 6.08,
+        "probability": 0.48078957696755725
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_099/005.mp3",
+    "duration": 8.2546875,
+    "text": "يوم إذن تحديث أخبارها",
+    "clean": "يوم اذن تحديث اخبارها",
+    "words": [
+      {
+        "word": " يوم",
+        "start": 0.0,
+        "end": 1.26,
+        "probability": 0.6501266360282898
+      },
+      {
+        "word": " إذن",
+        "start": 1.26,
+        "end": 3.22,
+        "probability": 0.41708951195081073
+      },
+      {
+        "word": " تحديث",
+        "start": 3.22,
+        "end": 4.82,
+        "probability": 0.5919867604970932
+      },
+      {
+        "word": " أخبارها",
+        "start": 4.82,
+        "end": 6.98,
+        "probability": 0.6539808571338653
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_099/006.mp3",
+    "duration": 7.94125,
+    "text": "بأننا ربك أو حالها",
+    "clean": "باننا ربك او حالها",
+    "words": [
+      {
+        "word": " بأننا",
+        "start": 0.0,
+        "end": 2.68,
+        "probability": 0.5087568561236063
+      },
+      {
+        "word": " ربك",
+        "start": 2.68,
+        "end": 3.96,
+        "probability": 0.9219252665837606
+      },
+      {
+        "word": " أو",
+        "start": 3.96,
+        "end": 4.72,
+        "probability": 0.6505599617958069
+      },
+      {
+        "word": " حالها",
+        "start": 4.72,
+        "end": 6.32,
+        "probability": 0.6889893313248953
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_099/007.mp3",
+    "duration": 13.6881875,
+    "text": "يوم إذي يصدرون ناس أشتا تلي رو آمالهم",
+    "clean": "يوم اذي يصدرون ناس اشتا تلي رو امالهم",
+    "words": [
+      {
+        "word": " يوم",
+        "start": 0.0,
+        "end": 1.14,
+        "probability": 0.6711070388555527
+      },
+      {
+        "word": " إذي",
+        "start": 1.14,
+        "end": 3.4,
+        "probability": 0.3767955203851064
+      },
+      {
+        "word": " يصدرون",
+        "start": 3.4,
+        "end": 5.36,
+        "probability": 0.7839055776596069
+      },
+      {
+        "word": " ناس",
+        "start": 5.36,
+        "end": 6.9,
+        "probability": 0.5582321733236313
+      },
+      {
+        "word": " أشتا",
+        "start": 6.9,
+        "end": 8.38,
+        "probability": 0.536407945677638
+      },
+      {
+        "word": " تلي",
+        "start": 8.38,
+        "end": 9.3,
+        "probability": 0.47947685420513153
+      },
+      {
+        "word": " رو",
+        "start": 9.3,
+        "end": 10.28,
+        "probability": 0.5363845229148865
+      },
+      {
+        "word": " آمالهم",
+        "start": 10.28,
+        "end": 12.48,
+        "probability": 0.6254502460360527
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_099/008.mp3",
+    "duration": 10.9453125,
+    "text": "فما يعمل مثال الزروطين خير إيارا",
+    "clean": "فما يعمل مثال الزروطين خير ايارا",
+    "words": [
+      {
+        "word": " فما",
+        "start": 0.0,
+        "end": 1.16,
+        "probability": 0.4665853679180145
+      },
+      {
+        "word": " يعمل",
+        "start": 1.16,
+        "end": 3.58,
+        "probability": 0.5973875919977824
+      },
+      {
+        "word": " مثال",
+        "start": 3.58,
+        "end": 4.86,
+        "probability": 0.40868351981043816
+      },
+      {
+        "word": " الزروطين",
+        "start": 4.86,
+        "end": 6.84,
+        "probability": 0.33464164659380913
+      },
+      {
+        "word": " خير",
+        "start": 6.84,
+        "end": 7.6,
+        "probability": 0.6059509515762329
+      },
+      {
+        "word": " إيارا",
+        "start": 7.6,
+        "end": 9.88,
+        "probability": 0.23688439466059208
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_099/009.mp3",
+    "duration": 11.2849375,
+    "text": "ومنية ملمثال الزروتي الشرون يا ره",
+    "clean": "ومنيه ملمثال الزروتي الشرون يا ره",
+    "words": [
+      {
+        "word": " ومنية",
+        "start": 2.08,
+        "end": 3.48,
+        "probability": 0.2599848459164302
+      },
+      {
+        "word": " ملمثال",
+        "start": 3.48,
+        "end": 4.88,
+        "probability": 0.5848036929965019
+      },
+      {
+        "word": " الزروتي",
+        "start": 4.88,
+        "end": 6.6,
+        "probability": 0.3422878682613373
+      },
+      {
+        "word": " الشرون",
+        "start": 6.6,
+        "end": 9.26,
+        "probability": 0.4832673768202464
+      },
+      {
+        "word": " يا",
+        "start": 9.26,
+        "end": 10.18,
+        "probability": 0.31250232458114624
+      },
+      {
+        "word": " ره",
+        "start": 10.18,
+        "end": 10.84,
+        "probability": 0.6255548894405365
+      }
+    ]
+  }
+]

@@ -1,0 +1,242 @@
+[
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_111/001.mp3",
+    "duration": 9.6914375,
+    "text": "بسم الله الرحمن الرحيم",
+    "clean": "بسم الله الرحمن الرحيم",
+    "words": [
+      {
+        "word": " بسم",
+        "start": 0.0,
+        "end": 1.58,
+        "probability": 0.6608327627182007
+      },
+      {
+        "word": " الله",
+        "start": 1.58,
+        "end": 2.62,
+        "probability": 0.5662888884544373
+      },
+      {
+        "word": " الرحمن",
+        "start": 2.62,
+        "end": 4.6,
+        "probability": 0.6287103990713755
+      },
+      {
+        "word": " الرحيم",
+        "start": 4.6,
+        "end": 8.28,
+        "probability": 0.8840272426605225
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_111/002.mp3",
+    "duration": 10.7101875,
+    "text": "تبت يداء عميلة هميون و تبت",
+    "clean": "تبت يداء عميله هميون و تبت",
+    "words": [
+      {
+        "word": " تبت",
+        "start": 0.0,
+        "end": 1.64,
+        "probability": 0.5840512911478678
+      },
+      {
+        "word": " يداء",
+        "start": 1.64,
+        "end": 4.02,
+        "probability": 0.474584698677063
+      },
+      {
+        "word": " عميلة",
+        "start": 4.02,
+        "end": 5.68,
+        "probability": 0.40267892740666866
+      },
+      {
+        "word": " هميون",
+        "start": 5.68,
+        "end": 7.4,
+        "probability": 0.5310832634568214
+      },
+      {
+        "word": " و",
+        "start": 7.4,
+        "end": 7.94,
+        "probability": 0.41521212458610535
+      },
+      {
+        "word": " تبت",
+        "start": 7.94,
+        "end": 8.96,
+        "probability": 0.5782288710276285
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_111/003.mp3",
+    "duration": 10.7885625,
+    "text": "ماذا أرنا عنه ماذوه وما كسابه",
+    "clean": "ماذا ارنا عنه ماذوه وما كسابه",
+    "words": [
+      {
+        "word": " ماذا",
+        "start": 1.42,
+        "end": 2.82,
+        "probability": 0.4385620355606079
+      },
+      {
+        "word": " أرنا",
+        "start": 2.82,
+        "end": 3.76,
+        "probability": 0.32956646879514057
+      },
+      {
+        "word": " عنه",
+        "start": 3.76,
+        "end": 5.1,
+        "probability": 0.5609816610813141
+      },
+      {
+        "word": " ماذوه",
+        "start": 5.1,
+        "end": 6.84,
+        "probability": 0.46247854083776474
+      },
+      {
+        "word": " وما",
+        "start": 6.84,
+        "end": 7.7,
+        "probability": 0.736341655254364
+      },
+      {
+        "word": " كسابه",
+        "start": 7.7,
+        "end": 9.34,
+        "probability": 0.5457415878772736
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_111/004.mp3",
+    "duration": 9.01225,
+    "text": "سا يصلا نارون ذات لهاب",
+    "clean": "سا يصلا نارون ذات لهاب",
+    "words": [
+      {
+        "word": " سا",
+        "start": 0.0,
+        "end": 1.14,
+        "probability": 0.36879754066467285
+      },
+      {
+        "word": " يصلا",
+        "start": 1.14,
+        "end": 2.18,
+        "probability": 0.49407288432121277
+      },
+      {
+        "word": " نارون",
+        "start": 2.18,
+        "end": 4.4,
+        "probability": 0.48401286204655963
+      },
+      {
+        "word": " ذات",
+        "start": 4.4,
+        "end": 5.7,
+        "probability": 0.8254856765270233
+      },
+      {
+        "word": " لهاب",
+        "start": 5.7,
+        "end": 6.96,
+        "probability": 0.34630084534486133
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_111/005.mp3",
+    "duration": 9.9265625,
+    "text": "1. ونرأته حمما لا تلحا قابه",
+    "clean": "1 ونراته حمما لا تلحا قابه",
+    "words": [
+      {
+        "word": " 1.",
+        "start": 0.0,
+        "end": 0.8,
+        "probability": 0.1759573072195053
+      },
+      {
+        "word": " ونرأته",
+        "start": 1.36,
+        "end": 2.76,
+        "probability": 0.3539949705203374
+      },
+      {
+        "word": " حمما",
+        "start": 2.76,
+        "end": 5.58,
+        "probability": 0.48768969376881915
+      },
+      {
+        "word": " لا",
+        "start": 5.58,
+        "end": 6.2,
+        "probability": 0.29640451073646545
+      },
+      {
+        "word": " تلحا",
+        "start": 6.2,
+        "end": 7.3,
+        "probability": 0.6604780405759811
+      },
+      {
+        "word": " قابه",
+        "start": 7.3,
+        "end": 8.2,
+        "probability": 0.28069182733694714
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_111/006.mp3",
+    "duration": 8.8555,
+    "text": "في جيدها حبلهم من مسادي",
+    "clean": "في جيدها حبلهم من مسادي",
+    "words": [
+      {
+        "word": " في",
+        "start": 0.0,
+        "end": 1.06,
+        "probability": 0.21784259378910065
+      },
+      {
+        "word": " جيدها",
+        "start": 1.06,
+        "end": 3.14,
+        "probability": 0.7866612672805786
+      },
+      {
+        "word": " حبلهم",
+        "start": 3.14,
+        "end": 5.4,
+        "probability": 0.44307364523410797
+      },
+      {
+        "word": " من",
+        "start": 5.4,
+        "end": 6.44,
+        "probability": 0.8972008228302002
+      },
+      {
+        "word": " مسادي",
+        "start": 6.44,
+        "end": 8.12,
+        "probability": 0.2917994459470113
+      }
+    ]
+  }
+]

@@ -3,8 +3,13 @@ import '../../../../data/models/memorization_settings.dart';
 
 class HifzProgressBar extends StatelessWidget {
   final MemorizationPlaybackState state;
+  final bool isLetter;
 
-  const HifzProgressBar({super.key, required this.state});
+  const HifzProgressBar({
+    super.key,
+    required this.state,
+    this.isLetter = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +32,18 @@ class HifzProgressBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'آية ${state.currentAyah} من ${state.totalAyahs}',
+              () {
+                if (isLetter) {
+                  return 'مقطع ${state.currentAyah} من ${state.totalAyahs}';
+                }
+                if (state.isMultiPartAyah) {
+                  return 'آية ${state.currentVerse} (مقطع ${state.currentPart}/${state.totalPartsForAyah})';
+                }
+                if (state.currentVerse == 0 && state.currentAyah == 1) {
+                  return 'البسملة';
+                }
+                return 'آية ${state.currentVerse > 0 ? state.currentVerse : state.currentAyah} من ${state.totalAyahs}';
+              }(),
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.7),
                 fontSize: 12,

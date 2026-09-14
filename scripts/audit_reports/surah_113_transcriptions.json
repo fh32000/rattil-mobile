@@ -1,0 +1,230 @@
+[
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_113/001.mp3",
+    "duration": 10.161625,
+    "text": "بسم الله الرحمن الرحيم",
+    "clean": "بسم الله الرحمن الرحيم",
+    "words": [
+      {
+        "word": " بسم",
+        "start": 0.0,
+        "end": 1.6,
+        "probability": 0.6019545495510101
+      },
+      {
+        "word": " الله",
+        "start": 1.6,
+        "end": 2.46,
+        "probability": 0.5495421886444092
+      },
+      {
+        "word": " الرحمن",
+        "start": 2.46,
+        "end": 4.6,
+        "probability": 0.6494500835736593
+      },
+      {
+        "word": " الرحيم",
+        "start": 4.6,
+        "end": 8.34,
+        "probability": 0.8648417592048645
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_113/002.mp3",
+    "duration": 6.5045,
+    "text": "أول أعوز بيرام بي الفلنق",
+    "clean": "اول اعوز بيرام بي الفلنق",
+    "words": [
+      {
+        "word": " أول",
+        "start": 0.0,
+        "end": 1.6,
+        "probability": 0.08748815953731537
+      },
+      {
+        "word": " أعوز",
+        "start": 1.6,
+        "end": 2.7,
+        "probability": 0.3378056213259697
+      },
+      {
+        "word": " بيرام",
+        "start": 2.7,
+        "end": 3.76,
+        "probability": 0.19274877508481345
+      },
+      {
+        "word": " بي",
+        "start": 3.76,
+        "end": 4.16,
+        "probability": 0.29453226923942566
+      },
+      {
+        "word": " الفلنق",
+        "start": 4.16,
+        "end": 5.3,
+        "probability": 0.34323588013648987
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_113/003.mp3",
+    "duration": 5.7208125,
+    "text": "من شرذي من خلنق",
+    "clean": "من شرذي من خلنق",
+    "words": [
+      {
+        "word": " من",
+        "start": 0.0,
+        "end": 1.24,
+        "probability": 0.3691464960575104
+      },
+      {
+        "word": " شرذي",
+        "start": 1.24,
+        "end": 3.02,
+        "probability": 0.44665123894810677
+      },
+      {
+        "word": " من",
+        "start": 3.02,
+        "end": 3.52,
+        "probability": 0.4868563115596771
+      },
+      {
+        "word": " خلنق",
+        "start": 3.52,
+        "end": 4.62,
+        "probability": 0.47852833569049835
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_113/004.mp3",
+    "duration": 9.01225,
+    "text": "ومين شرفي رو سنطين إذا وان قمت",
+    "clean": "ومين شرفي رو سنطين اذا وان قمت",
+    "words": [
+      {
+        "word": " ومين",
+        "start": 0.0,
+        "end": 2.62,
+        "probability": 0.4524412949879964
+      },
+      {
+        "word": " شرفي",
+        "start": 2.62,
+        "end": 3.66,
+        "probability": 0.48637883737683296
+      },
+      {
+        "word": " رو",
+        "start": 3.66,
+        "end": 4.3,
+        "probability": 0.28313449025154114
+      },
+      {
+        "word": " سنطين",
+        "start": 4.3,
+        "end": 5.32,
+        "probability": 0.4331895485520363
+      },
+      {
+        "word": " إذا",
+        "start": 5.32,
+        "end": 6.24,
+        "probability": 0.8339494466781616
+      },
+      {
+        "word": " وان",
+        "start": 6.24,
+        "end": 6.82,
+        "probability": 0.4748942404985428
+      },
+      {
+        "word": " قمت",
+        "start": 6.82,
+        "end": 7.48,
+        "probability": 0.2761233796676
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_113/005.mp3",
+    "duration": 10.0049375,
+    "text": "ومين شرلين نفافات في العنض",
+    "clean": "ومين شرلين نفافات في العنض",
+    "words": [
+      {
+        "word": " ومين",
+        "start": 0.0,
+        "end": 2.1,
+        "probability": 0.46712743242581684
+      },
+      {
+        "word": " شرلين",
+        "start": 2.1,
+        "end": 4.5,
+        "probability": 0.5971242114901543
+      },
+      {
+        "word": " نفافات",
+        "start": 4.5,
+        "end": 6.88,
+        "probability": 0.48946811258792877
+      },
+      {
+        "word": " في",
+        "start": 6.88,
+        "end": 7.48,
+        "probability": 0.849245548248291
+      },
+      {
+        "word": " العنض",
+        "start": 7.48,
+        "end": 8.86,
+        "probability": 0.2493740220864614
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_113/006.mp3",
+    "duration": 7.9935,
+    "text": "ومشد في حاسد إذا حسد",
+    "clean": "ومشد في حاسد اذا حسد",
+    "words": [
+      {
+        "word": " ومشد",
+        "start": 0.0,
+        "end": 2.8,
+        "probability": 0.4914156198501587
+      },
+      {
+        "word": " في",
+        "start": 2.8,
+        "end": 3.32,
+        "probability": 0.4446961581707001
+      },
+      {
+        "word": " حاسد",
+        "start": 3.32,
+        "end": 4.72,
+        "probability": 0.586207906405131
+      },
+      {
+        "word": " إذا",
+        "start": 4.72,
+        "end": 6.16,
+        "probability": 0.6328291893005371
+      },
+      {
+        "word": " حسد",
+        "start": 6.16,
+        "end": 7.24,
+        "probability": 0.7161436676979065
+      }
+    ]
+  }
+]

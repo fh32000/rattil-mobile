@@ -3,8 +3,8 @@ class AppConstants {
 
   static const String appName = 'ورتِّله';
   static const String appNameEn = 'Warattilhu';
-  static const String appVersion = '1.0.16';
-  static const String appReleaseDate = '13-06-2026';
+  static const String appVersion = '1.0.18';
+  static const String appReleaseDate = '14-09-2026';
   static const String appDescription =
       'تطبيق ورتِّله للاستماع إلى تلاوات القرآن الكريم';
 
@@ -16,10 +16,12 @@ class AppConstants {
   static const String reciterName = 'عمر أحمد عمر الخامر';
   static const String reciterBio =
       'عمر أحمد عمر الخامر، من أبناء اليمن - حضرموت / المكلا / روكب، '
-      'رئيس مركز إقرأ بروكب لتعليم القرآن وتلقي القراءات، '
+      'رئيس مركز إقراء بروكب لتعليم القرآن وتلقي القراءات، '
       '(مجاز بالقراءات السبع من معهد ابن عباس بالمكلا)، '
       'خريج جامعة القرآن الكريم والعلوم الإسلامية بالمكلا '
       '- قسم التجويد التطبيقي للقرآن.';
+  static const String reciterCenter =
+      'رئيس مركز إقراء بروكب لتعليم القرآن وتلقي القراءات';
 
   // Developer info
   static const String developerName = 'محمد فرج بامحفوظ';

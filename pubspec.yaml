@@ -1,7 +1,7 @@
 name: rattil
 description: "ورتِّله - تطبيق القرآن الكريم"
 publish_to: 'none'
-version: 1.0.17+5
+version: 1.0.18+6
 
 environment:
   sdk: ^3.8.1
