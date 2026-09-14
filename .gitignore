@@ -27,6 +27,8 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+/releases/
+*.aab
 pubspec.lock
 
 # Android
