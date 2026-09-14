@@ -69,7 +69,7 @@ Future<void> main() async {
   analytics.trackAppOpen();
 
   analytics.setUserProperties(
-    appVersion: '1.0.16+4',
+    appVersion: '1.0.18+6',
     platform: kIsWeb ? 'web' : defaultTargetPlatform.name,
     language: 'ar',
     themeMode: 'dark',
