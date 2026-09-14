@@ -1,0 +1,192 @@
+[
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_106/001.mp3",
+    "duration": 9.299625,
+    "text": "بسم الله الرحمن الرحيم",
+    "clean": "بسم الله الرحمن الرحيم",
+    "words": [
+      {
+        "word": " بسم",
+        "start": 0.0,
+        "end": 1.48,
+        "probability": 0.6685689091682434
+      },
+      {
+        "word": " الله",
+        "start": 1.48,
+        "end": 2.54,
+        "probability": 0.6830964684486389
+      },
+      {
+        "word": " الرحمن",
+        "start": 2.54,
+        "end": 4.48,
+        "probability": 0.6898505489031473
+      },
+      {
+        "word": " الرحيم",
+        "start": 4.48,
+        "end": 8.12,
+        "probability": 0.8396333853403727
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_106/002.mp3",
+    "duration": 6.7135,
+    "text": "لإلا في أوريش",
+    "clean": "لالا في اوريش",
+    "words": [
+      {
+        "word": " لإلا",
+        "start": 0.0,
+        "end": 2.34,
+        "probability": 0.4320721725622813
+      },
+      {
+        "word": " في",
+        "start": 2.34,
+        "end": 2.9,
+        "probability": 0.9346103072166443
+      },
+      {
+        "word": " أوريش",
+        "start": 2.9,
+        "end": 5.42,
+        "probability": 0.5241962894797325
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_106/003.mp3",
+    "duration": 10.579625,
+    "text": "إلا فيهم رحلت الشيطاء وصيف",
+    "clean": "الا فيهم رحلت الشيطاء وصيف",
+    "words": [
+      {
+        "word": " إلا",
+        "start": 0.0,
+        "end": 1.96,
+        "probability": 0.5970503091812134
+      },
+      {
+        "word": " فيهم",
+        "start": 1.96,
+        "end": 2.98,
+        "probability": 0.721822589635849
+      },
+      {
+        "word": " رحلت",
+        "start": 2.98,
+        "end": 4.16,
+        "probability": 0.5819142237305641
+      },
+      {
+        "word": " الشيطاء",
+        "start": 4.16,
+        "end": 6.7,
+        "probability": 0.6895907819271088
+      },
+      {
+        "word": " وصيف",
+        "start": 6.7,
+        "end": 9.48,
+        "probability": 0.42820999026298523
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_106/004.mp3",
+    "duration": 8.5943125,
+    "text": "فاليا مدور بها ذلبيت",
+    "clean": "فاليا مدور بها ذلبيت",
+    "words": [
+      {
+        "word": " فاليا",
+        "start": 0.0,
+        "end": 1.78,
+        "probability": 0.4557938724756241
+      },
+      {
+        "word": " مدور",
+        "start": 1.78,
+        "end": 2.98,
+        "probability": 0.5925345917542776
+      },
+      {
+        "word": " بها",
+        "start": 2.98,
+        "end": 4.38,
+        "probability": 0.5359211638569832
+      },
+      {
+        "word": " ذلبيت",
+        "start": 4.38,
+        "end": 7.3,
+        "probability": 0.5158291459083557
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_106/005.mp3",
+    "duration": 19.409,
+    "text": "4. اللذي أقعناهم من جوء واناهم واناهم من خوف",
+    "clean": "4 اللذي اقعناهم من جوء واناهم واناهم من خوف",
+    "words": [
+      {
+        "word": " 4.",
+        "start": 0.0,
+        "end": 0.68,
+        "probability": 0.05748196318745613
+      },
+      {
+        "word": " اللذي",
+        "start": 1.7,
+        "end": 3.1,
+        "probability": 0.47908953825632733
+      },
+      {
+        "word": " أقعناهم",
+        "start": 3.1,
+        "end": 5.88,
+        "probability": 0.41612170934677123
+      },
+      {
+        "word": " من",
+        "start": 5.88,
+        "end": 6.88,
+        "probability": 0.8520925045013428
+      },
+      {
+        "word": " جوء",
+        "start": 6.88,
+        "end": 8.34,
+        "probability": 0.5023123125235239
+      },
+      {
+        "word": " واناهم",
+        "start": 8.34,
+        "end": 11.56,
+        "probability": 0.5328765138983727
+      },
+      {
+        "word": " واناهم",
+        "start": 11.56,
+        "end": 15.84,
+        "probability": 0.891595184803009
+      },
+      {
+        "word": " من",
+        "start": 15.84,
+        "end": 16.8,
+        "probability": 0.9697292447090149
+      },
+      {
+        "word": " خوف",
+        "start": 16.8,
+        "end": 18.66,
+        "probability": 0.5448707640171051
+      }
+    ]
+  }
+]

@@ -347,5 +347,176 @@ void main() {
       expect(segments[17].fileName, equals('017.mp3'));
       expect(segments[17].verseNumber, equals(17));
     });
+
+    test('Surah 88 default segments correctly configures 26 ayahs + Basmala', () {
+      final segments = AyahTrackSource.getSegments(88);
+      expect(segments.length, equals(27));
+      expect(segments[0].fileName, equals('000.mp3'));
+      expect(segments[0].verseNumber, equals(0));
+      expect(segments[26].fileName, equals('026.mp3'));
+      expect(segments[26].verseNumber, equals(26));
+    });
+
+    test('Surah 89 default segments correctly configures multi-part ayah 23 and 30 ayahs', () {
+      final segments = AyahTrackSource.getSegments(89);
+      expect(segments.length, equals(32));
+      expect(segments[0].fileName, equals('000.mp3'));
+      expect(segments[0].verseNumber, equals(0));
+
+      // Ayah 23 parts
+      expect(segments[23].fileName, equals('023-1.mp3'));
+      expect(segments[23].verseNumber, equals(23));
+      expect(segments[23].partIndex, equals(1));
+      expect(segments[23].totalParts, equals(2));
+
+      expect(segments[24].fileName, equals('023-2.mp3'));
+      expect(segments[24].verseNumber, equals(23));
+      expect(segments[24].partIndex, equals(2));
+      expect(segments[24].totalParts, equals(2));
+
+      // Final ayah 30
+      expect(segments[31].fileName, equals('030.mp3'));
+      expect(segments[31].verseNumber, equals(30));
+    });
+
+    test('Surah 90 default segments correctly configures multi-part ayahs 17 and 19', () {
+      final segments = AyahTrackSource.getSegments(90);
+      expect(segments.length, equals(23));
+      expect(segments[0].fileName, equals('000.mp3'));
+      expect(segments[0].verseNumber, equals(0));
+
+      // Ayah 17 parts
+      expect(segments[17].fileName, equals('017-1.mp3'));
+      expect(segments[17].verseNumber, equals(17));
+      expect(segments[17].partIndex, equals(1));
+      expect(segments[17].totalParts, equals(2));
+
+      expect(segments[18].fileName, equals('017-2.mp3'));
+      expect(segments[18].verseNumber, equals(17));
+      expect(segments[18].partIndex, equals(2));
+      expect(segments[18].totalParts, equals(2));
+
+      // Ayah 18
+      expect(segments[19].fileName, equals('018.mp3'));
+      expect(segments[19].verseNumber, equals(18));
+
+      // Ayah 19 parts
+      expect(segments[20].fileName, equals('019-1.mp3'));
+      expect(segments[20].verseNumber, equals(19));
+      expect(segments[20].partIndex, equals(1));
+      expect(segments[20].totalParts, equals(2));
+
+      expect(segments[21].fileName, equals('019-2.mp3'));
+      expect(segments[21].verseNumber, equals(19));
+      expect(segments[21].partIndex, equals(2));
+      expect(segments[21].totalParts, equals(2));
+
+      // Final ayah 20
+      expect(segments[22].fileName, equals('020.mp3'));
+      expect(segments[22].verseNumber, equals(20));
+    });
+
+    test('Surah 92 default segments correctly configures 21 ayahs + Basmala', () {
+      final segments = AyahTrackSource.getSegments(92);
+      expect(segments.length, equals(22));
+      expect(segments[0].fileName, equals('000.mp3'));
+      expect(segments[0].verseNumber, equals(0));
+      expect(segments[21].fileName, equals('021.mp3'));
+      expect(segments[21].verseNumber, equals(21));
+    });
+
+    test('Surah 94 default segments correctly configures 8 ayahs + Basmala', () {
+      final segments = AyahTrackSource.getSegments(94);
+      expect(segments.length, equals(9));
+      expect(segments[0].fileName, equals('000.mp3'));
+      expect(segments[0].verseNumber, equals(0));
+      expect(segments[8].fileName, equals('008.mp3'));
+      expect(segments[8].verseNumber, equals(8));
+    });
+
+    test('Surah 101 default segments correctly configures 11 ayahs + Basmala', () {
+      final segments = AyahTrackSource.getSegments(101);
+      expect(segments.length, equals(12));
+      expect(segments[0].fileName, equals('000.mp3'));
+      expect(segments[0].verseNumber, equals(0));
+      expect(segments[11].fileName, equals('011.mp3'));
+      expect(segments[11].verseNumber, equals(11));
+    });
+
+    test('Surah 87 default segments correctly configures multi-part ayah 7 and 19 ayahs', () {
+      final segments = AyahTrackSource.getSegments(87);
+      expect(segments.length, equals(21));
+      expect(segments[0].fileName, equals('000.mp3'));
+      expect(segments[0].verseNumber, equals(0));
+
+      // Ayah 7 parts
+      expect(segments[7].fileName, equals('007-1.mp3'));
+      expect(segments[7].verseNumber, equals(7));
+      expect(segments[7].partIndex, equals(1));
+      expect(segments[7].totalParts, equals(2));
+
+      expect(segments[8].fileName, equals('007-2.mp3'));
+      expect(segments[8].verseNumber, equals(7));
+      expect(segments[8].partIndex, equals(2));
+      expect(segments[8].totalParts, equals(2));
+
+      // Final ayah 19
+      expect(segments[20].fileName, equals('019.mp3'));
+      expect(segments[20].verseNumber, equals(19));
+    });
+
+    test('Surah 95 default segments correctly configures multi-part ayah 6 and 8 ayahs', () {
+      final segments = AyahTrackSource.getSegments(95);
+      expect(segments.length, equals(10));
+      expect(segments[0].fileName, equals('000.mp3'));
+      expect(segments[0].verseNumber, equals(0));
+
+      // Ayah 6 parts
+      expect(segments[6].fileName, equals('006-1.mp3'));
+      expect(segments[6].verseNumber, equals(6));
+      expect(segments[6].partIndex, equals(1));
+      expect(segments[6].totalParts, equals(2));
+
+      expect(segments[7].fileName, equals('006-2.mp3'));
+      expect(segments[7].verseNumber, equals(6));
+      expect(segments[7].partIndex, equals(2));
+      expect(segments[7].totalParts, equals(2));
+
+      // Final ayah 8
+      expect(segments[9].fileName, equals('008.mp3'));
+      expect(segments[9].verseNumber, equals(8));
+    });
+
+    test('Surah 97 default segments correctly configures multi-part ayah 4 and 5 ayahs', () {
+      final segments = AyahTrackSource.getSegments(97);
+      expect(segments.length, equals(7));
+      expect(segments[0].fileName, equals('000.mp3'));
+      expect(segments[0].verseNumber, equals(0));
+
+      // Ayah 4 parts
+      expect(segments[4].fileName, equals('004-1.mp3'));
+      expect(segments[4].verseNumber, equals(4));
+      expect(segments[4].partIndex, equals(1));
+      expect(segments[4].totalParts, equals(2));
+
+      expect(segments[5].fileName, equals('004-2.mp3'));
+      expect(segments[5].verseNumber, equals(4));
+      expect(segments[5].partIndex, equals(2));
+      expect(segments[5].totalParts, equals(2));
+
+      // Final ayah 5
+      expect(segments[6].fileName, equals('005.mp3'));
+      expect(segments[6].verseNumber, equals(5));
+    });
+
+    test('ALL 37 surahs in Juz Amma (78-114) have 000.mp3 as Basmala and valid non-empty segments', () {
+      for (int s = 78; s <= 114; s++) {
+        final segments = AyahTrackSource.getSegments(s);
+        expect(segments.isNotEmpty, isTrue, reason: 'Surah $s segments must not be empty');
+        expect(segments[0].fileName, equals('000.mp3'), reason: 'Surah $s first file must be 000.mp3');
+        expect(segments[0].verseNumber, equals(0), reason: 'Surah $s first segment must be verse 0 (Basmala)');
+        expect(segments.last.verseNumber, greaterThan(0), reason: 'Surah $s last segment must be a valid verse');
+      }
+    });
   });
 }

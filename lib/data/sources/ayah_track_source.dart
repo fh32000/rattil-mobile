@@ -36,7 +36,7 @@ class AyahTrackSource {
     88: 27,
     89: 32,
     90: 23,
-    91: 17,
+    91: 16,
     92: 22,
     93: 12,
     94: 9,
@@ -415,19 +415,228 @@ class AyahTrackSource {
       ];
     }
 
+    if (surahNumber == 87) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 6; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+        const AyahTrackSegment(
+          fileName: '007-1.mp3',
+          verseNumber: 7,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '007-2.mp3',
+          verseNumber: 7,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        for (int i = 8; i <= 19; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+    }
+
+    if (surahNumber == 88) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 26; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+    }
+
+    if (surahNumber == 89) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 22; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+        const AyahTrackSegment(
+          fileName: '023-1.mp3',
+          verseNumber: 23,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '023-2.mp3',
+          verseNumber: 23,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        for (int i = 24; i <= 30; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+    }
+
+    if (surahNumber == 90) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 16; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+        const AyahTrackSegment(
+          fileName: '017-1.mp3',
+          verseNumber: 17,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '017-2.mp3',
+          verseNumber: 17,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '018.mp3',
+          verseNumber: 18,
+        ),
+        const AyahTrackSegment(
+          fileName: '019-1.mp3',
+          verseNumber: 19,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '019-2.mp3',
+          verseNumber: 19,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '020.mp3',
+          verseNumber: 20,
+        ),
+      ];
+    }
+
+    if (surahNumber == 92) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 21; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+    }
+
+    if (surahNumber == 94) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 8; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+    }
+
+    if (surahNumber == 95) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 5; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+        const AyahTrackSegment(
+          fileName: '006-1.mp3',
+          verseNumber: 6,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '006-2.mp3',
+          verseNumber: 6,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        for (int i = 7; i <= 8; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+    }
+
+    if (surahNumber == 97) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 3; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+        const AyahTrackSegment(
+          fileName: '004-1.mp3',
+          verseNumber: 4,
+          partIndex: 1,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '004-2.mp3',
+          verseNumber: 4,
+          partIndex: 2,
+          totalParts: 2,
+        ),
+        const AyahTrackSegment(
+          fileName: '005.mp3',
+          verseNumber: 5,
+        ),
+      ];
+    }
+
+    if (surahNumber == 101) {
+      return <AyahTrackSegment>[
+        const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0),
+        for (int i = 1; i <= 11; i++)
+          AyahTrackSegment(
+            fileName: '${i.toString().padLeft(3, '0')}.mp3',
+            verseNumber: i,
+          ),
+      ];
+    }
+
     final count = ayahFileCounts[surahNumber] ?? 0;
     if (count == 0) return [];
 
     final segments = <AyahTrackSegment>[];
-    for (int i = 1; i <= count; i++) {
-      final fileName = '${i.toString().padLeft(3, '0')}.mp3';
-      final verseNum = surahNumber == 1 ? i : (i - 1);
-      segments.add(AyahTrackSegment(
-        fileName: fileName,
-        verseNumber: verseNum,
-        partIndex: 1,
-        totalParts: 1,
-      ));
+    if (surahNumber == 1) {
+      for (int i = 1; i <= count; i++) {
+        segments.add(AyahTrackSegment(
+          fileName: '${i.toString().padLeft(3, '0')}.mp3',
+          verseNumber: i,
+          partIndex: 1,
+          totalParts: 1,
+        ));
+      }
+    } else {
+      // Standard Juz Amma format: 000.mp3 is Basmala (verse 0), 001..N is verses 1..N
+      segments.add(const AyahTrackSegment(fileName: '000.mp3', verseNumber: 0));
+      for (int i = 1; i < count; i++) {
+        segments.add(AyahTrackSegment(
+          fileName: '${i.toString().padLeft(3, '0')}.mp3',
+          verseNumber: i,
+          partIndex: 1,
+          totalParts: 1,
+        ));
+      }
     }
     return segments;
   }

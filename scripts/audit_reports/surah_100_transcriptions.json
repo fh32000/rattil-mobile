@@ -1,0 +1,416 @@
+[
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/001.mp3",
+    "duration": 9.5085625,
+    "text": "بسم الله الرحمن الرحيم",
+    "clean": "بسم الله الرحمن الرحيم",
+    "words": [
+      {
+        "word": " بسم",
+        "start": 0.0,
+        "end": 1.36,
+        "probability": 0.6625630259513855
+      },
+      {
+        "word": " الله",
+        "start": 1.36,
+        "end": 2.24,
+        "probability": 0.7459501028060913
+      },
+      {
+        "word": " الرحمن",
+        "start": 2.24,
+        "end": 4.38,
+        "probability": 0.6223021149635315
+      },
+      {
+        "word": " الرحيم",
+        "start": 4.38,
+        "end": 8.0,
+        "probability": 0.8263248999913534
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/002.mp3",
+    "duration": 5.48575,
+    "text": "والعادية تنضبها",
+    "clean": "والعاديه تنضبها",
+    "words": [
+      {
+        "word": " والعادية",
+        "start": 1.7400000000000002,
+        "end": 3.14,
+        "probability": 0.45943086221814156
+      },
+      {
+        "word": " تنضبها",
+        "start": 3.14,
+        "end": 4.54,
+        "probability": 0.4172272428870201
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/003.mp3",
+    "duration": 5.459625,
+    "text": "فلموريات قد حافظ",
+    "clean": "فلموريات قد حافظ",
+    "words": [
+      {
+        "word": " فلموريات",
+        "start": 1.5,
+        "end": 2.9,
+        "probability": 0.5413600921630859
+      },
+      {
+        "word": " قد",
+        "start": 2.9,
+        "end": 3.76,
+        "probability": 0.5215049088001251
+      },
+      {
+        "word": " حافظ",
+        "start": 3.76,
+        "end": 4.8,
+        "probability": 0.26404374837875366
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/004.mp3",
+    "duration": 5.459625,
+    "text": "في المغيرات السبحة",
+    "clean": "في المغيرات السبحه",
+    "words": [
+      {
+        "word": " في",
+        "start": 0.0,
+        "end": 0.78,
+        "probability": 0.3288539946079254
+      },
+      {
+        "word": " المغيرات",
+        "start": 0.78,
+        "end": 2.78,
+        "probability": 0.7823644429445267
+      },
+      {
+        "word": " السبحة",
+        "start": 2.78,
+        "end": 4.64,
+        "probability": 0.5078324601054192
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/005.mp3",
+    "duration": 5.511875,
+    "text": "سأسرنا بهينا قائة",
+    "clean": "ساسرنا بهينا قائه",
+    "words": [
+      {
+        "word": " سأسرنا",
+        "start": 0.0,
+        "end": 2.06,
+        "probability": 0.6011458516120911
+      },
+      {
+        "word": " بهينا",
+        "start": 2.06,
+        "end": 3.36,
+        "probability": 0.46492187678813934
+      },
+      {
+        "word": " قائة",
+        "start": 3.36,
+        "end": 4.42,
+        "probability": 0.22527640561262766
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/006.mp3",
+    "duration": 5.9559375,
+    "text": "سوة سنكون بهجم مع",
+    "clean": "سوه سنكون بهجم مع",
+    "words": [
+      {
+        "word": " سوة",
+        "start": 0.0,
+        "end": 1.14,
+        "probability": 0.3089118152856827
+      },
+      {
+        "word": " سنكون",
+        "start": 1.14,
+        "end": 1.92,
+        "probability": 0.5461907982826233
+      },
+      {
+        "word": " بهجم",
+        "start": 1.92,
+        "end": 3.98,
+        "probability": 0.5717662274837494
+      },
+      {
+        "word": " مع",
+        "start": 3.98,
+        "end": 4.48,
+        "probability": 0.5934129953384399
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/007.mp3",
+    "duration": 10.527375,
+    "text": "إن الملين سنال يروبه إلى كانود",
+    "clean": "ان الملين سنال يروبه الي كانود",
+    "words": [
+      {
+        "word": " إن",
+        "start": 0.0,
+        "end": 1.78,
+        "probability": 0.29084858298301697
+      },
+      {
+        "word": " الملين",
+        "start": 1.78,
+        "end": 3.5,
+        "probability": 0.26822954416275024
+      },
+      {
+        "word": " سنال",
+        "start": 3.5,
+        "end": 5.08,
+        "probability": 0.554388682047526
+      },
+      {
+        "word": " يروبه",
+        "start": 5.08,
+        "end": 6.52,
+        "probability": 0.452919639647007
+      },
+      {
+        "word": " إلى",
+        "start": 6.52,
+        "end": 7.16,
+        "probability": 0.18860214948654175
+      },
+      {
+        "word": " كانود",
+        "start": 7.16,
+        "end": 9.38,
+        "probability": 0.5596610903739929
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/008.mp3",
+    "duration": 9.299625,
+    "text": "وإنه على ذلك لشاهد",
+    "clean": "وانه علي ذلك لشاهد",
+    "words": [
+      {
+        "word": " وإنه",
+        "start": 0.0,
+        "end": 2.7,
+        "probability": 0.5689010960049927
+      },
+      {
+        "word": " على",
+        "start": 2.7,
+        "end": 3.48,
+        "probability": 0.6953201293945312
+      },
+      {
+        "word": " ذلك",
+        "start": 3.48,
+        "end": 5.2,
+        "probability": 0.9585219323635101
+      },
+      {
+        "word": " لشاهد",
+        "start": 5.2,
+        "end": 8.12,
+        "probability": 0.6975642070174217
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/009.mp3",
+    "duration": 9.4824375,
+    "text": "وإنه لحب الخير لشديد",
+    "clean": "وانه لحب الخير لشديد",
+    "words": [
+      {
+        "word": " وإنه",
+        "start": 1.46,
+        "end": 2.86,
+        "probability": 0.6966852396726608
+      },
+      {
+        "word": " لحب",
+        "start": 2.86,
+        "end": 4.22,
+        "probability": 0.47250991066296893
+      },
+      {
+        "word": " الخير",
+        "start": 4.22,
+        "end": 5.66,
+        "probability": 0.644766166806221
+      },
+      {
+        "word": " لشديد",
+        "start": 5.66,
+        "end": 8.68,
+        "probability": 0.5940818004310131
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/010.mp3",
+    "duration": 10.08325,
+    "text": "أفالا يا لم إذاب واسع رنا في الأبور",
+    "clean": "افالا يا لم اذاب واسع رنا في الابور",
+    "words": [
+      {
+        "word": " أفالا",
+        "start": 0.0,
+        "end": 1.8,
+        "probability": 0.5425944626331329
+      },
+      {
+        "word": " يا",
+        "start": 1.8,
+        "end": 2.12,
+        "probability": 0.35533180832862854
+      },
+      {
+        "word": " لم",
+        "start": 2.12,
+        "end": 3.02,
+        "probability": 0.24316094815731049
+      },
+      {
+        "word": " إذاب",
+        "start": 3.02,
+        "end": 4.28,
+        "probability": 0.5327390829722086
+      },
+      {
+        "word": " واسع",
+        "start": 4.28,
+        "end": 5.02,
+        "probability": 0.29937082280715305
+      },
+      {
+        "word": " رنا",
+        "start": 5.02,
+        "end": 5.8,
+        "probability": 0.5619287639856339
+      },
+      {
+        "word": " في",
+        "start": 5.8,
+        "end": 6.34,
+        "probability": 0.6043521165847778
+      },
+      {
+        "word": " الأبور",
+        "start": 6.34,
+        "end": 8.98,
+        "probability": 0.6356753706932068
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/011.mp3",
+    "duration": 7.2098125,
+    "text": "وحو سيلا ما في الصدور",
+    "clean": "وحو سيلا ما في الصدور",
+    "words": [
+      {
+        "word": " وحو",
+        "start": 0.0,
+        "end": 1.18,
+        "probability": 0.550285741686821
+      },
+      {
+        "word": " سيلا",
+        "start": 1.18,
+        "end": 1.94,
+        "probability": 0.4609742561976115
+      },
+      {
+        "word": " ما",
+        "start": 1.94,
+        "end": 2.68,
+        "probability": 0.6184390187263489
+      },
+      {
+        "word": " في",
+        "start": 2.68,
+        "end": 2.96,
+        "probability": 0.8860055208206177
+      },
+      {
+        "word": " الصدور",
+        "start": 2.96,
+        "end": 5.78,
+        "probability": 0.7687117258707682
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_100/012.mp3",
+    "duration": 11.0236875,
+    "text": "إنا ربهم بهم يوم أي في لخابير",
+    "clean": "انا ربهم بهم يوم اي في لخابير",
+    "words": [
+      {
+        "word": " إنا",
+        "start": 0.0,
+        "end": 2.04,
+        "probability": 0.32648612558841705
+      },
+      {
+        "word": " ربهم",
+        "start": 2.04,
+        "end": 3.5,
+        "probability": 0.7156165242195129
+      },
+      {
+        "word": " بهم",
+        "start": 3.5,
+        "end": 5.56,
+        "probability": 0.7248583734035492
+      },
+      {
+        "word": " يوم",
+        "start": 5.56,
+        "end": 6.48,
+        "probability": 0.6772024929523468
+      },
+      {
+        "word": " أي",
+        "start": 6.48,
+        "end": 7.12,
+        "probability": 0.2042243331670761
+      },
+      {
+        "word": " في",
+        "start": 7.12,
+        "end": 7.48,
+        "probability": 0.4187902510166168
+      },
+      {
+        "word": " لخابير",
+        "start": 7.48,
+        "end": 10.64,
+        "probability": 0.5819234922528267
+      }
+    ]
+  }
+]

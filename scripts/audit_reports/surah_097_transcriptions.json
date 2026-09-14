@@ -1,0 +1,286 @@
+[
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_097/001.mp3",
+    "duration": 9.6391875,
+    "text": "بسم الله الرحمن الرحيم",
+    "clean": "بسم الله الرحمن الرحيم",
+    "words": [
+      {
+        "word": " بسم",
+        "start": 0.0,
+        "end": 1.34,
+        "probability": 0.6521474719047546
+      },
+      {
+        "word": " الله",
+        "start": 1.34,
+        "end": 2.34,
+        "probability": 0.7476391792297363
+      },
+      {
+        "word": " الرحمن",
+        "start": 2.34,
+        "end": 4.3,
+        "probability": 0.6239555676778158
+      },
+      {
+        "word": " الرحيم",
+        "start": 4.3,
+        "end": 8.0,
+        "probability": 0.8768441478411356
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_097/002.mp3",
+    "duration": 11.493875,
+    "text": "إنا زلناه في ليلة القدر",
+    "clean": "انا زلناه في ليله القدر",
+    "words": [
+      {
+        "word": " إنا",
+        "start": 4.619999999999999,
+        "end": 6.02,
+        "probability": 0.20391350984573364
+      },
+      {
+        "word": " زلناه",
+        "start": 6.02,
+        "end": 7.42,
+        "probability": 0.6047842018306255
+      },
+      {
+        "word": " في",
+        "start": 7.42,
+        "end": 7.9,
+        "probability": 0.9560273885726929
+      },
+      {
+        "word": " ليلة",
+        "start": 7.9,
+        "end": 9.18,
+        "probability": 0.4829590519269307
+      },
+      {
+        "word": " القدر",
+        "start": 9.18,
+        "end": 10.22,
+        "probability": 0.5833198477824529
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_097/003.mp3",
+    "duration": 8.777125,
+    "text": "وما عند راكما ليلة قد راك",
+    "clean": "وما عند راكما ليله قد راك",
+    "words": [
+      {
+        "word": " وما",
+        "start": 0.0,
+        "end": 1.96,
+        "probability": 0.6021760106086731
+      },
+      {
+        "word": " عند",
+        "start": 1.96,
+        "end": 3.0,
+        "probability": 0.17038339376449585
+      },
+      {
+        "word": " راكما",
+        "start": 3.0,
+        "end": 4.48,
+        "probability": 0.5553052984178066
+      },
+      {
+        "word": " ليلة",
+        "start": 4.48,
+        "end": 5.94,
+        "probability": 0.5457436541716257
+      },
+      {
+        "word": " قد",
+        "start": 5.94,
+        "end": 6.9,
+        "probability": 0.4610532708466053
+      },
+      {
+        "word": " راك",
+        "start": 6.9,
+        "end": 8.08,
+        "probability": 0.45523526271184284
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_097/004.mp3",
+    "duration": 8.3330625,
+    "text": "ليلة القدري خير من الفيشاهر",
+    "clean": "ليله القدري خير من الفيشاهر",
+    "words": [
+      {
+        "word": " ليلة",
+        "start": 0.0,
+        "end": 1.52,
+        "probability": 0.5422307203213373
+      },
+      {
+        "word": " القدري",
+        "start": 1.52,
+        "end": 2.7,
+        "probability": 0.4417569388945897
+      },
+      {
+        "word": " خير",
+        "start": 2.7,
+        "end": 3.56,
+        "probability": 0.8435032069683075
+      },
+      {
+        "word": " من",
+        "start": 3.56,
+        "end": 5.16,
+        "probability": 0.9086161851882935
+      },
+      {
+        "word": " الفيشاهر",
+        "start": 5.16,
+        "end": 7.24,
+        "probability": 0.560594254732132
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_097/005.mp3",
+    "duration": 11.78125,
+    "text": "تنزل الملائكة ورحوفيها بإذني ربيهم",
+    "clean": "تنزل الملائكه ورحوفيها باذني ربيهم",
+    "words": [
+      {
+        "word": " تنزل",
+        "start": 0.0,
+        "end": 1.68,
+        "probability": 0.7849080413579941
+      },
+      {
+        "word": " الملائكة",
+        "start": 1.68,
+        "end": 4.92,
+        "probability": 0.5048923671245575
+      },
+      {
+        "word": " ورحوفيها",
+        "start": 4.92,
+        "end": 7.86,
+        "probability": 0.5588026096423467
+      },
+      {
+        "word": " بإذني",
+        "start": 7.86,
+        "end": 9.08,
+        "probability": 0.49948570877313614
+      },
+      {
+        "word": " ربيهم",
+        "start": 9.08,
+        "end": 10.72,
+        "probability": 0.6691220204035441
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_097/006.mp3",
+    "duration": 8.4898125,
+    "text": "بإبني ربيهم من كل أمر",
+    "clean": "بابني ربيهم من كل امر",
+    "words": [
+      {
+        "word": " بإبني",
+        "start": 0.0,
+        "end": 1.8,
+        "probability": 0.3088080734014511
+      },
+      {
+        "word": " ربيهم",
+        "start": 1.8,
+        "end": 3.8,
+        "probability": 0.33155789971351624
+      },
+      {
+        "word": " من",
+        "start": 3.8,
+        "end": 5.04,
+        "probability": 0.83873450756073
+      },
+      {
+        "word": " كل",
+        "start": 5.04,
+        "end": 6.64,
+        "probability": 0.7882601022720337
+      },
+      {
+        "word": " أمر",
+        "start": 6.64,
+        "end": 7.6,
+        "probability": 0.49402447044849396
+      }
+    ]
+  },
+  {
+    "file": "assets/audio/juz_amma_ayahs/surah_097/007.mp3",
+    "duration": 7.967375,
+    "text": "سلام من هي حتى من طول عيل فجرون",
+    "clean": "سلام من هي حتي من طول عيل فجرون",
+    "words": [
+      {
+        "word": " سلام",
+        "start": 0.0,
+        "end": 1.98,
+        "probability": 0.7334024906158447
+      },
+      {
+        "word": " من",
+        "start": 1.98,
+        "end": 2.62,
+        "probability": 0.1330617219209671
+      },
+      {
+        "word": " هي",
+        "start": 2.62,
+        "end": 3.0,
+        "probability": 0.4400889277458191
+      },
+      {
+        "word": " حتى",
+        "start": 3.0,
+        "end": 4.16,
+        "probability": 0.7479736506938934
+      },
+      {
+        "word": " من",
+        "start": 4.16,
+        "end": 4.88,
+        "probability": 0.34203508496284485
+      },
+      {
+        "word": " طول",
+        "start": 4.88,
+        "end": 5.52,
+        "probability": 0.8282338976860046
+      },
+      {
+        "word": " عيل",
+        "start": 5.52,
+        "end": 6.22,
+        "probability": 0.36603811383247375
+      },
+      {
+        "word": " فجرون",
+        "start": 6.22,
+        "end": 7.12,
+        "probability": 0.5608961582183838
+      }
+    ]
+  }
+]
