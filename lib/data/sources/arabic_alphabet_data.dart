@@ -10,13 +10,14 @@ class ArabicAlphabetData {
         .map(
           (l) => AudioTrack(
             id: 'letter_${l.number}',
-            surahNumber: 0,
+            surahNumber: l.number,
             surahNameArabic: l.name,
             surahNameEnglish: l.nameEnglish,
             reciterName: 'مخارج الحروف',
-            assetPath: l.assetPath,
+            assetPath: l.nameAssetPath,
             pageNumber: 0,
             trackType: 'alphabet',
+            segmentKind: 'name',
           ),
         )
         .toList();
@@ -30,7 +31,6 @@ class ArabicAlphabetData {
       nameEnglish: 'alif',
       makhrajGroup: 'الحلق',
       makhrajDetail: 'أقصى الحلق',
-      assetPath: 'assets/audio/arabic_alphabet/001-alif.mp3',
     ),
     ArabicLetter(
       number: 2,
@@ -39,7 +39,6 @@ class ArabicAlphabetData {
       nameEnglish: 'baa',
       makhrajGroup: 'الشفتان',
       makhrajDetail: 'انطباق الشفتين',
-      assetPath: 'assets/audio/arabic_alphabet/002-baa.mp3',
     ),
     ArabicLetter(
       number: 3,
@@ -48,7 +47,6 @@ class ArabicAlphabetData {
       nameEnglish: 'taa',
       makhrajGroup: 'اللسان',
       makhrajDetail: 'طرف اللسان مع أصول الثنايا العليا',
-      assetPath: 'assets/audio/arabic_alphabet/003-taa.mp3',
     ),
     ArabicLetter(
       number: 4,
@@ -57,7 +55,6 @@ class ArabicAlphabetData {
       nameEnglish: 'thaa',
       makhrajGroup: 'اللسان',
       makhrajDetail: 'طرف اللسان مع أطراف الثنايا العليا',
-      assetPath: 'assets/audio/arabic_alphabet/004-thaa.mp3',
     ),
     ArabicLetter(
       number: 5,
@@ -66,7 +63,6 @@ class ArabicAlphabetData {
       nameEnglish: 'jeem',
       makhrajGroup: 'اللسان',
       makhrajDetail: 'وسط اللسان مع وسط الحنك الأعلى',
-      assetPath: 'assets/audio/arabic_alphabet/005-jeem.mp3',
     ),
     ArabicLetter(
       number: 6,
@@ -75,7 +71,6 @@ class ArabicAlphabetData {
       nameEnglish: 'haa',
       makhrajGroup: 'الحلق',
       makhrajDetail: 'وسط الحلق',
-      assetPath: 'assets/audio/arabic_alphabet/006-haa.mp3',
     ),
     ArabicLetter(
       number: 7,
@@ -84,7 +79,6 @@ class ArabicAlphabetData {
       nameEnglish: 'khaa',
       makhrajGroup: 'الحلق',
       makhrajDetail: 'أدنى الحلق',
-      assetPath: 'assets/audio/arabic_alphabet/007-khaa.mp3',
     ),
     ArabicLetter(
       number: 8,
@@ -93,7 +87,6 @@ class ArabicAlphabetData {
       nameEnglish: 'daal',
       makhrajGroup: 'اللسان',
       makhrajDetail: 'طرف اللسان مع أصول الثنايا العليا',
-      assetPath: 'assets/audio/arabic_alphabet/008-daal.mp3',
     ),
     ArabicLetter(
       number: 9,
@@ -102,7 +95,6 @@ class ArabicAlphabetData {
       nameEnglish: 'thaal',
       makhrajGroup: 'اللسان',
       makhrajDetail: 'طرف اللسان مع أطراف الثنايا العليا',
-      assetPath: 'assets/audio/arabic_alphabet/009-thaal.mp3',
     ),
     ArabicLetter(
       number: 10,
@@ -110,8 +102,7 @@ class ArabicAlphabetData {
       name: 'الراء',
       nameEnglish: 'raa',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'طرف اللسان مع ما يحاذيه من اللثة العليا',
-      assetPath: 'assets/audio/arabic_alphabet/010-raa.mp3',
+      makhrajDetail: 'طرف اللسان مائلاً إلى ظهره قليلاً مع لثة الثنايا العليا',
     ),
     ArabicLetter(
       number: 11,
@@ -119,8 +110,7 @@ class ArabicAlphabetData {
       name: 'الزاي',
       nameEnglish: 'zay',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'طرف اللسان مع ما يحاذيه من الثنايا السفلى',
-      assetPath: 'assets/audio/arabic_alphabet/011-zay.mp3',
+      makhrajDetail: 'رأس طرف اللسان مع ما بين الثنايا العليا والسفلى',
     ),
     ArabicLetter(
       number: 12,
@@ -128,8 +118,7 @@ class ArabicAlphabetData {
       name: 'السين',
       nameEnglish: 'seen',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'طرف اللسان مع الثنايا السفلى',
-      assetPath: 'assets/audio/arabic_alphabet/012-seen.mp3',
+      makhrajDetail: 'رأس طرف اللسان مع ما بين الثنايا العليا والسفلى',
     ),
     ArabicLetter(
       number: 13,
@@ -137,8 +126,7 @@ class ArabicAlphabetData {
       name: 'الشين',
       nameEnglish: 'sheen',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'وسط اللسان مع وسط الحنك الأعلى',
-      assetPath: 'assets/audio/arabic_alphabet/013-sheen.mp3',
+      makhrajDetail: 'وسط اللسان مع ما يحاذيه من الحنك الأعلى',
     ),
     ArabicLetter(
       number: 14,
@@ -146,8 +134,7 @@ class ArabicAlphabetData {
       name: 'الصاد',
       nameEnglish: 'saad',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'طرف اللسان مع الثنايا السفلى',
-      assetPath: 'assets/audio/arabic_alphabet/014-saad.mp3',
+      makhrajDetail: 'رأس طرف اللسان مع ما بين الثنايا العليا والسفلى مع الاستعلاء',
     ),
     ArabicLetter(
       number: 15,
@@ -155,8 +142,7 @@ class ArabicAlphabetData {
       name: 'الضاد',
       nameEnglish: 'daad',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'حافة اللسان مع ما يليها من الأضراس العليا',
-      assetPath: 'assets/audio/arabic_alphabet/015-daad.mp3',
+      makhrajDetail: 'إحدى حافتي اللسان أو كلاهما مع ما يحاذيها من الأضراس العليا',
     ),
     ArabicLetter(
       number: 16,
@@ -164,8 +150,7 @@ class ArabicAlphabetData {
       name: 'الطاء',
       nameEnglish: 'taa_heavy',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'طرف اللسان مع أصول الثنايا العليا',
-      assetPath: 'assets/audio/arabic_alphabet/016-taa_heavy.mp3',
+      makhrajDetail: 'طرف اللسان مع أصول الثنايا العليا مع الإطباق',
     ),
     ArabicLetter(
       number: 17,
@@ -173,8 +158,7 @@ class ArabicAlphabetData {
       name: 'الظاء',
       nameEnglish: 'dhaa',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'طرف اللسان مع أطراف الثنايا العليا',
-      assetPath: 'assets/audio/arabic_alphabet/017-dhaa.mp3',
+      makhrajDetail: 'طرف اللسان مع أطراف الثنايا العليا مع الإطباق',
     ),
     ArabicLetter(
       number: 18,
@@ -183,7 +167,6 @@ class ArabicAlphabetData {
       nameEnglish: 'ayn',
       makhrajGroup: 'الحلق',
       makhrajDetail: 'وسط الحلق',
-      assetPath: 'assets/audio/arabic_alphabet/018-ayn.mp3',
     ),
     ArabicLetter(
       number: 19,
@@ -192,7 +175,6 @@ class ArabicAlphabetData {
       nameEnglish: 'ghayn',
       makhrajGroup: 'الحلق',
       makhrajDetail: 'أدنى الحلق',
-      assetPath: 'assets/audio/arabic_alphabet/019-ghayn.mp3',
     ),
     ArabicLetter(
       number: 20,
@@ -200,8 +182,7 @@ class ArabicAlphabetData {
       name: 'الفاء',
       nameEnglish: 'faa',
       makhrajGroup: 'الشفتان',
-      makhrajDetail: 'باطن الشفة السفلى مع أطراف الثنايا العليا',
-      assetPath: 'assets/audio/arabic_alphabet/020-faa.mp3',
+      makhrajDetail: 'بطن الشفة السفلى مع أطراف الثنايا العليا',
     ),
     ArabicLetter(
       number: 21,
@@ -209,8 +190,7 @@ class ArabicAlphabetData {
       name: 'القاف',
       nameEnglish: 'qaaf',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'أقصى اللسان مع ما يحاذيه من الحنك الأعلى',
-      assetPath: 'assets/audio/arabic_alphabet/021-qaaf.mp3',
+      makhrajDetail: 'أقصى اللسان مع ما يحاذيه من الحنك الأعلى الرخو',
     ),
     ArabicLetter(
       number: 22,
@@ -218,8 +198,7 @@ class ArabicAlphabetData {
       name: 'الكاف',
       nameEnglish: 'kaaf',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'أقصى اللسان مع ما يحاذيه من الحنك الأعلى',
-      assetPath: 'assets/audio/arabic_alphabet/022-kaaf.mp3',
+      makhrajDetail: 'أقصى اللسان أسفل مخرج القاف قليلاً مع الحنك العظمي',
     ),
     ArabicLetter(
       number: 23,
@@ -227,8 +206,7 @@ class ArabicAlphabetData {
       name: 'اللام',
       nameEnglish: 'laam',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'طرف اللسان مع ما يلي الثنايا العليا',
-      assetPath: 'assets/audio/arabic_alphabet/023-laam.mp3',
+      makhrajDetail: 'أدنى حافة اللسان إلى منتهى طرفه مع ما يحاذيها من لثة الأسنان العليا',
     ),
     ArabicLetter(
       number: 24,
@@ -236,8 +214,7 @@ class ArabicAlphabetData {
       name: 'الميم',
       nameEnglish: 'meem',
       makhrajGroup: 'الشفتان',
-      makhrajDetail: 'انطباق الشفتين',
-      assetPath: 'assets/audio/arabic_alphabet/024-meem.mp3',
+      makhrajDetail: 'انطباق الشفتين مع الغنة من الخيشوم',
     ),
     ArabicLetter(
       number: 25,
@@ -245,17 +222,15 @@ class ArabicAlphabetData {
       name: 'النون',
       nameEnglish: 'noon',
       makhrajGroup: 'اللسان',
-      makhrajDetail: 'طرف اللسان مع ما يحاذيه من اللثة العليا',
-      assetPath: 'assets/audio/arabic_alphabet/025-noon.mp3',
+      makhrajDetail: 'طرف اللسان مع ما يحاذيه من لثة الثنايا العليا مع الغنة',
     ),
     ArabicLetter(
       number: 26,
-      arabicLetter: 'ه',
+      arabicLetter: 'هـ',
       name: 'الهاء',
       nameEnglish: 'haa_light',
       makhrajGroup: 'الحلق',
       makhrajDetail: 'أقصى الحلق',
-      assetPath: 'assets/audio/arabic_alphabet/026-haa_light.mp3',
     ),
     ArabicLetter(
       number: 27,
@@ -263,8 +238,7 @@ class ArabicAlphabetData {
       name: 'الواو',
       nameEnglish: 'waw',
       makhrajGroup: 'الشفتان',
-      makhrajDetail: 'انضمام الشفتين',
-      assetPath: 'assets/audio/arabic_alphabet/027-waw.mp3',
+      makhrajDetail: 'بانضمام الشفتين مع فرجة يسيرة',
     ),
     ArabicLetter(
       number: 28,
@@ -273,7 +247,6 @@ class ArabicAlphabetData {
       nameEnglish: 'yaa',
       makhrajGroup: 'اللسان',
       makhrajDetail: 'وسط اللسان مع وسط الحنك الأعلى',
-      assetPath: 'assets/audio/arabic_alphabet/028-yaa.mp3',
     ),
   ];
 
@@ -292,32 +265,167 @@ class ArabicAlphabetData {
     }
   }
 
-  /// Generate 5 cut tracks for letter repetition mode (1 name + 4 diacritics)
-  static List<AudioTrack> getLetterRepeatTracks(int letterNumber) {
+  /// Constructs the sequential audio tracks for a specific Haraka:
+  /// [Letter Name] ➡️ [Haraka Definition] ➡️ [Ex 1] ➡️ ["Another Example" transition] ➡️ [Ex 2] ...
+  static List<AudioTrack> getHarakaSequenceTracks(
+    int letterNumber,
+    LetterHarakaType harakaType, {
+    bool includeLetterName = true,
+  }) {
     final letter = getByNumber(letterNumber);
     if (letter == null) return [];
 
+    final haraka = letter.getHaraka(harakaType);
     final numStr = letter.number.toString().padLeft(3, '0');
-    final engName = letter.nameEnglish;
-
-    final cutNames = ['1-name', '2-sukun', '3-fatha', '4-kasra', '5-damma'];
-
     final tracks = <AudioTrack>[];
-    for (int i = 0; i < 5; i++) {
-      final segNum = i + 1;
+
+    int seqIndex = 1;
+
+    // 1. [Letter Name (from root)]
+    if (includeLetterName) {
       tracks.add(AudioTrack(
-        id: 'letter_${numStr}_seg_$segNum',
-        surahNumber: 0,
-        surahNameArabic: '${letter.name} (${letter.getSegmentSymbol(segNum)})',
+        id: 'letter_${numStr}_name',
+        surahNumber: letter.number,
+        surahNameArabic: '${letter.name} - اسم الحرف (${letter.arabicLetter})',
         surahNameEnglish: letter.nameEnglish,
-        reciterName: 'مخارج الحروف (ترديد)',
-        assetPath:
-            'assets/audio/arabic_alphabet_cuts/$numStr-$engName-${cutNames[i]}.mp3',
+        reciterName: 'مخارج الحروف',
+        assetPath: letter.nameAssetPath,
         pageNumber: 0,
         trackType: 'alphabet_segment',
-        ayahNumber: segNum,
+        ayahNumber: seqIndex++,
+        harakaName: haraka.nameArabic,
+        segmentKind: 'name',
       ));
     }
+
+    // 2. [Haraka Definition]
+    tracks.add(AudioTrack(
+      id: 'letter_${numStr}_${harakaType.folderName}_def',
+      surahNumber: letter.number,
+      surahNameArabic: '${letter.name} - تعريف ${haraka.nameArabic} (${haraka.symbol})',
+      surahNameEnglish: letter.nameEnglish,
+      reciterName: 'مخارج الحروف',
+      assetPath: haraka.definitionAssetPath,
+      pageNumber: 0,
+      trackType: 'alphabet_segment',
+      ayahNumber: seqIndex++,
+      harakaName: haraka.nameArabic,
+      segmentKind: 'definition',
+    ));
+
+    // 3. Examples dynamically chained with ["Another Example" transition (from root)]
+    for (int i = 0; i < haraka.exampleAssetPaths.length; i++) {
+      final exNum = i + 1;
+      if (i > 0) {
+        // Transition: "مثال آخر"
+        tracks.add(AudioTrack(
+          id: 'letter_${numStr}_${harakaType.folderName}_trans_$exNum',
+          surahNumber: letter.number,
+          surahNameArabic: '${letter.name} - مثال آخر (${haraka.symbol})',
+          surahNameEnglish: letter.nameEnglish,
+          reciterName: 'مخارج الحروف',
+          assetPath: letter.anotherExampleAssetPath,
+          pageNumber: 0,
+          trackType: 'alphabet_segment',
+          ayahNumber: seqIndex++,
+          harakaName: haraka.nameArabic,
+          segmentKind: 'transition',
+          exampleNumber: exNum,
+        ));
+      }
+
+      // Quranic Example
+      tracks.add(AudioTrack(
+        id: 'letter_${numStr}_${harakaType.folderName}_ex_$exNum',
+        surahNumber: letter.number,
+        surahNameArabic: '${letter.name} - مثال $exNum (${haraka.symbol})',
+        surahNameEnglish: letter.nameEnglish,
+        reciterName: 'مخارج الحروف',
+        assetPath: haraka.exampleAssetPaths[i],
+        pageNumber: 0,
+        trackType: 'alphabet_segment',
+        ayahNumber: seqIndex++,
+        harakaName: haraka.nameArabic,
+        segmentKind: 'example',
+        exampleNumber: exNum,
+      ));
+    }
+
     return tracks;
+  }
+
+  /// Constructs the complete full sequence for all 4 Harakat of the letter:
+  /// [Letter Name] ➡️
+  /// [Sukun Def] ➡️ [Ex 1] ➡️ [Trans] ➡️ [Ex 2] ... ➡️
+  /// [Fatha Def] ➡️ [Ex 1] ➡️ [Trans] ➡️ [Ex 2] ... ➡️
+  /// [Kasra Def] ➡️ [Ex 1] ➡️ [Trans] ➡️ [Ex 2] ... ➡️
+  /// [Damma Def] ➡️ [Ex 1] ➡️ [Trans] ➡️ [Ex 2] ...
+  static List<AudioTrack> getLetterFullSequenceTracks(int letterNumber) {
+    final letter = getByNumber(letterNumber);
+    if (letter == null) return [];
+
+    final tracks = <AudioTrack>[];
+    final numStr = letter.number.toString().padLeft(3, '0');
+    int seqIndex = 1;
+
+    // Root: [Letter Name]
+    tracks.add(AudioTrack(
+      id: 'letter_${numStr}_name',
+      surahNumber: letter.number,
+      surahNameArabic: '${letter.name} - اسم الحرف (${letter.arabicLetter})',
+      surahNameEnglish: letter.nameEnglish,
+      reciterName: 'مخارج الحروف',
+      assetPath: letter.nameAssetPath,
+      pageNumber: 0,
+      trackType: 'alphabet_segment',
+      ayahNumber: seqIndex++,
+      segmentKind: 'name',
+    ));
+
+    // Sequential 4 Harakat (Sukun, Fatha, Kasra, Damma)
+    const harakatOrder = [
+      LetterHarakaType.sukun,
+      LetterHarakaType.fatha,
+      LetterHarakaType.kasra,
+      LetterHarakaType.damma,
+    ];
+
+    for (final hType in harakatOrder) {
+      final harakaTracks = getHarakaSequenceTracks(
+        letterNumber,
+        hType,
+        includeLetterName: false,
+      );
+
+      for (final t in harakaTracks) {
+        tracks.add(AudioTrack(
+          id: t.id,
+          surahNumber: t.surahNumber,
+          surahNameArabic: t.surahNameArabic,
+          surahNameEnglish: t.surahNameEnglish,
+          reciterName: t.reciterName,
+          assetPath: t.assetPath,
+          pageNumber: 0,
+          trackType: 'alphabet_segment',
+          ayahNumber: seqIndex++,
+          harakaName: t.harakaName,
+          segmentKind: t.segmentKind,
+          exampleNumber: t.exampleNumber,
+        ));
+      }
+    }
+
+    return tracks;
+  }
+
+  /// Generate repeat tracks for letter repetition/Hifz mode
+  static List<AudioTrack> getLetterRepeatTracks(
+    int letterNumber, {
+    LetterHarakaType? harakaType,
+  }) {
+    if (harakaType != null) {
+      return getHarakaSequenceTracks(letterNumber, harakaType);
+    }
+    return getLetterFullSequenceTracks(letterNumber);
   }
 }

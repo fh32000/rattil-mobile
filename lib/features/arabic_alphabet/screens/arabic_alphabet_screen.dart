@@ -28,21 +28,21 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
     final currentTrack = ref.read(currentTrackProvider).valueOrNull;
     final isPlaying = ref.read(isPlayingProvider).valueOrNull ?? false;
 
-    // If this letter is already loaded, toggle play/pause
-    if (currentTrack?.id == 'letter_${letter.number}') {
+    // Check if this letter is currently loaded
+    final isThisLetterLoaded = currentTrack != null &&
+        currentTrack.isLetter &&
+        (currentTrack.surahNumber == letter.number ||
+            currentTrack.id.startsWith('letter_${letter.number.toString().padLeft(3, '0')}'));
+
+    if (isThisLetterLoaded) {
       if (isPlaying) {
         await handler.pause();
       } else {
         await handler.play();
       }
     } else {
-      // Load all letters as a playlist, starting from this letter
-      final letterTracks = ArabicAlphabetData.toAudioTracks();
-      final startIndex = letter.number - 1; // 1-based number → 0-based index
-      await handler.loadLetterTracks(
-        letterTracks: letterTracks,
-        startIndex: startIndex,
-      );
+      // Play sequential audio chain for this letter
+      await handler.playLetterSequence(letterNumber: letter.number);
     }
   }
 
@@ -215,8 +215,10 @@ class _ArabicAlphabetScreenState extends ConsumerState<ArabicAlphabetScreen> {
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final letter = letters[index];
-                    final isLetterPlaying =
-                        currentTrack?.id == 'letter_${letter.number}' &&
+                    final isLetterPlaying = currentTrack != null &&
+                        currentTrack.isLetter &&
+                        (currentTrack.surahNumber == letter.number ||
+                            currentTrack.id.startsWith('letter_${letter.number.toString().padLeft(3, '0')}')) &&
                         isPlaying;
                     return LetterCard(
                       letter: letter,

@@ -3,6 +3,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../../core/services/analytics_service.dart';
+import '../../../data/models/arabic_letter.dart';
 import '../../../data/models/audio_track.dart';
 import '../../../data/models/memorization_settings.dart';
 import '../../../data/repositories/memorization_settings_repository.dart';
@@ -225,6 +226,41 @@ class QuranAudioHandler extends BaseAudioHandler
     }
   }
 
+  /// Plays the complete sequential audio for a letter (or a specific Haraka):
+  /// [Letter Name] ➡️ [Haraka Definition] ➡️ [Ex 1] ➡️ ["Another Example"] ➡️ [Ex 2] ...
+  Future<void> playLetterSequence({
+    required int letterNumber,
+    LetterHarakaType? harakaType,
+    int startIndex = 0,
+  }) async {
+    final tracks = harakaType != null
+        ? ArabicAlphabetData.getHarakaSequenceTracks(letterNumber, harakaType)
+        : ArabicAlphabetData.getLetterFullSequenceTracks(letterNumber);
+    if (tracks.isEmpty) return;
+
+    _disableHifzMode();
+    final letter = ArabicAlphabetData.getByNumber(letterNumber);
+    final playlistTitle = harakaType != null
+        ? '${letter?.name} - ${harakaType.arabicName}'
+        : letter?.name;
+    _currentPlaylistName.add(playlistTitle);
+
+    _trackList.add(tracks);
+    _currentIndex.add(startIndex);
+    queue.add(tracks.map(_trackToMediaItem).toList());
+
+    final track = tracks[startIndex];
+    mediaItem.add(_trackToMediaItem(track));
+
+    try {
+      await _player.setAudioSource(AudioLoader.createSource(track.assetPath));
+      await _player.play();
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error loading letter sequence track: ${track.assetPath} - $e');
+    }
+  }
+
   // ─── Hifz Mode ───
 
   bool get canEnableHifzMode {
@@ -234,7 +270,10 @@ class QuranAudioHandler extends BaseAudioHandler
     return AyahTrackSource.hasAyahAudio(track.surahNumber);
   }
 
-  Future<void> enableHifzMode({int? letterNumber}) async {
+  Future<void> enableHifzMode({
+    int? letterNumber,
+    LetterHarakaType? harakaType,
+  }) async {
     if (_hifzMode) return;
     final track = currentTrack;
 
@@ -254,7 +293,10 @@ class QuranAudioHandler extends BaseAudioHandler
       _savedTrackIndex = _currentIndex.value;
 
       _hifzMode = true;
-      _ayahTracks = ArabicAlphabetData.getLetterRepeatTracks(targetLetterNumber);
+      _ayahTracks = ArabicAlphabetData.getLetterRepeatTracks(
+        targetLetterNumber,
+        harakaType: harakaType,
+      );
       if (_ayahTracks.isEmpty) {
         _hifzMode = false;
         return;
@@ -571,7 +613,9 @@ class QuranAudioHandler extends BaseAudioHandler
       final isAlphabetSegment = currentTrack.isAlphabetSegment;
       final surahNumber = currentTrack.surahNumber;
       final isNonRepeatingFirstSegment = isAlphabetSegment
-          ? _memState.currentAyah == 1
+          ? (currentTrack.isLetterName ||
+              currentTrack.isTransition ||
+              _memState.currentAyah == 1)
           : (surahNumber != 1 &&
               (currentTrack.verseNumber == 0 || _memState.currentAyah == 1));
 
