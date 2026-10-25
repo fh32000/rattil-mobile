@@ -217,17 +217,9 @@ jobs:
             build/app/outputs/flutter-apk/app-release.apk.sha256
           retention-days: 30
 
-      # 12. Notice if Google Play Key is not set
-      - name: Check Google Play Key
-        if: "${{ secrets.PLAY_STORE_JSON_KEY == '' }}"
-        run: |
-          echo "ℹ️ Notice: secrets.PLAY_STORE_JSON_KEY is not configured yet in GitHub Secrets."
-          echo "Skipping Google Play deployment. Artifacts and GitHub Release will proceed as normal."
-
-      # 13. Deploy to Google Play Console
+      # 12. Deploy to Google Play Console
       - name: Deploy to Google Play Console
         id: deploy_play_store
-        if: "${{ secrets.PLAY_STORE_JSON_KEY != '' }}"
         uses: r0adkll/upload-google-play@v1
         continue-on-error: true
         with:
@@ -238,16 +230,16 @@ jobs:
           status: ${{ steps.build_app.outputs.RELEASE_STATUS }}
           whatsNewDirectory: distribution/whatsnew
 
-      # 14. Wait before retry (if Google Play experienced transient 503 error)
+      # 13. Wait before retry (if Google Play experienced transient 503 error)
       - name: Wait before retry (if transient 503)
-        if: steps.deploy_play_store.outcome == 'failure' && secrets.PLAY_STORE_JSON_KEY != ''
+        if: steps.deploy_play_store.outcome == 'failure'
         run: |
           echo "⚠️ Initial Google Play deployment returned an error. Waiting 15 seconds before retry..."
           sleep 15
 
-      # 15. Retry Deploy to Google Play Console
+      # 14. Retry Deploy to Google Play Console
       - name: Retry Deploy to Google Play Console
-        if: steps.deploy_play_store.outcome == 'failure' && secrets.PLAY_STORE_JSON_KEY != ''
+        if: steps.deploy_play_store.outcome == 'failure'
         continue-on-error: true
         uses: r0adkll/upload-google-play@v1
         with:
