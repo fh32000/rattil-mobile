@@ -12,8 +12,9 @@ plugins {
 apply(plugin = "com.google.gms.google-services")
 
 val keystoreProperties = Properties()
-val keystorePropertiesFile = rootProject.file("app/key.properties")
-if (keystorePropertiesFile.exists()) {
+val keystorePropertiesFile = rootProject.file("app/key.properties").takeIf { it.exists() }
+    ?: rootProject.file("key.properties").takeIf { it.exists() }
+if (keystorePropertiesFile != null && keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
@@ -32,7 +33,7 @@ android {
     }
 
     signingConfigs {
-        if (keystorePropertiesFile.exists()) {
+        if (keystorePropertiesFile != null && keystorePropertiesFile.exists()) {
             create("release") {
                 keyAlias = keystoreProperties["keyAlias"] as String
                 keyPassword = keystoreProperties["keyPassword"] as String
@@ -55,7 +56,7 @@ android {
             ndk {
                 debugSymbolLevel = "none"
             }
-            signingConfig = if (keystorePropertiesFile.exists()) {
+            signingConfig = if (keystorePropertiesFile != null && keystorePropertiesFile.exists()) {
                 signingConfigs.getByName("release")
             } else {
                 signingConfigs.getByName("debug")

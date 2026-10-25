@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rattil/data/models/arabic_letter.dart';
 import 'package:rattil/data/sources/ayah_track_source.dart';
 import 'package:rattil/data/sources/arabic_alphabet_data.dart';
 import 'package:rattil/data/sources/ayah_file_to_verse.dart';
@@ -58,14 +59,26 @@ void main() {
 
     test('Arabic alphabet repetition tracks generation', () {
       final tracks = ArabicAlphabetData.getLetterRepeatTracks(1);
-      expect(tracks.length, equals(5));
+      // 1 name + 4 harakat * (1 def + 4 examples + 3 transitions) = 33 tracks
+      expect(tracks.length, equals(33));
       expect(tracks[0].trackType, equals('alphabet_segment'));
       expect(tracks[0].ayahNumber, equals(1));
-      expect(tracks[0].assetPath, contains('001-alif-1-name.mp3'));
-      expect(tracks[1].assetPath, contains('001-alif-2-sukun.mp3'));
-      expect(tracks[2].assetPath, contains('001-alif-3-fatha.mp3'));
-      expect(tracks[3].assetPath, contains('001-alif-4-kasra.mp3'));
-      expect(tracks[4].assetPath, contains('001-alif-5-damma.mp3'));
+      expect(tracks[0].assetPath, contains('001_alif/name.mp3'));
+      expect(tracks[1].assetPath, contains('001_alif/sukun/definition.mp3'));
+      expect(tracks[2].assetPath, contains('001_alif/sukun/example_1.mp3'));
+      expect(tracks[3].assetPath, contains('001_alif/another_example.mp3'));
+      expect(tracks[4].assetPath, contains('001_alif/sukun/example_2.mp3'));
+
+      // Test specific haraka repetition
+      final fathaTracks = ArabicAlphabetData.getLetterRepeatTracks(
+        1,
+        harakaType: LetterHarakaType.fatha,
+      );
+      // 1 name + 1 def + 4 examples + 3 transitions = 9 tracks
+      expect(fathaTracks.length, equals(9));
+      expect(fathaTracks[0].assetPath, contains('001_alif/name.mp3'));
+      expect(fathaTracks[1].assetPath, contains('001_alif/fatha/definition.mp3'));
+      expect(fathaTracks[2].assetPath, contains('001_alif/fatha/example_1.mp3'));
     });
 
     test('ArabicLetter diacritic symbol resolution', () {

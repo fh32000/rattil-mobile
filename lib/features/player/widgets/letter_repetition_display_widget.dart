@@ -140,9 +140,55 @@ class LetterRepetitionDisplayWidget extends StatelessWidget {
     );
   }
 
+  String _resolveSymbol(ArabicLetter letter) {
+    if (track.isLetterName || track.isTransition) {
+      return letter.arabicLetter;
+    }
+    if (track.harakaName != null) {
+      switch (track.harakaName) {
+        case 'السكون':
+          return letter.getHarakaSymbol(LetterHarakaType.sukun);
+        case 'الفتحة':
+          return letter.getHarakaSymbol(LetterHarakaType.fatha);
+        case 'الكسرة':
+          return letter.getHarakaSymbol(LetterHarakaType.kasra);
+        case 'الضمة':
+          return letter.getHarakaSymbol(LetterHarakaType.damma);
+      }
+    }
+    return letter.getSegmentSymbol(currentSegment);
+  }
+
+  String _resolveTitle(ArabicLetter letter) {
+    if (track.isLetterName) {
+      return 'اسم الحرف: ${letter.name}';
+    }
+    if (track.isHarakaDefinition) {
+      return 'تعريف حركة ${track.harakaName ?? ''}';
+    }
+    if (track.isExample) {
+      final exNum = track.exampleNumber != null ? ' (${track.exampleNumber})' : '';
+      return 'مثال قرآني$exNum - ${track.harakaName ?? ''}';
+    }
+    if (track.isTransition) {
+      return 'انتقال: مثال آخر';
+    }
+    return letter.getSegmentTitle(currentSegment);
+  }
+
+  int _resolveActiveChipIndex() {
+    if (track.isLetterName) return 1;
+    if (track.harakaName == 'السكون') return 2;
+    if (track.harakaName == 'الفتحة') return 3;
+    if (track.harakaName == 'الكسرة') return 4;
+    if (track.harakaName == 'الضمة') return 5;
+    return currentSegment;
+  }
+
   Widget _buildLetterContent(ArabicLetter letter) {
-    final symbol = letter.getSegmentSymbol(currentSegment);
-    final title = letter.getSegmentTitle(currentSegment);
+    final symbol = _resolveSymbol(letter);
+    final title = _resolveTitle(letter);
+    final activeChipIndex = _resolveActiveChipIndex();
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -151,7 +197,7 @@ class LetterRepetitionDisplayWidget extends StatelessWidget {
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           child: KeyedSubtree(
-            key: ValueKey('seg_${currentSegment}_$symbol'),
+            key: ValueKey('seg_${currentSegment}_${track.id}_$symbol'),
             child: Text(
               symbol,
               style: const TextStyle(
@@ -165,13 +211,20 @@ class LetterRepetitionDisplayWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        // Segment title (e.g. الحرف مكسوراً)
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
+        // Segment title / kind
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         const SizedBox(height: 16),
@@ -180,7 +233,7 @@ class LetterRepetitionDisplayWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(5, (index) {
             final segNum = index + 1;
-            final isSelected = segNum == currentSegment;
+            final isSelected = segNum == activeChipIndex;
             final segSymbol = letter.getSegmentSymbol(segNum);
             final segTitle = letter.getSegmentTitle(segNum);
 
@@ -252,6 +305,10 @@ class LetterRepetitionDisplayWidget extends StatelessWidget {
   }
 
   Widget _buildFooter(ArabicLetter? letter) {
+    final statusText = track.harakaName != null
+        ? '${track.harakaName}${track.isExample ? " (مثال ${track.exampleNumber})" : (track.isHarakaDefinition ? " (تعريف)" : "")}'
+        : 'مقطع $currentSegment من $totalSegments';
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -263,10 +320,11 @@ class LetterRepetitionDisplayWidget extends StatelessWidget {
           ),
         ),
         Text(
-          'مقطع $currentSegment من $totalSegments',
+          statusText,
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.6),
+            color: Colors.white.withValues(alpha: 0.8),
             fontSize: 12,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
