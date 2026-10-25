@@ -3,8 +3,8 @@ class AppConstants {
 
   static const String appName = 'ورتِّله';
   static const String appNameEn = 'Warattilhu';
-  static const String appVersion = '1.0.18';
-  static const String appReleaseDate = '14-09-2026';
+  static const String appVersion = '1.0.19';
+  static const String appReleaseDate = '25-10-2026';
   static const String appDescription =
       'تطبيق ورتِّله للاستماع إلى تلاوات القرآن الكريم';
 
